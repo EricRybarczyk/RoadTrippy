@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item><!-- app branding color for the app bar -->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item><!-- darker variant for the status bar and contextual app bars -->
+        <item name="colorAccent">@color/colorAccent</item><!-- theme UI controls like checkboxes, text fields, and floating action button -->
+        <item name="colorControlNormal">@color/colorControlNormal</item><!-- normal state of unchecked controls -->
+        <item name="colorControlActivated">@color/colorControlActivated</item><!-- overrides colorAccent on activated/checked UI controls -->
+        <item name="colorControlHighlight">@color/colorControlHighlight</item><!-- ripple coloring -->
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item><!-- required for Preference Fragment-->
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColor">@color/colorTextPrimary</item>
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColor">@color/colorTextPrimary</item>
+    </style>
+
+    <style name="ScreenHeading" parent="AppTheme">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+    </style>
+
+    <style name="TextInput" parent="AppTheme">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+    </style>
+
+    <style name="TextInputLabel" parent="AppTheme">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextInputLabel</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="TextSubHint" parent="AppTheme">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextSubHint</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+    </style>
+
+    <style name="AppButton" parent="@android:style/Widget.Button">
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:width">185sp</item>
+        <item name="android:textColor">@color/colorTextSubdued</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="NavigationDestinationButton" parent="@android:style/Widget.Button">
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:width">250sp</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="AccentButton" parent="@android:style/Widget.Button">
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorTextOverAccent</item>
+        <item name="android:height">22sp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="AccentButton.Condensed">
+        <item name="android:textSize">14sp</item>
+        <item name="android:maxHeight">20dp</item>
+        <item name="android:height">20dp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="DialogTitle" parent="AppTheme">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="TripListItemName" parent="AppTheme">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:layout_marginStart">@dimen/trip_list_item_margin_start</item>
+        <item name="android:layout_marginTop">@dimen/trip_list_item_margin_top</item>
+    </style>
+
+    <style name="TripListItemContent" parent="AppTheme">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:layout_marginStart">@dimen/trip_list_item_margin_start</item>
+        <item name="android:layout_marginTop">@dimen/trip_list_item_margin_top</item>
+    </style>
+
+    <style name="TripDetailTitle" parent="AppTheme">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextLight</item>
+        <item name="android:layout_margin">6dp</item>
+    </style>
+
+    <style name="TripDayNumber" parent="AppTheme">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextLight</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <style name="TripDayListItemContent" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:layout_marginStart">@dimen/trip_list_item_margin_start</item>
+        <item name="android:layout_marginTop">@dimen/trip_list_item_margin_top</item>
+    </style>
+
+    <style name="TripDayListItemSecondary" parent="AppTheme">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:layout_marginStart">@dimen/trip_list_item_margin_start</item>
+        <item name="android:layout_marginTop">@dimen/trip_list_item_secondary_margin_top</item>
+    </style>
+
+    <style name="TripDayDestinationLabel" parent="AppTheme">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:layout_marginTop">@dimen/trip_day_destination_label_top_margin</item>
+    </style>
+
+    <style name="TripDayDestinationItem" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:layout_marginTop">@dimen/trip_day_destination_item_vertical_margin</item>
+    </style>
+
+    <style name="TripDayDestinationIcon" parent="AppTheme">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:layout_marginTop">@dimen/trip_day_destination_item_vertical_margin</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">4dp</item>
+    </style>
+
+    <style name="WidgetTripCountdownDayNumber" parent="AppTheme">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextLight</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+    <style name="WidgetTripCountdownTitle" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:layout_marginStart">@dimen/widget_trip_countdown_text_margin_start</item>
+        <item name="android:layout_marginTop">@dimen/widget_trip_countdown_text_margin_top</item>
+    </style>
+
+    <style name="WidgetTripCountdownSubtitle" parent="AppTheme">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextSecondary</item>
+        <item name="android:layout_marginStart">@dimen/widget_trip_countdown_text_margin_start</item>
+        <item name="android:layout_marginTop">@dimen/widget_trip_countdown_text_margin_top</item>
+    </style>
+
+</resources>

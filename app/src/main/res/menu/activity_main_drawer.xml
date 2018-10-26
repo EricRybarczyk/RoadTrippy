@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_trip_plans"
+            android:icon="@drawable/ic_menu_calendar"
+            android:title="@string/menu_label_trip_plans" />
+        <item
+            android:id="@+id/nav_create_trip"
+            android:icon="@drawable/ic_action_add_circle_outline"
+            android:title="@string/menu_label_create_trip" />
+        <item
+            android:id="@+id/nav_trip_history"
+            android:icon="@drawable/ic_menu_history"
+            android:title="@string/menu_label_past_trips" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_settings_outline"
+            android:title="@string/menu_label_settings" />
+    </group>
+
+</menu>

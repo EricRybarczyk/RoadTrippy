@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Road Trippy</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_header_title">Username</string>
+    <string name="nav_header_subtitle">Have a great trip!</string>
+
+    <string name="menu_label_trip_plans">Trip Plans</string>
+    <string name="menu_label_create_trip">Create a Trip</string>
+    <string name="menu_label_past_trips">Past Trips</string>
+    <string name="menu_label_settings">Settings</string>
+    <string name="menu_label_sign_out">Sign Out</string>
+    <string name="menu_label_edit_trip">Edit Trip</string>
+    <string name="menu_label_archive_trip">Archive Trip</string>
+
+    <string name="pref_key_home_latitude">preference_home_latitude</string>
+    <string name="pref_key_home_longitude">preference_home_longitude</string>
+    <string name="pref_daily_driving_hours_default">12</string>
+    <string name="pref_key_daily_driving_hours">preference_daily_driving_duration</string>
+
+    <string name="screen_heading_create_trip">Start planning your trip</string>
+    <string name="screen_heading_default_trip_name">Trip Route Overview</string>
+
+    <string name="input_trip_name_label">Trip name or short description</string>
+    <string name="input_trip_departure_date_label">Departure date</string>
+    <string name="input_trip_return_date_label">Return date</string>
+    <string name="input_trip_origin_label">Starting from</string>
+    <string name="input_trip_destination_label">Destination</string>
+    <string name="input_trip_return_option_label">Include return driving directions</string>
+    <string name="input_trip_next_button_label">NEXT</string>
+    <string name="input_trip_origin_home_button_label">My Home</string>
+    <string name="input_trip_origin_pick_button_label">Other</string>
+    <string name="input_trip_name_sub_hint">This name will identify the trip throughout this app</string>
+    <string name="trip_confirm_button_save_label">SAVE TRIP</string>
+
+    <string name="dialog_trip_origin_picker_title">Where will you start?</string>
+
+    <string name="map_select_location_instructions">Search or tap the map to choose a location</string>
+    <string name="map_select_location_search_hint">Search…</string>
+    <string name="map_select_location_button_search_label">SEARCH</string>
+    <string name="map_select_location_button_save_label">DONE</string>
+    <string name="map_home_location_button_save_label">SAVE</string>
+    <string name="map_location_description_hint">Name this location</string>
+    <string name="map_search_no_results_message">No results found. Please try again.</string>
+    <string name="map_search_too_many_results_message">Too many results, please narrow your search.</string>
+    <string name="map_search_call_error_message">Error: unable to perform search</string>
+    <string name="map_directions_call_error_message">Error: unable to get directions</string>
+    <string name="map_directions_failure">Unable to find Directions. Please adjust your Trip.</string>
+    <string name="maps_api_avoids_default">ferries</string>
+    <string name="maps_api_indicator_ferry">ferry</string>
+
+    <string name="input_trip_day_primary_description">Primary activity or event today</string>
+    <string name="input_trip_day_secondary_notes">Enter additional notes here if you wish</string>
+    <string name="trip_day_add_destination_button_label">ADD DESTINATION</string>
+    <string name="trip_day_save_button_label">DONE</string>
+    <string name="trip_day_destination_list_label">Destinations Today:</string>
+    <string name="input_trip_day_destination">Add a destination for today</string>
+
+    <string name="fa_icon_star">&#xf005;</string>
+    <string name="fa_icon_trash">&#xf2ed;</string>
+    <string name="fa_icon_back">&#xf359;</string>
+
+    <!-- ContentDescription items-->
+    <string name="aria_trip_item_image_description">Simple map image for trip</string>
+    <string name="aria_nav_header_desc">Application Logo</string>
+    <string name="aria_trip_overview_theme_image">Trip Overview Theme Image</string>
+    <string name="aria_icon_get_directions">Get Directions Icon</string>
+    <string name="aria_day_destination_button_map_search">Map Search Icon</string>
+    <string name="aria_divider_line">divider line</string>
+
+    <!-- words and abbreviations injected into generated strings -->
+    <string name="word_for_TO">to</string>
+    <string name="word_for_HOURS">Hours</string>
+    <string name="abbreviation_for_HOURS">h</string>
+    <string name="word_for_MINUTES">Minutes</string>
+    <string name="abbreviation_for_MINUTES">m</string>
+    <string name="word_for_UNKNOWN">Unknown</string>
+    <string name="label_for_DRIVING_TIME">Driving Time:</string>
+    <string name="word_for_HOME">Home</string>
+    <string name="word_for_Day">Day</string>
+    <string name="phrase_for_YourTrip">Your Trip</string>
+    <string name="phrase_for_DrivingDay">Driving Day</string>
+    <string name="phrase_for_ReturnDrive">Return Drive</string>
+    <string name="phrase_for_PlanYourDay">Plan Your Day</string>
+    <string name="phrase_for_EnjoyYourDay">enjoy your day</string>
+    <string name="phrase_for_EnjoyYourDrive">enjoy your drive</string>
+
+    <string name="error_device_location_null">Device location not found, please check your Location Settings.</string>
+    <string name="error_create_trip_data_validation">Please provide all trip information</string>
+    <string name="error_home_location_preference_not_found">Please use the Settings menu to set your Home location</string>
+    <string name="error_message_system_missing_google_maps">Unable to locate Google Maps on your device. Google Maps is required for Navigation features.</string>
+    <string name="error_message_archived_trip_no_edit">Sorry, we do not allow editing of archived trips</string>
+    <string name="warning_message_no_network">No Network Available. App features are limited.</string>
+    <string name="error_message_no_network_no_maps">No Network Available. Maps are not available.</string>
+    <string name="error_log_message_no_network">No network available</string>
+
+    <string name="widget_trip_countdown_label">Road Trippy: Countdown Widget</string>
+    <string name="widget_trip_countdown_config_heading">Select a trip</string>
+    <string name="widget_trip_countdown_subtitle">days until you drive!</string>
+    <string name="widget_config_launch_app_button_label">Launch App</string>
+    <string name="widget_config_require_login_message">Please launch the App and Log In before creating a widget</string>
+
+</resources>
