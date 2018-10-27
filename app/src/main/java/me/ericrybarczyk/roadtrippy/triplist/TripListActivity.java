@@ -154,7 +154,6 @@ public class TripListActivity extends AppCompatActivity {
         this.activeUsername = ANONYMOUS;
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();

@@ -8,13 +8,12 @@ import me.ericrybarczyk.roadtrippy.dto.Trip;
 
 public interface TripListContract {
     interface View extends BaseView<Presenter> {
-        void showTripList();
+        void showCreateTrip();
     }
 
 
     interface Presenter extends BasePresenter {
-        FirebaseRecyclerOptions<Trip> getTripListDataOptions();
-        void loadTripList();
+        void createTrip();
     }
 }
 
