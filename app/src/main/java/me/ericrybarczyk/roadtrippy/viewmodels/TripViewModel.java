@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 
-import ericrybarczyk.me.roadtrippy.dto.Trip;
+import me.ericrybarczyk.roadtrippy.dto.Trip;
 
 
 public class TripViewModel extends ViewModel {

@@ -10,6 +10,7 @@ android {
         applicationId "me.ericrybarczyk.roadtrippy"
         minSdkVersion 19
         targetSdkVersion 27
+        multiDexEnabled true
         resConfigs "en"
         // recommended by https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md
         versionCode 1
@@ -19,13 +20,14 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 ext {
+    multiDexVersion = "1.0.3"
     supportLibVersion = "27.1.1"
     googlePlayVersion = "16.0.0" // 15.0.1
     mapUtilsVersion = "0.5"
@@ -44,10 +46,12 @@ ext {
     junitVersion = "4.12"
     supportTestVersion = "1.0.2"
     espressoVersion = "3.0.2"
+    guavaVersion = '18.0'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:multidex:$multiDexVersion"
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:animated-vector-drawable:$supportLibVersion"
     implementation "com.android.support:support-media-compat:$supportLibVersion"
@@ -57,7 +61,6 @@ dependencies {
     implementation "com.android.support:cardview-v7:$supportLibVersion"
     implementation "android.arch.lifecycle:viewmodel:$lifecycleVersion"
     implementation "com.android.support:preference-v7:$preferencesVersion"
-
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
 
     implementation "com.google.android.gms:play-services-maps:$googlePlayVersion"
@@ -70,16 +73,14 @@ dependencies {
     implementation "com.firebaseui:firebase-ui-auth:$firebaseUiVersion"
     implementation "com.firebaseui:firebase-ui-database:$firebaseUiVersion"
 
-    implementation "com.jakewharton:butterknife:$butterknifeVersion"
-    implementation "com.android.support:support-v4:$supportLibVersion"
-    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
-
     implementation "com.google.code.gson:gson:$gsonVersion"
+    implementation "com.google.guava:guava:$guavaVersion"
+
+    implementation "com.jakewharton:butterknife:$butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.jakewharton.threetenabp:threetenabp:$threetenVersion"
-
     implementation "com.squareup.picasso:picasso:$picassoVersion"
 
     testImplementation "junit:junit:$junitVersion"

@@ -7,9 +7,9 @@ import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 
-import ericrybarczyk.me.roadtrippy.dto.TripDay;
-import ericrybarczyk.me.roadtrippy.dto.TripLocation;
-import ericrybarczyk.me.roadtrippy.persistence.PersistenceFormats;
+import me.ericrybarczyk.roadtrippy.dto.TripDay;
+import me.ericrybarczyk.roadtrippy.dto.TripLocation;
+import me.ericrybarczyk.roadtrippy.persistence.PersistenceFormats;
 
 public class TripDayViewModel extends ViewModel {
 

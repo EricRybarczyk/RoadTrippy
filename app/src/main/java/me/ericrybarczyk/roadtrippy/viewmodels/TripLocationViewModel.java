@@ -1,6 +1,6 @@
 package me.ericrybarczyk.roadtrippy.viewmodels;
 
-import ericrybarczyk.me.roadtrippy.dto.TripLocation;
+import me.ericrybarczyk.roadtrippy.dto.TripLocation;
 
 public class TripLocationViewModel {
 
