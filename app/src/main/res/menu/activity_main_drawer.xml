@@ -6,7 +6,7 @@
 
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/nav_trip_plans"
+            android:id="@+id/nav_trip_list"
             android:icon="@drawable/ic_menu_calendar"
             android:title="@string/menu_label_trip_plans" />
         <item

@@ -1,4 +1,4 @@
-package me.ericrybarczyk.roadtrippy.triplist;
+package me.ericrybarczyk.roadtrippy.createtrip;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +15,10 @@ import android.widget.FrameLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
-import me.ericrybarczyk.roadtrippy.createtrip.CreateTripActivity;
+import me.ericrybarczyk.roadtrippy.triplist.TripListActivity;
 
-public class TripListActivity extends AppCompatActivity {
+public class CreateTripActivity extends AppCompatActivity {
+
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.drawer_layout) protected DrawerLayout drawer;
@@ -27,7 +28,7 @@ public class TripListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_list);
+        setContentView(R.layout.activity_create_trip);
         ButterKnife.bind(this);
 
         // configure toolbar
@@ -49,11 +50,11 @@ public class TripListActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.nav_trip_list:
-                                // current screen, no action
+                                Intent intent = new Intent(CreateTripActivity.this, TripListActivity.class);
+                                startActivity(intent);
                                 break;
                             case R.id.nav_create_trip:
-                                Intent intent = new Intent(TripListActivity.this, CreateTripActivity.class);
-                                startActivity(intent);
+                                // current screen, no action
                                 break;
                             case R.id.nav_trip_history:
                                 // trip history activity
@@ -66,6 +67,6 @@ public class TripListActivity extends AppCompatActivity {
                         drawer.closeDrawers();
                         return true;
                     }
-        });
+                });
     }
 }
