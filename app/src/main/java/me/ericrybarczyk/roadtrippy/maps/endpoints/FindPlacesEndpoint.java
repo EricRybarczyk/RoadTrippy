@@ -1,6 +1,6 @@
 package me.ericrybarczyk.roadtrippy.maps.endpoints;
 
-import ericrybarczyk.me.roadtrippy.places.PlacesResponse;
+import me.ericrybarczyk.roadtrippy.maps.places.PlacesResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

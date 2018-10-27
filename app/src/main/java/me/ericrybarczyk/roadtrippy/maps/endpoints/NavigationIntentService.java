@@ -3,7 +3,7 @@ package me.ericrybarczyk.roadtrippy.maps.endpoints;
 import android.content.Intent;
 import android.net.Uri;
 
-import ericrybarczyk.me.roadtrippy.viewmodels.TripLocationViewModel;
+import me.ericrybarczyk.roadtrippy.viewmodels.TripLocationViewModel;
 
 public class NavigationIntentService {
     public static Intent getNavigationIntent(TripLocationViewModel tripLocationViewModel) {
