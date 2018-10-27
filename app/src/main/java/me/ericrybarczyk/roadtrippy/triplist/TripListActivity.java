@@ -25,6 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.createtrip.CreateTripActivity;
+import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
+import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 
 public class TripListActivity extends AppCompatActivity {
@@ -33,6 +35,8 @@ public class TripListActivity extends AppCompatActivity {
     @BindView(R.id.drawer_layout) protected DrawerLayout drawer;
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
+
+    private TripListPresenter tripListPresenter;
     private static final String TAG = TripListActivity.class.getSimpleName();
 
     public static final String ANONYMOUS = "anonymous";
@@ -59,6 +63,18 @@ public class TripListActivity extends AppCompatActivity {
 
         setupNavigationDrawer();
         setupFirebaseAuth();
+
+        TripListFragment tripListFragment = (TripListFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
+        if (tripListFragment == null) {
+            tripListFragment = TripListFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripListFragment, R.id.content_container);
+        }
+
+        tripListPresenter = new TripListPresenter(new TripRepository(), tripListFragment, firebaseUser);
+        tripListFragment.setPresenter(tripListPresenter);
+
+        // TODO: load saved instance state if it exists
+
 
     }
 
@@ -94,8 +110,9 @@ public class TripListActivity extends AppCompatActivity {
            including Udacity's Firebase extracurricular module in the Android Developer Nanodegree program,
            and https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md */
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
         authStateListener = firebaseAuth -> {
-            firebaseUser = firebaseAuth.getCurrentUser();
             if (firebaseUser != null) {
                 onSignedInInitialize(firebaseUser);
                 // TODO - EVAL: onFragmentNavigationRequest(FragmentTags.TAG_TRIP_LIST);
