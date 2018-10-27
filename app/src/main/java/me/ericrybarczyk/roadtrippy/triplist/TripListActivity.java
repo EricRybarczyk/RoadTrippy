@@ -10,12 +10,22 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.createtrip.CreateTripActivity;
+import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 
 public class TripListActivity extends AppCompatActivity {
 
@@ -23,6 +33,14 @@ public class TripListActivity extends AppCompatActivity {
     @BindView(R.id.drawer_layout) protected DrawerLayout drawer;
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
+    private static final String TAG = TripListActivity.class.getSimpleName();
+
+    public static final String ANONYMOUS = "anonymous";
+    private String activeUsername = ANONYMOUS;
+    private String userId;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +58,8 @@ public class TripListActivity extends AppCompatActivity {
         toggle.syncState();
 
         setupNavigationDrawer();
+        setupFirebaseAuth();
+
     }
 
     private void setupNavigationDrawer() {
@@ -67,5 +87,66 @@ public class TripListActivity extends AppCompatActivity {
                         return true;
                     }
         });
+    }
+
+    private void setupFirebaseAuth() {
+        /* SOURCE: FirebaseAuth code is directly adapted from Udacity & Google materials,
+           including Udacity's Firebase extracurricular module in the Android Developer Nanodegree program,
+           and https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md */
+        firebaseAuth = FirebaseAuth.getInstance();
+        authStateListener = firebaseAuth -> {
+            firebaseUser = firebaseAuth.getCurrentUser();
+            if (firebaseUser != null) {
+                onSignedInInitialize(firebaseUser);
+                // TODO - EVAL: onFragmentNavigationRequest(FragmentTags.TAG_TRIP_LIST);
+            } else {
+
+                onSignedOutCleanup();
+
+                // configure supported sign-in providers
+                List<AuthUI.IdpConfig> providers = Collections.singletonList(
+                        new AuthUI.IdpConfig.GoogleBuilder().build());
+
+                // Create and launch sign-in intent
+                startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setIsSmartLockEnabled(false) // TODO: Udacity tutorial set this to false (default is true: system will basically keep user automatically logged in)
+                                .setAvailableProviders(providers)
+                                .build(),
+                        RequestCodes.SIGN_IN_REQUEST_CODE);
+            }
+        };
+    }
+
+    private void onSignedInInitialize(FirebaseUser firebaseUser) {
+        this.activeUsername = firebaseUser.getDisplayName();
+        String userId = firebaseUser.getUid();
+
+        View header = navigationView.getHeaderView(0);
+        TextView usernameText = header.findViewById(R.id.username_display_text);
+        usernameText.setText(activeUsername);
+
+// TODO: finish implementing onSignedInInitialize()
+//        this.saveUserPreference(userId);
+//        new UserInfoSave().execute(firebaseUser);
+//        this.tripArchiveCheck(userId);
+    }
+
+    private void onSignedOutCleanup() {
+        this.activeUsername = ANONYMOUS;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        firebaseAuth.removeAuthStateListener(authStateListener);
     }
 }

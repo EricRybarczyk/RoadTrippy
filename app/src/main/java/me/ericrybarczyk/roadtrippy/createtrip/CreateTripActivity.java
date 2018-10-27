@@ -24,6 +24,7 @@ public class CreateTripActivity extends AppCompatActivity {
     @BindView(R.id.drawer_layout) protected DrawerLayout drawer;
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
+    private static final String TAG = CreateTripActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
