@@ -44,6 +44,7 @@ import me.ericrybarczyk.roadtrippy.maps.endpoints.FindPlacesEndpoint;
 import me.ericrybarczyk.roadtrippy.maps.endpoints.SearchService;
 import me.ericrybarczyk.roadtrippy.maps.places.Candidate;
 import me.ericrybarczyk.roadtrippy.maps.places.PlacesResponse;
+import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripContract;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.InputUtils;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
@@ -56,8 +57,8 @@ import retrofit2.Response;
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
 public class GoogleMapFragment extends Fragment
-        implements  OnMapReadyCallback, GoogleMap.OnMapClickListener,
-        GoogleMap.OnCameraMoveStartedListener, View.OnClickListener {
+        implements  OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnCameraMoveStartedListener,
+                    View.OnClickListener, AddEditTripContract.View {
 
     @BindView(R.id.search_button) protected Button searchButton;
     @BindView(R.id.set_location_button) protected Button setLocationButton;
@@ -66,6 +67,7 @@ public class GoogleMapFragment extends Fragment
 
     private TripViewModel tripViewModel;
     private TripDayViewModel tripDayViewModel;
+    private AddEditTripContract.Presenter presenter;
     private SupportMapFragment mapFragment;
     private String googleMapsApiKey;
     private GoogleMap googleMap;
@@ -372,6 +374,12 @@ public class GoogleMapFragment extends Fragment
         savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)mapLocation.longitude);
         super.onSaveInstanceState(savedInstanceState);
     }
+
+    @Override
+    public void setPresenter(AddEditTripContract.Presenter presenter) {
+
+    }
+
     public interface LocationSelectedListener {
         void onLocationSelected(LatLng location, int requestCode, String locationDescription);
         void onTripDayDestinationSelected(LatLng location, int requestCode, String locationDescription); // , Bundle args
