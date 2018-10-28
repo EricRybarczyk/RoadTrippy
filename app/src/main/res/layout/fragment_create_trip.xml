@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_view_create_trip"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/colorBackground"
+        tools:context=".MainActivity">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/right_inset_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_percent=".70"
+            android:orientation="vertical"/>
+
+        <TextView
+            android:id="@+id/heading_create_trip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/screen_heading_create_trip"
+            style="@style/ScreenHeading"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/trip_name_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/input_vertical_margin"
+            android:lines="1"
+            android:maxLines="1"
+            android:maxLength="50"
+            android:inputType="text|textCapSentences"
+            style="@style/TextInput"
+            android:hint="@string/input_trip_name_label"
+            app:layout_constraintTop_toBottomOf="@id/heading_create_trip"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/trip_name_sub_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextSubHint"
+            android:text="@string/input_trip_name_sub_hint"
+            app:layout_constraintTop_toBottomOf="@id/trip_name_text"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/departure_date_button"
+            style="@style/AppButton"
+            android:background="@drawable/button_shape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_menu_calendar"
+            android:text="@string/input_trip_departure_date_label"
+            app:layout_constraintTop_toBottomOf="@id/trip_name_sub_hint"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/return_date_button"
+            style="@style/AppButton"
+            android:background="@drawable/button_shape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_menu_calendar"
+            android:text="@string/input_trip_return_date_label"
+            app:layout_constraintTop_toBottomOf="@id/departure_date_button"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/origin_button"
+            style="@style/AppButton"
+            android:background="@drawable/button_shape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_menu_marker"
+            android:text="@string/input_trip_origin_label"
+            app:layout_constraintTop_toBottomOf="@id/return_date_button"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Button
+            android:id="@+id/destination_button"
+            style="@style/AppButton"
+            android:background="@drawable/button_shape"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_menu_marker"
+            android:text="@string/input_trip_destination_label"
+            app:layout_constraintTop_toBottomOf="@id/origin_button"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <CheckBox
+            android:id="@+id/option_return_directions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/input_vertical_margin"
+            android:text="@string/input_trip_return_option_label"
+            android:checked="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/destination_button" />
+
+        <Button
+            android:id="@+id/create_trip_next_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/AccentButton"
+            android:text="@string/input_trip_next_button_label"
+            app:layout_constraintTop_toBottomOf="@id/option_return_directions"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="1"/>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</ScrollView>

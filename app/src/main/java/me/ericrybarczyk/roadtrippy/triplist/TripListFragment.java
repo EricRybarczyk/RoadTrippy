@@ -21,7 +21,7 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
-import me.ericrybarczyk.roadtrippy.createtrip.CreateTripActivity;
+import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.maps.MapSettings;
 import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
@@ -151,7 +151,7 @@ public class TripListFragment extends Fragment implements TripListContract.View 
 
     @Override
     public void showCreateTrip() {
-        Intent intent = new Intent(getContext(), CreateTripActivity.class);
+        Intent intent = new Intent(getContext(), AddEditTripActivity.class);
         startActivityForResult(intent, RequestCodes.CREATE_TRIP_REQUEST_CODE);
     }
 

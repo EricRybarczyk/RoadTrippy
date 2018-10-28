@@ -22,16 +22,17 @@
 
         <activity
             android:name=".triplist.TripListActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name">
+            <!--android:theme="@style/AppTheme.NoActionBar"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".createtrip.CreateTripActivity"
+        <activity android:name=".tripaddedit.AddEditTripActivity"
             android:label="@string/app_label_create_trip"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".triplist.TripListActivity"/>
+        <!--android:theme="@style/AppTheme.NoActionBar"-->
 
     </application>
 
