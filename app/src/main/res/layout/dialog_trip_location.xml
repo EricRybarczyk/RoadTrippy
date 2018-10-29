@@ -2,54 +2,55 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground">
+    android:background="@color/colorBackground"
+    tools:context=".tripaddedit.AddEditTripActivity">
 
     <TextView
-        android:id="@+id/instructions_text_trip_location_picker"
+        android:id="@+id/instructions_text_tlp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/map_select_location_instructions"
-        app:layout_constraintStart_toStartOf="@+id/guideline_start_trip_location_picker"
-        app:layout_constraintTop_toTopOf="@+id/guideline_top_trip_location_picker" />
+        app:layout_constraintStart_toStartOf="@+id/guideline_start_tlp"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top_tlp" />
 
     <EditText
-        android:id="@+id/search_text_trip_location_picker"
+        android:id="@+id/search_text_tlp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:hint="@string/map_select_location_search_hint"
         android:inputType="text"
-        app:layout_constraintEnd_toStartOf="@+id/search_button_trip_location_picker"
-        app:layout_constraintStart_toStartOf="@+id/guideline_start_trip_location_picker"
-        app:layout_constraintTop_toBottomOf="@+id/instructions_text_trip_location_picker"
-        app:layout_constraintBaseline_toBaselineOf="@id/search_button"/>
+        app:layout_constraintEnd_toStartOf="@+id/search_button_tlp"
+        app:layout_constraintStart_toStartOf="@+id/guideline_start_tlp"
+        app:layout_constraintTop_toBottomOf="@+id/instructions_text_tlp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/search_button_tlp"/>
 
     <Button
-        android:id="@+id/search_button_trip_location_picker"
+        android:id="@+id/search_button_tlp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/instructions_text_trip_location_picker"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintTop_toBottomOf="@+id/instructions_text_tlp"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_end_tlp"
         android:text="@string/map_select_location_button_search_label"
         style="@style/AccentButton.Condensed" />
 
-
     <FrameLayout
-        android:id="@+id/map_container_trip_location_picker"
+        android:id="@+id/map_container_tlp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/map_vertical_margin"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_button"
-        app:layout_constraintBottom_toTopOf="@+id/set_location_button_trip_location_picker">
+        app:layout_constraintTop_toBottomOf="@+id/search_button_tlp"
+        app:layout_constraintBottom_toTopOf="@+id/set_location_button_tlp">
 
         <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/map_trip_location_picker"
+            android:id="@+id/map_tlp"
             class="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -59,53 +60,53 @@
     </FrameLayout>
 
     <EditText
-        android:id="@+id/description_text_trip_location_picker"
+        android:id="@+id/description_text_tlp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:hint="@string/map_location_description_hint"
         android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@+id/map_container_trip_location_picker"
-        app:layout_constraintStart_toStartOf="@+id/guideline_start_trip_location_picker"
-        app:layout_constraintEnd_toStartOf="@+id/set_location_button_trip_location_picker"
-        app:layout_constraintBaseline_toBaselineOf="@id/set_location_button"/>
+        app:layout_constraintTop_toBottomOf="@+id/map_container_tlp"
+        app:layout_constraintStart_toStartOf="@+id/guideline_start_tlp"
+        app:layout_constraintEnd_toStartOf="@+id/set_location_button_tlp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/set_location_button_tlp"/>
 
     <Button
-        android:id="@+id/set_location_button_trip_location_picker"
+        android:id="@+id/set_location_button_tlp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/map_container_trip_location_picker"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom_trip_location_picker"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintTop_toBottomOf="@+id/map_container_tlp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom_tlp"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_end_tlp"
         android:text="@string/map_select_location_button_save_label"
         style="@style/AccentButton"/>
     <!-- app:layout_constraintStart_toStartOf="@+id/guideline_start" -->
 
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline_start_trip_location_picker"
+        android:id="@+id/guideline_start_tlp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_begin="8dp" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline_end_trip_location_picker"
+        android:id="@+id/guideline_end_tlp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_end="8dp" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline_top_trip_location_picker"
+        android:id="@+id/guideline_top_tlp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="8dp" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline_bottom_trip_location_picker"
+        android:id="@+id/guideline_bottom_tlp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

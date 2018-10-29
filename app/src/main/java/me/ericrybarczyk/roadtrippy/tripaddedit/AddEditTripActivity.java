@@ -54,21 +54,11 @@ public class AddEditTripActivity extends AppCompatActivity implements MapDisplay
 
         verifyFirebaseUser();
 
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_container);
-        if (fragment == null) {
-            Log.d(TAG, "Loading AddEditTripFragment from null");
-            loadAddEditTripFragment();
+        AddEditTripFragment addEditTripFragment = (AddEditTripFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
+        if (addEditTripFragment == null) {
+            addEditTripFragment = AddEditTripFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), addEditTripFragment, R.id.content_container);
         }
-        if (fragment instanceof AddEditTripFragment) {
-            Log.d(TAG, "We have an AddEditTripFragment");
-            loadAddEditTripFragment();
-
-        } else if (fragment instanceof GoogleMapFragment) {
-            Log.d((TAG), "We have a GoogleMapFragment");
-            loadGoogleMapFragment(RequestCodes.TRIP_DESTINATION_REQUEST_CODE, FragmentTags.TAG_CREATE_TRIP);
-        }
-
-
 
         // TODO: load saved instance state if it exists
 

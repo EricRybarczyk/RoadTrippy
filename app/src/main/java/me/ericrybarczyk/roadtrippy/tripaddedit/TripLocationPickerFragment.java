@@ -41,10 +41,10 @@ public class TripLocationPickerFragment extends DialogFragment
     private String argumentLocationDescription;
     private static final String TAG = TripLocationPickerFragment.class.getSimpleName();
 
-    @BindView(R.id.search_button_trip_location_picker) protected Button searchButton;
-    @BindView(R.id.set_location_button_trip_location_picker) protected Button setLocationButton;
-    @BindView(R.id.description_text_trip_location_picker) protected EditText locationDescription;
-    @BindView(R.id.search_text_trip_location_picker) protected EditText searchText;
+    @BindView(R.id.search_button_tlp) protected Button searchButton;
+    @BindView(R.id.set_location_button_tlp) protected Button setLocationButton;
+    @BindView(R.id.description_text_tlp) protected EditText locationDescription;
+    @BindView(R.id.search_text_tlp) protected EditText searchText;
 
     public static TripLocationPickerFragment newInstance(int requestCode) {
         TripLocationPickerFragment tripLocationPickerFragment = new TripLocationPickerFragment();
@@ -96,6 +96,14 @@ public class TripLocationPickerFragment extends DialogFragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.dialog_trip_location, container, false);
         ButterKnife.bind(this, rootView);
+        rootView.clearFocus();
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         searchButton.setOnClickListener(this);
 
@@ -105,15 +113,13 @@ public class TripLocationPickerFragment extends DialogFragment
         }
 
 
-        rootView.clearFocus();
-        return rootView;
+        view.clearFocus();
     }
-
-
 
     @Override
     public void onResume() {
         // Technique for full-size dialog display is from https://guides.codepath.com/android/Using-DialogFragment#sizing-dialogs
+        // TODO: revisit sizing, maybe 95%
         // Get existing layout params for the window
         ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
         // Assign window properties to fill the parent

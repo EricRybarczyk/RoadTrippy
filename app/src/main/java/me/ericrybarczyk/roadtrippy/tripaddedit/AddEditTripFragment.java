@@ -109,12 +109,16 @@ public class AddEditTripFragment extends Fragment
 
         destinationButton.setOnClickListener(v -> {
             saveTripName();
-            if (tripViewModel.getDestinationLatLng() != null) {
-                // request a map centered on the location already selected
-                mapDisplayRequestListener.onMapDisplayRequested(RequestCodes.TRIP_DESTINATION_REQUEST_CODE, FragmentTags.TAG_CREATE_TRIP, tripViewModel.getDestinationLatLng(), tripViewModel.getDestinationDescription());
-            } else {
-                mapDisplayRequestListener.onMapDisplayRequested(RequestCodes.TRIP_DESTINATION_REQUEST_CODE, FragmentTags.TAG_CREATE_TRIP);
-            }
+
+            TripLocationPickerFragment tripLocationPickerFragment = TripLocationPickerFragment.newInstance(RequestCodes.TRIP_DESTINATION_REQUEST_CODE);
+            tripLocationPickerFragment.show(getChildFragmentManager(), FragmentTags.TAG_CREATE_TRIP);
+
+//            if (tripViewModel.getDestinationLatLng() != null) {
+//                // request a map centered on the location already selected
+//                mapDisplayRequestListener.onMapDisplayRequested(RequestCodes.TRIP_DESTINATION_REQUEST_CODE, FragmentTags.TAG_CREATE_TRIP, tripViewModel.getDestinationLatLng(), tripViewModel.getDestinationDescription());
+//            } else {
+//                mapDisplayRequestListener.onMapDisplayRequested(RequestCodes.TRIP_DESTINATION_REQUEST_CODE, FragmentTags.TAG_CREATE_TRIP);
+//            }
         });
 
         nextStepButton.setOnClickListener(v -> {
