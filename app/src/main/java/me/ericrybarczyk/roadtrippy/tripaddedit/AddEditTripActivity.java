@@ -20,15 +20,13 @@ import com.google.firebase.auth.FirebaseUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
-import me.ericrybarczyk.roadtrippy.maps.GoogleMapFragment;
-import me.ericrybarczyk.roadtrippy.maps.MapDisplayRequestListener;
 import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
 import me.ericrybarczyk.roadtrippy.triplist.TripListActivity;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
 import me.ericrybarczyk.roadtrippy.util.FragmentTags;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 
-public class AddEditTripActivity extends AppCompatActivity implements MapDisplayRequestListener, GoogleMapFragment.LocationSelectedListener {
+public class AddEditTripActivity extends AppCompatActivity {
 
     private AddEditTripPresenter addEditTripPresenter;
     private FirebaseUser firebaseUser;
@@ -59,27 +57,10 @@ public class AddEditTripActivity extends AppCompatActivity implements MapDisplay
             addEditTripFragment = AddEditTripFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), addEditTripFragment, R.id.content_container);
         }
+        addEditTripPresenter = new AddEditTripPresenter(new TripRepository(), firebaseUser, addEditTripFragment);
 
         // TODO: load saved instance state if it exists
 
-    }
-
-    void loadAddEditTripFragment() {
-        AddEditTripFragment addEditTripFragment = (AddEditTripFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
-        if (addEditTripFragment == null) {
-            addEditTripFragment = AddEditTripFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), addEditTripFragment, R.id.content_container);
-        }
-        addEditTripPresenter = new AddEditTripPresenter(new TripRepository(), firebaseUser, addEditTripFragment);
-    }
-
-    void loadGoogleMapFragment(int requestCode, String returnToFragmentTag) {
-        GoogleMapFragment googleMapFragment = (GoogleMapFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
-        if (googleMapFragment == null) {
-            googleMapFragment = GoogleMapFragment.newInstance(requestCode, returnToFragmentTag);
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), googleMapFragment, R.id.content_container);
-        }
-        addEditTripPresenter = new AddEditTripPresenter(new TripRepository(), firebaseUser, googleMapFragment);
     }
 
     private void verifyFirebaseUser() {
@@ -124,23 +105,4 @@ public class AddEditTripActivity extends AppCompatActivity implements MapDisplay
         return true;
     }
 
-    @Override
-    public void onMapDisplayRequested(int requestCode, String returnToFragmentTag) {
-        loadGoogleMapFragment(requestCode, returnToFragmentTag);
-    }
-
-    @Override
-    public void onMapDisplayRequested(int requestCode, String returnToFragmentTag, LatLng displayLocation, String locationDescription) {
-
-    }
-
-    @Override
-    public void onLocationSelected(LatLng location, int requestCode, String locationDescription) {
-
-    }
-
-    @Override
-    public void onTripDayDestinationSelected(LatLng location, int requestCode, String locationDescription) {
-
-    }
 }

@@ -1,7 +1,6 @@
 package me.ericrybarczyk.roadtrippy.tripaddedit;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -20,7 +19,6 @@ import org.threeten.bp.format.FormatStyle;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
-import me.ericrybarczyk.roadtrippy.maps.MapDisplayRequestListener;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.FragmentTags;
 import me.ericrybarczyk.roadtrippy.util.InputUtils;
@@ -36,7 +34,6 @@ public class AddEditTripFragment extends Fragment
 
     private TripViewModel tripViewModel;
     private AddEditTripContract.Presenter presenter;
-    private MapDisplayRequestListener mapDisplayRequestListener;
 
     @BindView(R.id.trip_name_text) protected EditText tripNameText;
     @BindView(R.id.departure_date_button) protected Button departureDateButton;
@@ -114,7 +111,7 @@ public class AddEditTripFragment extends Fragment
             tripLocationPickerFragment.show(getChildFragmentManager(), FragmentTags.TAG_CREATE_TRIP);
 
 //            if (tripViewModel.getDestinationLatLng() != null) {
-//                // request a map centered on the location already selected
+//   TODO             // request a map centered on the location already selected
 //                mapDisplayRequestListener.onMapDisplayRequested(RequestCodes.TRIP_DESTINATION_REQUEST_CODE, FragmentTags.TAG_CREATE_TRIP, tripViewModel.getDestinationLatLng(), tripViewModel.getDestinationDescription());
 //            } else {
 //                mapDisplayRequestListener.onMapDisplayRequested(RequestCodes.TRIP_DESTINATION_REQUEST_CODE, FragmentTags.TAG_CREATE_TRIP);
@@ -124,7 +121,7 @@ public class AddEditTripFragment extends Fragment
         nextStepButton.setOnClickListener(v -> {
             saveTripName();
             if (isValidForSave()) {
-                //fragmentNavigationRequestListener.onFragmentNavigationRequest(FragmentTags.TAG_TRIP_OVERVIEW_MAP);
+                //TODO - EVAL: fragmentNavigationRequestListener.onFragmentNavigationRequest(FragmentTags.TAG_TRIP_OVERVIEW_MAP);
             } else {
                 Toast.makeText(getContext(), R.string.error_create_trip_data_validation, Toast.LENGTH_LONG).show();
             }
@@ -170,14 +167,6 @@ public class AddEditTripFragment extends Fragment
     @Override
     public void onTripOriginSelected(String key) {
 
-    }@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof MapDisplayRequestListener) {
-            mapDisplayRequestListener = (MapDisplayRequestListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement MapDisplayRequestListener");
-        }
     }
 
     @Override
