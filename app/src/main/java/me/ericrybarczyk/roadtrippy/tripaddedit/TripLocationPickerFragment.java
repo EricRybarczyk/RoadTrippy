@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,9 +19,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -41,6 +37,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.maps.MapSettings;
 import me.ericrybarczyk.roadtrippy.maps.endpoints.FindPlacesEndpoint;
@@ -51,7 +49,6 @@ import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.InputUtils;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,7 +75,6 @@ public class TripLocationPickerFragment extends DialogFragment
     @BindView(R.id.set_location_button_tlp) protected Button setLocationButton;
     @BindView(R.id.description_text_tlp) protected EditText locationDescription;
     @BindView(R.id.search_text_tlp) protected EditText searchText;
-    //@BindView(R.id.map_tlp) protected SupportMapFragment mapFragment;
 
     public static TripLocationPickerFragment newInstance(int requestCode) {
         TripLocationPickerFragment tripLocationPickerFragment = new TripLocationPickerFragment();
@@ -161,13 +157,12 @@ public class TripLocationPickerFragment extends DialogFragment
                 }
                 InputUtils.hideKeyboardFrom(getContext(), searchText);
 
-                if (requestCode == RequestCodes.TRIP_DAY_DESTINATION_REQUEST_CODE) {
-                    //TODO - EVAL: locationSelectedListener.onTripDayDestinationSelected(mapLocation, requestCode, locationDescription.getText().toString());
-                } else {
-                    //TODO - EVAL: locationSelectedListener.onLocationSelected(mapLocation, requestCode, locationDescription.getText().toString());
+                TripLocationSelectedListener listener = (TripLocationSelectedListener) getTargetFragment();
+                if (listener == null) {
+                    throw new RuntimeException(TAG + " must implement TripLocationSelectedListener");
                 }
-
-                //TODO - EVAL: fragmentNavigationRequestListener.onFragmentNavigationRequest(returnFragmentTag);
+                listener.onTripLocationSelected(mapLocation, locationDescription.getText().toString(), requestCode);
+                dismiss();
             }
         });
 
@@ -184,9 +179,8 @@ public class TripLocationPickerFragment extends DialogFragment
     }
 
     private void saveMapSnapshotImage(Bitmap bitmap) {
-        File imageDir = getContext().getDir(MapSettings.DESTINATION_MAP_IMAGE_DIRECTORY, Context.MODE_PRIVATE);
 
-        // slice a part of the image for use in trip list view
+        // calculations to slice a part of the image for use in trip list view
         int currentWidth = bitmap.getWidth();
         int currentHeight = bitmap.getHeight();
         // original is slightly portrait. Remove 20% horizontal 60% vertical, keep centered remainder. Looks good in List View, Picasso centers to fit.
@@ -195,25 +189,29 @@ public class TripLocationPickerFragment extends DialogFragment
         int resizedWidth = currentWidth - (startX * 2);
         int resizedHeight = currentHeight - (startY * 2);
 
-        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, startX, startY, resizedWidth, resizedHeight);
-
-        // save the main image now
-        File mainFile = new File(imageDir, MapSettings.DESTINATION_MAP_MAIN_PREFIX + tripViewModel.getTripId() + MapSettings.DESTINATION_MAP_IMAGE_EXTENSION);
-        File resizedFile = new File(imageDir, MapSettings.DESTINATION_MAP_SLICED_PREFIX + tripViewModel.getTripId() + MapSettings.DESTINATION_MAP_IMAGE_EXTENSION);
-
         FileOutputStream fos = null;
         try {
+            File imageDir = getTargetFragment().getContext().getDir(MapSettings.DESTINATION_MAP_IMAGE_DIRECTORY, Context.MODE_PRIVATE);
+
+            // main image is used on trip detail screen
+            File mainFile = new File(imageDir, MapSettings.DESTINATION_MAP_MAIN_PREFIX + tripViewModel.getTripId() + MapSettings.DESTINATION_MAP_IMAGE_EXTENSION);
             fos = new FileOutputStream(mainFile);
             bitmap.compress(Bitmap.CompressFormat.PNG, MapSettings.MAP_IMAGE_SAVE_QUALITY, fos);
+
+            // resized is a narrow image for use in main trip list screen
+            Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, startX, startY, resizedWidth, resizedHeight);
+            File resizedFile = new File(imageDir, MapSettings.DESTINATION_MAP_SLICED_PREFIX + tripViewModel.getTripId() + MapSettings.DESTINATION_MAP_IMAGE_EXTENSION);
             fos = new FileOutputStream(resizedFile);
             resizedBitmap.compress(Bitmap.CompressFormat.PNG, MapSettings.MAP_IMAGE_SAVE_QUALITY, fos);
+
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            // in case of file errors, placeholder images will be acceptable
+            Log.e(TAG, e.getMessage());
         } finally {
             try {
                 fos.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getMessage());
             }
         }
     }
@@ -341,5 +339,9 @@ public class TripLocationPickerFragment extends DialogFragment
         savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)mapLocation.latitude);
         savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)mapLocation.longitude);
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public interface TripLocationSelectedListener {
+        void onTripLocationSelected(LatLng location, String description, int requestCode);
     }
 }

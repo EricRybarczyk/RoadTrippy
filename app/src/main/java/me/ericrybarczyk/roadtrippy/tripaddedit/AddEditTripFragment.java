@@ -12,6 +12,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
@@ -30,7 +32,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class AddEditTripFragment extends Fragment
         implements  AddEditTripContract.View,
                     TripOriginPickerFragment.TripOriginSelectedListener,
-                    DatePickerFragment.TripDateSelectedListener {
+                    DatePickerFragment.TripDateSelectedListener,
+                    TripLocationPickerFragment.TripLocationSelectedListener {
 
     private TripViewModel tripViewModel;
     private AddEditTripContract.Presenter presenter;
@@ -108,7 +111,8 @@ public class AddEditTripFragment extends Fragment
             saveTripName();
 
             TripLocationPickerFragment tripLocationPickerFragment = TripLocationPickerFragment.newInstance(RequestCodes.TRIP_DESTINATION_REQUEST_CODE);
-            tripLocationPickerFragment.show(getChildFragmentManager(), FragmentTags.TAG_CREATE_TRIP);
+            tripLocationPickerFragment.setTargetFragment(AddEditTripFragment.this, RequestCodes.TRIP_DESTINATION_REQUEST_CODE);
+            tripLocationPickerFragment.show(getFragmentManager(), FragmentTags.TAG_CREATE_TRIP);
 
 //            if (tripViewModel.getDestinationLatLng() != null) {
 //   TODO             // request a map centered on the location already selected
@@ -172,5 +176,19 @@ public class AddEditTripFragment extends Fragment
     @Override
     public void setPresenter(AddEditTripContract.Presenter presenter) {
         this.presenter = checkNotNull(presenter);
+    }
+
+    @Override
+    public void onTripLocationSelected(LatLng location, String description, int requestCode) {
+        switch (requestCode) {
+            case RequestCodes.TRIP_ORIGIN_REQUEST_CODE:
+                // TODO
+                Toast.makeText(getContext(), "Origin: " + description, Toast.LENGTH_SHORT).show();
+                break;
+            case RequestCodes.TRIP_DESTINATION_REQUEST_CODE:
+                // TODO
+                Toast.makeText(getContext(), "Destination: " + description, Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }
