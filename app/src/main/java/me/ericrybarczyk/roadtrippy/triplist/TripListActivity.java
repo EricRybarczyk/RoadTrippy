@@ -1,20 +1,31 @@
 package me.ericrybarczyk.roadtrippy.triplist;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -45,6 +56,8 @@ public class TripListActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser firebaseUser;
+    private Location lastKnownLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +78,9 @@ public class TripListActivity extends AppCompatActivity {
 
         // TODO: load saved instance state if it exists
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        verifyPermissions();
+        updateLastKnownLocation();
         setupFirebaseAuth();
     }
 
@@ -77,6 +93,50 @@ public class TripListActivity extends AppCompatActivity {
 
         tripListPresenter = new TripListPresenter(new TripRepository(), tripListFragment, firebaseUser);
         tripListFragment.setPresenter(tripListPresenter);
+    }
+
+    private void verifyPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted - request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    RequestCodes.LOCATION_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case RequestCodes.LOCATION_PERMISSIONS_REQUEST_CODE: {
+                updateLastKnownLocation();
+                break;
+            }
+            default: {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void updateLastKnownLocation() {
+        fusedLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        lastKnownLocation = location;
+                        Log.i(TAG, "lastKnownLocation updated");
+                    }
+
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "fusedLocationProviderClient onFailure: " + e.getMessage());
+                    }
+                });
     }
 
     private void setupNavigationDrawer() {
