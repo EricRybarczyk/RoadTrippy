@@ -21,6 +21,7 @@ import org.threeten.bp.format.FormatStyle;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
+import me.ericrybarczyk.roadtrippy.maps.MapSettings;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.FragmentTags;
 import me.ericrybarczyk.roadtrippy.util.InputUtils;
@@ -66,7 +67,7 @@ public class AddEditTripFragment extends Fragment
         final View rootView = inflater.inflate(R.layout.fragment_create_trip, container, false);
         ButterKnife.bind(this, rootView);
 
-        if (tripViewModel.isEdited()) {
+        if (tripViewModel.isEdited()) {// TODO: isEdited per-value
             tripNameText.setText(tripViewModel.getDescription());
             departureDateButton.setText(tripViewModel.getDepartureDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
             returnDateButton.setText(tripViewModel.getReturnDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
@@ -109,17 +110,22 @@ public class AddEditTripFragment extends Fragment
 
         destinationButton.setOnClickListener(v -> {
             saveTripName();
-
             TripLocationPickerFragment tripLocationPickerFragment = TripLocationPickerFragment.newInstance(RequestCodes.TRIP_DESTINATION_REQUEST_CODE);
+            tripLocationPickerFragment.setPresenter(presenter);
+            // if trip already has a destination set we need to show that on the map
+            if (tripViewModel.getDestinationLatLng() != null) {
+                Bundle args = new Bundle();
+                args.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)tripViewModel.getDestinationLatLng().latitude);
+                args.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)tripViewModel.getDestinationLatLng().longitude);
+                args.putString(MapSettings.KEY_MAP_DISPLAY_LOCATION_DESCRIPTION, tripViewModel.getDestinationDescription());
+                if (tripLocationPickerFragment.getArguments() != null) {
+                    tripLocationPickerFragment.getArguments().putAll(args);
+                } else {
+                    tripLocationPickerFragment.setArguments(args);
+                }
+            }
             tripLocationPickerFragment.setTargetFragment(AddEditTripFragment.this, RequestCodes.TRIP_DESTINATION_REQUEST_CODE);
             tripLocationPickerFragment.show(getFragmentManager(), FragmentTags.TAG_CREATE_TRIP);
-
-//            if (tripViewModel.getDestinationLatLng() != null) {
-//   TODO             // request a map centered on the location already selected
-//                mapDisplayRequestListener.onMapDisplayRequested(RequestCodes.TRIP_DESTINATION_REQUEST_CODE, FragmentTags.TAG_CREATE_TRIP, tripViewModel.getDestinationLatLng(), tripViewModel.getDestinationDescription());
-//            } else {
-//                mapDisplayRequestListener.onMapDisplayRequested(RequestCodes.TRIP_DESTINATION_REQUEST_CODE, FragmentTags.TAG_CREATE_TRIP);
-//            }
         });
 
         nextStepButton.setOnClickListener(v -> {
@@ -182,12 +188,12 @@ public class AddEditTripFragment extends Fragment
     public void onTripLocationSelected(LatLng location, String description, int requestCode) {
         switch (requestCode) {
             case RequestCodes.TRIP_ORIGIN_REQUEST_CODE:
-                // TODO
-                Toast.makeText(getContext(), "Origin: " + description, Toast.LENGTH_SHORT).show();
+                tripViewModel.setOriginLatLng(location);
+                tripViewModel.setOriginDescription(description);
                 break;
             case RequestCodes.TRIP_DESTINATION_REQUEST_CODE:
-                // TODO
-                Toast.makeText(getContext(), "Destination: " + description, Toast.LENGTH_SHORT).show();
+                tripViewModel.setDestinationLatLng(location);
+                tripViewModel.setDestinationDescription(description);
                 break;
         }
     }

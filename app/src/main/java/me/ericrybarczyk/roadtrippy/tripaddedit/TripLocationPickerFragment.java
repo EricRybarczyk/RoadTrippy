@@ -56,16 +56,17 @@ import retrofit2.Response;
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
 public class TripLocationPickerFragment extends DialogFragment
-        implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
-        GoogleMap.OnCameraMoveStartedListener, View.OnClickListener {
+        implements  OnMapReadyCallback, GoogleMap.OnMapClickListener,
+                    GoogleMap.OnCameraMoveStartedListener, View.OnClickListener {
 
     private TripViewModel tripViewModel;
+    private AddEditTripContract.Presenter presenter;
     private SupportMapFragment mapFragment;
     private String googleMapsApiKey;
     private GoogleMap googleMap;
     private LatLng mapLocation;
-    private boolean displayForUserCurrentLocation;
     private CameraPosition cameraPosition;
+    private boolean displayForUserCurrentLocation;
     private float lastMapZoomLevel;
     private int requestCode; // passed in from caller to be returned with map location
     private String argumentLocationDescription;
@@ -134,6 +135,10 @@ public class TripLocationPickerFragment extends DialogFragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (presenter == null) {
+            throw new RuntimeException(TAG + ": Must call setPresenter() after you instantiate the instance, before the View is created.");
+        }
+
         mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map_tlp);
         searchButton.setOnClickListener(this);
 
@@ -151,7 +156,7 @@ public class TripLocationPickerFragment extends DialogFragment
                     googleMap.snapshot(new GoogleMap.SnapshotReadyCallback() {
                         @Override
                         public void onSnapshotReady(Bitmap bitmap) {
-                            saveMapSnapshotImage(bitmap);
+                            presenter.saveMapSnapshotImage(getTargetFragment().getContext(), bitmap, tripViewModel.getTripId());
                         }
                     });
                 }
@@ -178,43 +183,8 @@ public class TripLocationPickerFragment extends DialogFragment
         view.clearFocus();
     }
 
-    private void saveMapSnapshotImage(Bitmap bitmap) {
+    // TODO: move to Presenter, if I can get a reference to it?
 
-        // calculations to slice a part of the image for use in trip list view
-        int currentWidth = bitmap.getWidth();
-        int currentHeight = bitmap.getHeight();
-        // original is slightly portrait. Remove 20% horizontal 60% vertical, keep centered remainder. Looks good in List View, Picasso centers to fit.
-        int startX = Math.round(currentWidth * 0.1f);
-        int startY = Math.round(currentHeight * 0.3f);
-        int resizedWidth = currentWidth - (startX * 2);
-        int resizedHeight = currentHeight - (startY * 2);
-
-        FileOutputStream fos = null;
-        try {
-            File imageDir = getTargetFragment().getContext().getDir(MapSettings.DESTINATION_MAP_IMAGE_DIRECTORY, Context.MODE_PRIVATE);
-
-            // main image is used on trip detail screen
-            File mainFile = new File(imageDir, MapSettings.DESTINATION_MAP_MAIN_PREFIX + tripViewModel.getTripId() + MapSettings.DESTINATION_MAP_IMAGE_EXTENSION);
-            fos = new FileOutputStream(mainFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, MapSettings.MAP_IMAGE_SAVE_QUALITY, fos);
-
-            // resized is a narrow image for use in main trip list screen
-            Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, startX, startY, resizedWidth, resizedHeight);
-            File resizedFile = new File(imageDir, MapSettings.DESTINATION_MAP_SLICED_PREFIX + tripViewModel.getTripId() + MapSettings.DESTINATION_MAP_IMAGE_EXTENSION);
-            fos = new FileOutputStream(resizedFile);
-            resizedBitmap.compress(Bitmap.CompressFormat.PNG, MapSettings.MAP_IMAGE_SAVE_QUALITY, fos);
-
-        } catch (FileNotFoundException e) {
-            // in case of file errors, placeholder images will be acceptable
-            Log.e(TAG, e.getMessage());
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
-            }
-        }
-    }
 
     @Override
     public void onResume() {
@@ -339,6 +309,10 @@ public class TripLocationPickerFragment extends DialogFragment
         savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)mapLocation.latitude);
         savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)mapLocation.longitude);
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public void setPresenter(AddEditTripContract.Presenter addEditTripPresenter) {
+        this.presenter = addEditTripPresenter;
     }
 
     public interface TripLocationSelectedListener {

@@ -62,8 +62,13 @@ public class TripListActivity extends AppCompatActivity {
         toggle.syncState();
 
         setupNavigationDrawer();
-        setupFirebaseAuth();
 
+        // TODO: load saved instance state if it exists
+
+        setupFirebaseAuth();
+    }
+
+    private void initializeDisplay() {
         TripListFragment tripListFragment = (TripListFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
         if (tripListFragment == null) {
             tripListFragment = TripListFragment.newInstance();
@@ -72,10 +77,6 @@ public class TripListActivity extends AppCompatActivity {
 
         tripListPresenter = new TripListPresenter(new TripRepository(), tripListFragment, firebaseUser);
         tripListFragment.setPresenter(tripListPresenter);
-
-        // TODO: load saved instance state if it exists
-
-
     }
 
     private void setupNavigationDrawer() {
@@ -143,6 +144,8 @@ public class TripListActivity extends AppCompatActivity {
         View header = navigationView.getHeaderView(0);
         TextView usernameText = header.findViewById(R.id.username_display_text);
         usernameText.setText(activeUsername);
+
+        initializeDisplay();
 
 // TODO: finish implementing onSignedInInitialize()
 //        this.saveUserPreference(userId);
