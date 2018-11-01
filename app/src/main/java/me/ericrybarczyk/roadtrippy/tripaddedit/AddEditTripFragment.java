@@ -1,9 +1,12 @@
 package me.ericrybarczyk.roadtrippy.tripaddedit;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -24,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.maps.MapSettings;
+import me.ericrybarczyk.roadtrippy.triplist.TripListActivity;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.FragmentTags;
 import me.ericrybarczyk.roadtrippy.util.InputUtils;
@@ -34,9 +38,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AddEditTripFragment extends Fragment
         implements  AddEditTripContract.View,
-                    TripOriginPickerFragment.TripOriginSelectedListener,
                     DatePickerFragment.TripDateSelectedListener,
-                    TripLocationPickerFragment.TripLocationSelectedListener {
+                    TripOriginPickerFragment.TripOriginSelectedListener,
+                    TripLocationPickerFragment.TripLocationSelectedListener,
+                    TripOverviewMapFragment.TripConfirmationListener {
 
     private TripViewModel tripViewModel;
     private AddEditTripContract.Presenter presenter;
@@ -133,7 +138,9 @@ public class AddEditTripFragment extends Fragment
         nextStepButton.setOnClickListener(v -> {
             saveTripName();
             if (tripViewModel.isValidForSave()) {
-                //TODO - EVAL: fragmentNavigationRequestListener.onFragmentNavigationRequest(FragmentTags.TAG_TRIP_OVERVIEW_MAP);
+                TripOverviewMapFragment tripOverviewMapFragment = TripOverviewMapFragment.newInstance();
+                tripOverviewMapFragment.setTargetFragment(AddEditTripFragment.this, RequestCodes.TRIP_OVERVIEW_MAP_REQUEST_CODE);
+                tripOverviewMapFragment.show(getFragmentManager(), FragmentTags.TAG_TRIP_OVERVIEW_MAP);
             } else {
                 Toast.makeText(getContext(), R.string.error_create_trip_data_validation, Toast.LENGTH_LONG).show();
             }
@@ -225,5 +232,16 @@ public class AddEditTripFragment extends Fragment
                 destinationButton.setText(description);
                 break;
         }
+    }
+
+    @Override
+    public void onTripConfirmation() {
+        presenter.saveTrip(getContext(), tripViewModel);
+    }
+
+    @Override
+    public void showTripList() {
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 }

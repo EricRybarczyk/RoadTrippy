@@ -3,7 +3,6 @@ package me.ericrybarczyk.roadtrippy.tripaddedit;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
@@ -31,11 +30,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

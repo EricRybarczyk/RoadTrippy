@@ -54,9 +54,12 @@ public class TripOverviewMapFragment extends DialogFragment implements OnMapRead
     @BindView(R.id.heading_create_trip_tom) protected TextView headingText;
     @BindView(R.id.trip_confirm_button_tom) protected Button tripConfirmButton;
 
-    public TripOverviewMapFragment() {
+    public static TripOverviewMapFragment newInstance() {
+        return new TripOverviewMapFragment();
     }
 
+    public TripOverviewMapFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

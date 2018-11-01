@@ -21,10 +21,10 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
-import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.maps.MapSettings;
 import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
+import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.util.FontManager;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
@@ -160,8 +160,8 @@ public class TripListFragment extends Fragment implements TripListContract.View 
         this.presenter = checkNotNull(presenter);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 }
