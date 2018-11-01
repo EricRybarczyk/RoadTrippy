@@ -1,9 +1,11 @@
 package me.ericrybarczyk.roadtrippy.tripaddedit;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,14 +106,14 @@ public class AddEditTripFragment extends Fragment
 
         originButton.setOnClickListener(v -> {
             saveTripName();
-            TripOriginPickerFragment pickerFragment = TripOriginPickerFragment.newInstance(this);
-            pickerFragment.show(getChildFragmentManager(), ArgumentKeys.TAG_PICK_ORIGIN_DIALOG);
+            TripOriginPickerFragment pickerFragment = TripOriginPickerFragment.newInstance();
+            pickerFragment.setTargetFragment(AddEditTripFragment.this, RequestCodes.TRIP_ORIGIN_REQUEST_CODE);
+            pickerFragment.show(getFragmentManager(), ArgumentKeys.TAG_PICK_ORIGIN_DIALOG);
         });
 
         destinationButton.setOnClickListener(v -> {
             saveTripName();
             TripLocationPickerFragment tripLocationPickerFragment = TripLocationPickerFragment.newInstance(RequestCodes.TRIP_DESTINATION_REQUEST_CODE);
-            tripLocationPickerFragment.setPresenter(presenter);
             // if trip already has a destination set we need to show that on the map
             if (tripViewModel.getDestinationLatLng() != null) {
                 Bundle args = new Bundle();
@@ -130,13 +132,12 @@ public class AddEditTripFragment extends Fragment
 
         nextStepButton.setOnClickListener(v -> {
             saveTripName();
-            if (isValidForSave()) {
+            if (tripViewModel.isValidForSave()) {
                 //TODO - EVAL: fragmentNavigationRequestListener.onFragmentNavigationRequest(FragmentTags.TAG_TRIP_OVERVIEW_MAP);
             } else {
                 Toast.makeText(getContext(), R.string.error_create_trip_data_validation, Toast.LENGTH_LONG).show();
             }
         });
-
 
         rootView.clearFocus();
         InputUtils.hideKeyboardFrom(getContext(), rootView);
@@ -147,15 +148,6 @@ public class AddEditTripFragment extends Fragment
         if (tripNameText.getText().length() > 0) {
             tripViewModel.setDescription(tripNameText.getText().toString().trim());
         }
-    }
-
-    private boolean isValidForSave() {
-        return (!tripViewModel.getDescription().isEmpty())
-                && (!tripViewModel.getOriginDescription().isEmpty())
-                && (!tripViewModel.getDestinationDescription().isEmpty())
-                && (tripViewModel.getDepartureDate().compareTo(tripViewModel.getReturnDate()) <= 0)
-                && (tripViewModel.getOriginLatLng() != null)
-                && (tripViewModel.getDestinationLatLng() != null);
     }
 
     @Override
@@ -176,7 +168,42 @@ public class AddEditTripFragment extends Fragment
 
     @Override
     public void onTripOriginSelected(String key) {
+        if (key.equals(ArgumentKeys.KEY_HOME_ORIGIN)) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+            if (preferences.contains(getString(R.string.pref_key_home_latitude)) && preferences.contains(getString(R.string.pref_key_home_longitude))) {
+                tripViewModel.setOriginLatLng(
+                        new LatLng(
+                                (double) preferences.getFloat(getString(R.string.pref_key_home_latitude), 0.0f),
+                                (double) preferences.getFloat(getString(R.string.pref_key_home_longitude), 0.0f)
+                        )
+                );
+                String home = getString(R.string.word_for_HOME);
+                tripViewModel.setOriginDescription(home);
+                originButton.setText(home);
+            } else {
+                Toast.makeText(getContext(), R.string.error_home_location_preference_not_found, Toast.LENGTH_LONG).show();
+            }
 
+        } else if (key.equals(ArgumentKeys.KEY_PICK_ORIGIN)) {
+
+            TripLocationPickerFragment tripLocationPickerFragment = TripLocationPickerFragment.newInstance(RequestCodes.TRIP_ORIGIN_REQUEST_CODE);
+            tripLocationPickerFragment.setTargetFragment(AddEditTripFragment.this, RequestCodes.TRIP_ORIGIN_REQUEST_CODE);
+
+            if (tripViewModel.getOriginLatLng() != null) {
+                // request a map centered on the location already selected
+                Bundle args = new Bundle();
+                args.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)tripViewModel.getOriginLatLng().latitude);
+                args.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)tripViewModel.getOriginLatLng().longitude);
+                args.putString(MapSettings.KEY_MAP_DISPLAY_LOCATION_DESCRIPTION, tripViewModel.getOriginDescription());
+
+                if (tripLocationPickerFragment.getArguments() != null) {
+                    tripLocationPickerFragment.getArguments().putAll(args);
+                } else {
+                    tripLocationPickerFragment.setArguments(args);
+                }
+            }
+            tripLocationPickerFragment.show(getFragmentManager(), FragmentTags.TAG_CREATE_TRIP);
+        }
     }
 
     @Override
@@ -190,10 +217,12 @@ public class AddEditTripFragment extends Fragment
             case RequestCodes.TRIP_ORIGIN_REQUEST_CODE:
                 tripViewModel.setOriginLatLng(location);
                 tripViewModel.setOriginDescription(description);
+                originButton.setText(description);
                 break;
             case RequestCodes.TRIP_DESTINATION_REQUEST_CODE:
                 tripViewModel.setDestinationLatLng(location);
                 tripViewModel.setDestinationDescription(description);
+                destinationButton.setText(description);
                 break;
         }
     }

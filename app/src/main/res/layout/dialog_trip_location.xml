@@ -77,13 +77,13 @@
         app:layout_constraintTop_toBottomOf="@id/search_button_tlp"
         app:layout_constraintBottom_toTopOf="@id/set_location_button_tlp">
 
-        <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+        <!-- fragment xmlns:map="http://schemas.android.com/apk/res-auto"
             android:id="@+id/map_tlp"
             class="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             map:uiZoomControls="true"
-            map:uiZoomGestures="true" />
+            map:uiZoomGestures="true" / -->
 
     </FrameLayout>
 

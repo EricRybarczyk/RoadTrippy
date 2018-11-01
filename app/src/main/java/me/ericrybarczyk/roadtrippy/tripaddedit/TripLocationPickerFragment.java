@@ -46,6 +46,7 @@ import me.ericrybarczyk.roadtrippy.maps.endpoints.SearchService;
 import me.ericrybarczyk.roadtrippy.maps.places.Candidate;
 import me.ericrybarczyk.roadtrippy.maps.places.PlacesResponse;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
+import me.ericrybarczyk.roadtrippy.util.FileSystemUtil;
 import me.ericrybarczyk.roadtrippy.util.InputUtils;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
@@ -60,7 +61,6 @@ public class TripLocationPickerFragment extends DialogFragment
                     GoogleMap.OnCameraMoveStartedListener, View.OnClickListener {
 
     private TripViewModel tripViewModel;
-    private AddEditTripContract.Presenter presenter;
     private SupportMapFragment mapFragment;
     private String googleMapsApiKey;
     private GoogleMap googleMap;
@@ -92,13 +92,12 @@ public class TripLocationPickerFragment extends DialogFragment
         super.onCreate(savedInstanceState);
 
         googleMapsApiKey = getString(R.string.google_maps_key);
-        Log.d(TAG, "Using Maps API key: " + googleMapsApiKey);
         lastMapZoomLevel = MapSettings.MAP_DEFAULT_ZOOM;
-        displayForUserCurrentLocation = true; // by default map will show users current location
+        displayForUserCurrentLocation = true; // by default map will show user's current location
 
         if (savedInstanceState != null) {
+            requestCode = savedInstanceState.getInt(ArgumentKeys.KEY_REQUEST_CODE);
             if (savedInstanceState.containsKey(ArgumentKeys.KEY_START_LAT)) {
-                requestCode = savedInstanceState.getInt(ArgumentKeys.KEY_REQUEST_CODE);
                 lastMapZoomLevel = savedInstanceState.getFloat(ArgumentKeys.KEY_LAST_MAP_ZOOM_LEVEL);
             } else if (savedInstanceState.containsKey(MapSettings.KEY_MAP_DISPLAY_LATITUDE)) {
                 displayForUserCurrentLocation = false; // flag request to show a requested location instead of user current location
@@ -127,6 +126,12 @@ public class TripLocationPickerFragment extends DialogFragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.dialog_trip_location, container, false);
         ButterKnife.bind(this, rootView);
+
+        if (mapFragment == null) {
+            mapFragment = SupportMapFragment.newInstance();
+        }
+        getChildFragmentManager().beginTransaction().replace(R.id.map_container_tlp, mapFragment).commitNow();
+
         rootView.clearFocus();
         return rootView;
     }
@@ -135,11 +140,6 @@ public class TripLocationPickerFragment extends DialogFragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (presenter == null) {
-            throw new RuntimeException(TAG + ": Must call setPresenter() after you instantiate the instance, before the View is created.");
-        }
-
-        mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map_tlp);
         searchButton.setOnClickListener(this);
 
         if (argumentLocationDescription != null) {
@@ -156,7 +156,7 @@ public class TripLocationPickerFragment extends DialogFragment
                     googleMap.snapshot(new GoogleMap.SnapshotReadyCallback() {
                         @Override
                         public void onSnapshotReady(Bitmap bitmap) {
-                            presenter.saveMapSnapshotImage(getTargetFragment().getContext(), bitmap, tripViewModel.getTripId());
+                            FileSystemUtil.saveMapSnapshotImage(getTargetFragment().getContext(), bitmap, tripViewModel.getTripId());
                         }
                     });
                 }
@@ -164,7 +164,7 @@ public class TripLocationPickerFragment extends DialogFragment
 
                 TripLocationSelectedListener listener = (TripLocationSelectedListener) getTargetFragment();
                 if (listener == null) {
-                    throw new RuntimeException(TAG + " must implement TripLocationSelectedListener");
+                    throw new RuntimeException(TAG + ": TargetFragment of this dialog must implement TripLocationSelectedListener");
                 }
                 listener.onTripLocationSelected(mapLocation, locationDescription.getText().toString(), requestCode);
                 dismiss();
@@ -182,9 +182,6 @@ public class TripLocationPickerFragment extends DialogFragment
 
         view.clearFocus();
     }
-
-    // TODO: move to Presenter, if I can get a reference to it?
-
 
     @Override
     public void onResume() {
@@ -309,10 +306,6 @@ public class TripLocationPickerFragment extends DialogFragment
         savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)mapLocation.latitude);
         savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)mapLocation.longitude);
         super.onSaveInstanceState(savedInstanceState);
-    }
-
-    public void setPresenter(AddEditTripContract.Presenter addEditTripPresenter) {
-        this.presenter = addEditTripPresenter;
     }
 
     public interface TripLocationSelectedListener {

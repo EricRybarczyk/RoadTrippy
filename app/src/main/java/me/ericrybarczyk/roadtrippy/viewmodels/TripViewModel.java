@@ -240,4 +240,13 @@ public class TripViewModel extends ViewModel {
     public boolean isEdited() {
         return isEdited;
     }
+
+    public boolean isValidForSave() {
+        return (!this.getDescription().isEmpty())
+                && (!this.getOriginDescription().isEmpty())
+                && (!this.getDestinationDescription().isEmpty())
+                && (this.getDepartureDate().compareTo(this.getReturnDate()) <= 0)
+                && (this.getOriginLatLng() != null)
+                && (this.getDestinationLatLng() != null);
+    }
 }

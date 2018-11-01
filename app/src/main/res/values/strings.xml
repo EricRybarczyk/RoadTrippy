@@ -49,7 +49,8 @@
     <string name="map_search_call_error_message">Error: unable to perform search</string>
     <string name="map_directions_call_error_message">Error: unable to get directions</string>
     <string name="map_directions_failure">Unable to find Directions. Please adjust your Trip.</string>
-    <string name="maps_api_avoids_default">ferries</string>
+    <!-- TODO: remove item if not used-->
+    <string name="REMOVE_THIS_maps_api_avoids_default">ferries</string>
     <string name="maps_api_indicator_ferry">ferry</string>
 
     <string name="input_trip_day_primary_description">Primary activity or event today</string>

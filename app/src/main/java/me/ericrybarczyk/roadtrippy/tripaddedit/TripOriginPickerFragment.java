@@ -18,15 +18,13 @@ public class TripOriginPickerFragment extends DialogFragment  {
 
     @BindView(R.id.home_origin_button) protected Button homeOriginButton;
     @BindView(R.id.pick_origin_button) protected Button pickOriginButton;
-
-    private TripOriginSelectedListener listener;
+    private static final String TAG = TripOriginPickerFragment.class.getSimpleName();
 
     public TripOriginPickerFragment() {
     }
 
-    public static TripOriginPickerFragment newInstance(TripOriginSelectedListener listener) {
+    public static TripOriginPickerFragment newInstance() {
         TripOriginPickerFragment pickerFragment = new TripOriginPickerFragment();
-        pickerFragment.setTripOriginSelectedListener(listener);
         pickerFragment.setStyle(STYLE_NO_TITLE, 0);
         return pickerFragment;
     }
@@ -37,24 +35,21 @@ public class TripOriginPickerFragment extends DialogFragment  {
         final View rootView = inflater.inflate(R.layout.dialog_select_trip_origin, container);
         ButterKnife.bind(this, rootView);
 
+        TripOriginSelectedListener listener = (TripOriginSelectedListener) getTargetFragment();
+        if (listener == null) {
+            throw new RuntimeException(TAG + ": TargetFragment of this dialog must implement TripOriginSelectedListener");
+        }
+
         homeOriginButton.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onTripOriginSelected(ArgumentKeys.KEY_HOME_ORIGIN);
-                this.dismiss();
-            }
+            listener.onTripOriginSelected(ArgumentKeys.KEY_HOME_ORIGIN);
+            this.dismiss();
         });
         pickOriginButton.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onTripOriginSelected(ArgumentKeys.KEY_PICK_ORIGIN);
-                this.dismiss();
-            }
+            listener.onTripOriginSelected(ArgumentKeys.KEY_PICK_ORIGIN);
+            this.dismiss();
         });
 
         return rootView;
-    }
-
-    private void setTripOriginSelectedListener(TripOriginSelectedListener listener) {
-        this.listener = listener;
     }
 
     public interface TripOriginSelectedListener {
