@@ -16,10 +16,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -82,6 +84,24 @@ public class TripListActivity extends AppCompatActivity {
         verifyPermissions();
         updateLastKnownLocation();
         setupFirebaseAuth();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_sign_out:
+                AuthUI.getInstance().signOut(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void initializeDisplay() {
@@ -171,9 +191,9 @@ public class TripListActivity extends AppCompatActivity {
            including Udacity's Firebase extracurricular module in the Android Developer Nanodegree program,
            and https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md */
         firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
 
         authStateListener = firebaseAuth -> {
+            firebaseUser = firebaseAuth.getCurrentUser();
             if (firebaseUser != null) {
                 onSignedInInitialize(firebaseUser);
                 // TODO - EVAL: onFragmentNavigationRequest(FragmentTags.TAG_TRIP_LIST);
@@ -195,6 +215,19 @@ public class TripListActivity extends AppCompatActivity {
                         RequestCodes.SIGN_IN_REQUEST_CODE);
             }
         };
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.SIGN_IN_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 
     private void onSignedInInitialize(FirebaseUser firebaseUser) {
