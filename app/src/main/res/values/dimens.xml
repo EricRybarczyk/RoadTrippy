@@ -23,12 +23,16 @@
     <item name="map_bounds_expand_amount" format="float" type="dimen">1.0</item>
 
     <dimen name="trip_detail_tip_image_height">200dp</dimen>
-    <dimen name="trip_detail_divider_vertical_margin">8dp</dimen>
 
     <dimen name="trip_day_destination_label_top_margin">28dp</dimen>
     <dimen name="trip_day_user_notes_top_margin">32dp</dimen>
     <dimen name="trip_day_destination_divider_vertical_margin">6dp</dimen>
     <dimen name="trip_day_destination_item_vertical_margin">6dp</dimen>
+
+    <dimen name="guideline_default_vertical_inset">8dp</dimen>
+    <dimen name="guideline_default_horizontal_inset">8dp</dimen>
+
+    <dimen name="pref_layout_item_height">80dp</dimen>
 
     <dimen name="widget_trip_countdown_margin">8dp</dimen>
     <dimen name="widget_trip_countdown_text_margin_start">6dp</dimen>

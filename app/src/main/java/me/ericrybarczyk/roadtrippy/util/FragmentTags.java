@@ -5,4 +5,5 @@ public class FragmentTags {
     public static final String TAG_RETURN_DATE_DIALOG= "return_date_dialog";
     public static final String TAG_CREATE_TRIP = "create_trip_fragment";
     public static final String TAG_TRIP_OVERVIEW_MAP = "trip_overview_map_fragment";
+    public static final String TAG_SETTING_DRIVING_DURATION = "driving_duration_setting_dislog";
 }

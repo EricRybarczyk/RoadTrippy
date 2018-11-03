@@ -33,7 +33,9 @@
             android:label="@string/app_label_create_trip"
             android:parentActivityName=".triplist.TripListActivity"/>
         <!--android:theme="@style/AppTheme.NoActionBar"-->
-
+        <activity android:name=".settings.SettingsActivity"
+            android:label="@string/app_label_settings"
+            android:parentActivityName=".triplist.TripListActivity"/>
     </application>
 
 </manifest>

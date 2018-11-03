@@ -98,7 +98,7 @@
         <item name="android:layout_marginBottom">4dp</item>
     </style>
 
-    <style name="AccentButton.Condensed">
+    <style name="AccentButton.Condensed" parent="AccentButton"><!-- TODO: should this have a parent attribute? AccentButton? -->
         <item name="android:textSize">14sp</item>
         <item name="android:maxHeight">20dp</item>
         <item name="android:height">20dp</item>

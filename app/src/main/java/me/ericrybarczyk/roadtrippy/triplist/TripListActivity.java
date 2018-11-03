@@ -37,6 +37,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
+import me.ericrybarczyk.roadtrippy.settings.SettingsActivity;
 import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
@@ -169,14 +170,15 @@ public class TripListActivity extends AppCompatActivity {
                                 // current screen, no action
                                 break;
                             case R.id.nav_create_trip:
-                                Intent intent = new Intent(TripListActivity.this, AddEditTripActivity.class);
-                                startActivity(intent);
+                                Intent intentCreateTrip = new Intent(TripListActivity.this, AddEditTripActivity.class);
+                                startActivity(intentCreateTrip);
                                 break;
                             case R.id.nav_trip_history:
                                 // trip history activity
                                 break;
                             case R.id.nav_settings:
-                                // settings activity
+                                Intent intentSettings = new Intent(TripListActivity.this, SettingsActivity.class);
+                                startActivity(intentSettings);
                                 break;
                         }
 

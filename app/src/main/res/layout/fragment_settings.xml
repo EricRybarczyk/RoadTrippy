@@ -1,7 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_start_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/guideline_default_vertical_inset" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_end_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/guideline_default_vertical_inset" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_top_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/guideline_default_horizontal_inset" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_bottom_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/guideline_default_horizontal_inset" />
+
+    <LinearLayout
+        android:id="@+id/home_location_preference"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/pref_layout_item_height"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="@id/guideline_top_settings"
+        app:layout_constraintStart_toStartOf="@id/guideline_start_settings"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end_settings">
+
+        <TextView
+            android:id="@+id/title_home_preference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Home Location"
+            android:text="@string/pref_home_location_title"
+            style="@style/TextInputLabel"/>
+
+        <TextView
+            android:id="@+id/info_home_preference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="explanation text goes here"
+            android:text="@string/pref_home_location_info"
+            style="@style/TextSubHint" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/divider_line_home_preference"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorDividerLineMedium"
+        android:contentDescription="@string/aria_divider_line"
+        app:layout_constraintTop_toBottomOf="@id/home_location_preference"
+        app:layout_constraintStart_toStartOf="@id/guideline_start_settings"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end_settings" />
+
+    <LinearLayout
+        android:id="@+id/driving_hours_preference"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/pref_layout_item_height"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/divider_line_home_preference"
+        app:layout_constraintStart_toStartOf="@id/guideline_start_settings"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end_settings">
+
+        <TextView
+            android:id="@+id/title_driving_hours_preference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Driving Hours"
+            android:text="@string/pref_driving_hours_title"
+            style="@style/TextInputLabel"/>
+
+        <TextView
+            android:id="@+id/info_driving_hours_preference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="explanation text goes here"
+            android:text="@string/pref_driving_hours_info"
+            style="@style/TextSubHint" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/divider_line_driving_preference"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorDividerLineMedium"
+        android:contentDescription="@string/aria_divider_line"
+        app:layout_constraintTop_toBottomOf="@id/driving_hours_preference"
+        app:layout_constraintStart_toStartOf="@id/guideline_start_settings"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end_settings" />
 
 </android.support.constraint.ConstraintLayout>

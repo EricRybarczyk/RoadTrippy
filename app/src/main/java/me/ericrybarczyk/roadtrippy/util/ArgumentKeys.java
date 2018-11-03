@@ -27,4 +27,5 @@ public class ArgumentKeys {
     public static final String KEY_DIALOG_TITLE = "dialog_title";
     public static final String KEY_HOME_ORIGIN = "home_origin";
     public static final String KEY_PICK_ORIGIN = "pick_origin";
+    public static final String KEY_DRIVING_DURATION_PREFERENCE = "driving_duration_preference_key";
 }
