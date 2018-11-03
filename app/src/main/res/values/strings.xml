@@ -17,8 +17,6 @@
     <string name="menu_label_edit_trip">Edit Trip</string>
     <string name="menu_label_archive_trip">Archive Trip</string>
 
-    <string name="pref_key_home_latitude">preference_home_latitude</string>
-    <string name="pref_key_home_longitude">preference_home_longitude</string>
     <string name="pref_daily_driving_hours_default">12</string>
     <string name="pref_key_daily_driving_hours">preference_daily_driving_duration</string>
     <string name="pref_home_location_title">Home Location</string>

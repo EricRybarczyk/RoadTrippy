@@ -177,11 +177,11 @@ public class AddEditTripFragment extends Fragment
     public void onTripOriginSelected(String key) {
         if (key.equals(ArgumentKeys.KEY_HOME_ORIGIN)) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-            if (preferences.contains(getString(R.string.pref_key_home_latitude)) && preferences.contains(getString(R.string.pref_key_home_longitude))) {
+            if (preferences.contains(ArgumentKeys.KEY_HOME_LOCATION_LATITUDE_PREFERENCE) && preferences.contains(ArgumentKeys.KEY_HOME_LOCATION_LONGITUDE_PREFERENCE)) {
                 tripViewModel.setOriginLatLng(
                         new LatLng(
-                                (double) preferences.getFloat(getString(R.string.pref_key_home_latitude), 0.0f),
-                                (double) preferences.getFloat(getString(R.string.pref_key_home_longitude), 0.0f)
+                                (double) preferences.getFloat(ArgumentKeys.KEY_HOME_LOCATION_LATITUDE_PREFERENCE, 0.0f),
+                                (double) preferences.getFloat(ArgumentKeys.KEY_HOME_LOCATION_LONGITUDE_PREFERENCE, 0.0f)
                         )
                 );
                 String home = getString(R.string.word_for_HOME);

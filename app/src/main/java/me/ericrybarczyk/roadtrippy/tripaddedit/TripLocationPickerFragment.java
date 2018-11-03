@@ -286,7 +286,9 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         savedInstanceState.putInt(ArgumentKeys.KEY_REQUEST_CODE, requestCode);
-        savedInstanceState.putFloat(ArgumentKeys.KEY_LAST_MAP_ZOOM_LEVEL, lastMapZoomLevel);
+        if (googleMap != null) {
+            savedInstanceState.putFloat(ArgumentKeys.KEY_LAST_MAP_ZOOM_LEVEL, googleMap.getCameraPosition().zoom);
+        }
         savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)mapLocation.latitude);
         savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)mapLocation.longitude);
         super.onSaveInstanceState(savedInstanceState);
