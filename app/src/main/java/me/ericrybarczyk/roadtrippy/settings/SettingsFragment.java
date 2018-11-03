@@ -8,7 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,7 +20,8 @@ import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SettingsFragment extends Fragment implements SettingsContract.View,
-                                                DrivingDurationSettingFragment.DrivingDurationPreferenceSaveListener {
+                                                DrivingDurationSettingFragment.DrivingDurationPreferenceSaveListener,
+                                                HomeLocationSettingFragment.HomeLocationPreferenceSaveListener {
 
     @BindView(R.id.home_location_preference) protected LinearLayout homeLocationPreference;
     @BindView(R.id.driving_hours_preference) protected LinearLayout drivingHoursPreference;
@@ -50,7 +52,15 @@ public class SettingsFragment extends Fragment implements SettingsContract.View,
         homeLocationPreference.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Not Implemented Yet", Toast.LENGTH_LONG).show();
+                LatLng homeLocation = presenter.getHomeLocationPreference();
+                HomeLocationSettingFragment settingFragment;
+                if (homeLocation == null) {
+                    settingFragment = HomeLocationSettingFragment.newInstance();
+                } else {
+                    settingFragment = HomeLocationSettingFragment.newInstance(homeLocation);
+                }
+                settingFragment.setTargetFragment(SettingsFragment.this, RequestCodes.PREFERENCE_HOME_LOCATION_REQUEST_CODE);
+                settingFragment.show(getFragmentManager(), FragmentTags.TAG_SETTING_HOME_LOCATION);
             }
         });
         drivingHoursPreference.setOnClickListener(new View.OnClickListener() {
@@ -78,5 +88,10 @@ public class SettingsFragment extends Fragment implements SettingsContract.View,
     @Override
     public void onDrivingDurationPreferenceSave(int drivingDuration) {
         this.presenter.saveDrivingDurationPreference(drivingDuration);
+    }
+
+    @Override
+    public void onHomeLocationPreferenceSave(LatLng homeLocation) {
+        this.presenter.saveHomeLocationPreference(homeLocation);
     }
 }

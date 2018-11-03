@@ -51,8 +51,8 @@ public class SettingsActivity extends AppCompatActivity {
         SettingsFragment settingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
         if (settingsFragment == null) {
             settingsFragment = SettingsFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), settingsFragment, R.id.content_container);
         }
-        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), settingsFragment, R.id.content_container);
         settingsPresenter = new SettingsPresenter(firebaseUser, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()), settingsFragment);
     }
 

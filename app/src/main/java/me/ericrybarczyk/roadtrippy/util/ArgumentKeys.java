@@ -28,4 +28,6 @@ public class ArgumentKeys {
     public static final String KEY_HOME_ORIGIN = "home_origin";
     public static final String KEY_PICK_ORIGIN = "pick_origin";
     public static final String KEY_DRIVING_DURATION_PREFERENCE = "driving_duration_preference_key";
+    public static final String KEY_HOME_LOCATION_LATITUDE_PREFERENCE = "home_location_latitude_preference_key";
+    public static final String KEY_HOME_LOCATION_LONGITUDE_PREFERENCE = "home_location_longitude_preference_key";
 }

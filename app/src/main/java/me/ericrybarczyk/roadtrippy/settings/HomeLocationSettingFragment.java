@@ -1,20 +1,16 @@
-package me.ericrybarczyk.roadtrippy.tripaddedit;
+package me.ericrybarczyk.roadtrippy.settings;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.ViewModelProviders;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -41,47 +37,48 @@ import me.ericrybarczyk.roadtrippy.maps.endpoints.SearchService;
 import me.ericrybarczyk.roadtrippy.maps.places.Candidate;
 import me.ericrybarczyk.roadtrippy.maps.places.PlacesResponse;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
-import me.ericrybarczyk.roadtrippy.util.FileSystemUtil;
 import me.ericrybarczyk.roadtrippy.util.FragmentTags;
 import me.ericrybarczyk.roadtrippy.util.InputUtils;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
-import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
-public class TripLocationPickerFragment extends FullScreenDialogFragment
-        implements  OnMapReadyCallback, GoogleMap.OnMapClickListener,
-                    GoogleMap.OnCameraMoveStartedListener, View.OnClickListener {
+public class HomeLocationSettingFragment extends FullScreenDialogFragment
+                implements  OnMapReadyCallback, GoogleMap.OnMapClickListener,
+                            GoogleMap.OnCameraMoveStartedListener, View.OnClickListener {
 
-    private TripViewModel tripViewModel;
     private SupportMapFragment mapFragment;
     private String googleMapsApiKey;
     private GoogleMap googleMap;
-    private LatLng mapLocation;
-    private CameraPosition cameraPosition;
-    private boolean displayForUserCurrentLocation;
     private float lastMapZoomLevel;
-    private int requestCode; // passed in from caller to be returned with map location
-    private String argumentLocationDescription;
-    private static final String TAG = TripLocationPickerFragment.class.getSimpleName();
+    private LatLng homeLocation;
+    private CameraPosition cameraPosition;
 
     @BindView(R.id.search_button_tlp) protected Button searchButton;
     @BindView(R.id.set_location_button_tlp) protected Button setLocationButton;
     @BindView(R.id.description_text_tlp) protected EditText locationDescription;
     @BindView(R.id.search_text_tlp) protected EditText searchText;
 
-    public static TripLocationPickerFragment newInstance(int requestCode) {
-        TripLocationPickerFragment tripLocationPickerFragment = new TripLocationPickerFragment();
-        Bundle args = new Bundle();
-        args.putInt(ArgumentKeys.KEY_REQUEST_CODE, requestCode);
-        tripLocationPickerFragment.setArguments(args);
-        return tripLocationPickerFragment;
+    private static final String TAG = HomeLocationSettingFragment.class.getSimpleName();
+
+    public static HomeLocationSettingFragment newInstance() {
+        return new HomeLocationSettingFragment();
     }
 
-    public TripLocationPickerFragment() {}
+    public static HomeLocationSettingFragment newInstance(LatLng homeLocation) {
+        HomeLocationSettingFragment settingFragment = new HomeLocationSettingFragment();
+        Bundle args = new Bundle();
+        args.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)homeLocation.latitude);
+        args.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)homeLocation.longitude);
+        settingFragment.setArguments(args);
+        return settingFragment;
+    }
+
+    public HomeLocationSettingFragment() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,45 +86,38 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
 
         googleMapsApiKey = getString(R.string.google_maps_key);
         lastMapZoomLevel = MapSettings.MAP_DEFAULT_ZOOM;
-        displayForUserCurrentLocation = true; // by default map will show user's current location
 
         if (savedInstanceState != null) {
-            requestCode = savedInstanceState.getInt(ArgumentKeys.KEY_REQUEST_CODE);
-            if (savedInstanceState.containsKey(ArgumentKeys.KEY_START_LAT)) {
+            if (savedInstanceState.containsKey(ArgumentKeys.KEY_LAST_MAP_ZOOM_LEVEL)) {
                 lastMapZoomLevel = savedInstanceState.getFloat(ArgumentKeys.KEY_LAST_MAP_ZOOM_LEVEL);
-            } else if (savedInstanceState.containsKey(MapSettings.KEY_MAP_DISPLAY_LATITUDE)) {
-                displayForUserCurrentLocation = false; // flag request to show a requested location instead of user current location
-                double latitude = (double) savedInstanceState.getFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE);
-                double longitude = (double) savedInstanceState.getFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE);
-                mapLocation = new LatLng(latitude, longitude);
+            }
+            if (savedInstanceState.containsKey(MapSettings.KEY_MAP_DISPLAY_LATITUDE)) {
+                homeLocation = getHomeLocation(savedInstanceState);
             }
         } else if (getArguments() != null) {
-            requestCode = getArguments().getInt(ArgumentKeys.KEY_REQUEST_CODE);
             if (getArguments().containsKey(MapSettings.KEY_MAP_DISPLAY_LATITUDE)) {
-                displayForUserCurrentLocation = false; // flag request to show a requested location instead of user current location
-                double latitude = (double) getArguments().getFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE);
-                double longitude = (double) getArguments().getFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE);
-                mapLocation = new LatLng(latitude, longitude);
-            }
-            if (getArguments().containsKey(MapSettings.KEY_MAP_DISPLAY_LOCATION_DESCRIPTION)) {
-                argumentLocationDescription = getArguments().getString(MapSettings.KEY_MAP_DISPLAY_LOCATION_DESCRIPTION);
+                homeLocation = getHomeLocation(getArguments());
             }
         }
+    }
 
-        tripViewModel = ViewModelProviders.of(getActivity()).get(TripViewModel.class);
+    private LatLng getHomeLocation(Bundle bundle) {
+        double latitude = (double) bundle.getFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE);
+        double longitude = (double) bundle.getFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE);
+        return new LatLng(latitude, longitude);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.dialog_trip_location, container, false);
+        final View rootView = inflater.inflate(R.layout.dialog_settings_home_location, container, false);
         ButterKnife.bind(this, rootView);
 
-        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentByTag(FragmentTags.TAG_CREATE_TRIP_MAP);
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentByTag(FragmentTags.TAG_SETTING_HOME_LOCATION_MAP);
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance();
         }
-        getChildFragmentManager().beginTransaction().replace(R.id.map_container_tlp, mapFragment, FragmentTags.TAG_CREATE_TRIP_MAP).commitNow();
+        getChildFragmentManager().beginTransaction().replace(R.id.map_container_tlp, mapFragment, FragmentTags.TAG_SETTING_HOME_LOCATION_MAP).commitNow();
 
         rootView.clearFocus();
         return rootView;
@@ -138,35 +128,9 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
         super.onViewCreated(view, savedInstanceState);
 
         searchButton.setOnClickListener(this);
-
-        if (argumentLocationDescription != null) {
-            locationDescription.setText(argumentLocationDescription);
-            argumentLocationDescription = null; // clear this out so it doesn't persist if the fragment is loaded again
-        }
-
-        setLocationButton.setOnClickListener(v -> {
-            if (v.getId() == setLocationButton.getId()) {
-                if (requestCode == RequestCodes.TRIP_DESTINATION_REQUEST_CODE) {
-                    updateMapView(MapSettings.MAP_SEARCH_RESULT_ZOOM); // make sure the map is displayed in a way that works well for the snapshot
-                    // save a bitmap of the Google Map
-                    // code based on https://stackoverflow.com/a/26946907/798642 and https://stackoverflow.com/a/17674787/798642
-                    googleMap.snapshot(new GoogleMap.SnapshotReadyCallback() {
-                        @Override
-                        public void onSnapshotReady(Bitmap bitmap) {
-                            FileSystemUtil.saveMapSnapshotImage(getTargetFragment().getContext(), bitmap, tripViewModel.getTripId());
-                        }
-                    });
-                }
-                InputUtils.hideKeyboardFrom(getContext(), searchText);
-
-                TripLocationSelectedListener listener = (TripLocationSelectedListener) getTargetFragment();
-                if (listener == null) {
-                    throw new RuntimeException(TAG + ": TargetFragment of this dialog must implement TripLocationSelectedListener");
-                }
-                listener.onTripLocationSelected(mapLocation, locationDescription.getText().toString(), requestCode);
-                dismiss();
-            }
-        });
+        setLocationButton.setOnClickListener(this);
+        locationDescription.setText(getString(R.string.word_for_HOME));
+        locationDescription.setEnabled(false);
 
         int permission = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PERMISSION_GRANTED) {
@@ -187,10 +151,11 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
                 .addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        if (displayForUserCurrentLocation) {
-                            mapLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        if (homeLocation == null) {
+                            // if homeLocation already set, start the map with that saved home location
+                            homeLocation = new LatLng(location.getLatitude(), location.getLongitude());
                         }
-                        mapFragment.getMapAsync(TripLocationPickerFragment.this);
+                        mapFragment.getMapAsync(HomeLocationSettingFragment.this);
                     }
                 });
     }
@@ -203,32 +168,16 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
         googleMap.setMyLocationEnabled(true);
 
         UiSettings uiSettings = googleMap.getUiSettings();
-        //uiSettings.setMyLocationButtonEnabled(true); // when something is selected on map, this shows two Maps Intents button icons (Directions, Map)
         uiSettings.setZoomControlsEnabled(true);
         uiSettings.setZoomGesturesEnabled(true);
 
-        updateMapView();
-    }
-
-    @Override
-    public void onMapClick(LatLng latLng) {
-        mapLocation = latLng;
-        updateMapView(MapSettings.MAP_CLICK_ZOOM);
-    }
-
-    @Override
-    public void onCameraMoveStarted(int i) {
-        InputUtils.hideKeyboardFrom(getContext(), getView());
-    }
-
-    private void updateMapView() {
         updateMapView(lastMapZoomLevel);
     }
 
     private void updateMapView(float zoomLevel) {
         googleMap.clear();
-        googleMap.addMarker(new MarkerOptions().position(mapLocation));
-        cameraPosition = new CameraPosition.Builder().target(mapLocation)
+        googleMap.addMarker(new MarkerOptions().position(homeLocation));
+        cameraPosition = new CameraPosition.Builder().target(homeLocation)
                 .zoom(zoomLevel)
                 .bearing(MapSettings.MAP_DEFAULT_BEARING)
                 .tilt(MapSettings.MAP_DEFAULT_TILT)
@@ -236,6 +185,17 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
         googleMap.animateCamera(cameraUpdate);
         lastMapZoomLevel = zoomLevel;
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        homeLocation = latLng;
+        updateMapView(MapSettings.MAP_CLICK_ZOOM);
+    }
+
+    @Override
+    public void onCameraMoveStarted(int i) {
+        InputUtils.hideKeyboardFrom(getContext(), getView());
     }
 
     @Override
@@ -258,7 +218,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
                         // if one result, set that as the location and update UI
                         if (placesResponse.getCandidates().size() == 1) {
                             Candidate place = placesResponse.getCandidates().get(0);
-                            mapLocation = new LatLng(place.getGeometry().getLocation().getLat(), place.getGeometry().getLocation().getLng());
+                            homeLocation = new LatLng(place.getGeometry().getLocation().getLat(), place.getGeometry().getLocation().getLng());
                             locationDescription.setText(place.getName());
                             updateMapView(MapSettings.MAP_SEARCH_RESULT_ZOOM);
                         } else {
@@ -279,20 +239,29 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
                     Toast.makeText(getContext(), R.string.map_search_call_error_message, Toast.LENGTH_LONG).show();
                 }
             });
-
+        }
+        if (v.getId() == setLocationButton.getId()) {
+            HomeLocationPreferenceSaveListener listener = (HomeLocationPreferenceSaveListener) getTargetFragment();
+            if (listener == null) {
+                throw new RuntimeException(TAG + ": TargetFragment of this dialog must implement HomeLocationPreferenceSaveListener");
+            }
+            listener.onHomeLocationPreferenceSave(homeLocation);
+            dismiss();
         }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        savedInstanceState.putInt(ArgumentKeys.KEY_REQUEST_CODE, requestCode);
-        savedInstanceState.putFloat(ArgumentKeys.KEY_LAST_MAP_ZOOM_LEVEL, lastMapZoomLevel);
-        savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)mapLocation.latitude);
-        savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)mapLocation.longitude);
+        if (googleMap != null) {
+            savedInstanceState.putFloat(ArgumentKeys.KEY_LAST_MAP_ZOOM_LEVEL, googleMap.getCameraPosition().zoom);
+        }
+        savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)homeLocation.latitude);
+        savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)homeLocation.longitude);
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    public interface TripLocationSelectedListener {
-        void onTripLocationSelected(LatLng location, String description, int requestCode);
+    public interface HomeLocationPreferenceSaveListener {
+        public void onHomeLocationPreferenceSave(LatLng homeLocation);
     }
 }
+
