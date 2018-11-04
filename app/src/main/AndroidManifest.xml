@@ -32,6 +32,7 @@
 
         <activity android:name=".tripaddedit.AddEditTripActivity"
             android:label="@string/app_label_create_trip"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".triplist.TripListActivity"/>
 
         <activity android:name=".tripdetail.TripDetailActivity"
