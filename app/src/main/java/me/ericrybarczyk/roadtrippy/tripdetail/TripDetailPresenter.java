@@ -1,9 +1,15 @@
 package me.ericrybarczyk.roadtrippy.tripdetail;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
+import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
 import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 
@@ -15,12 +21,28 @@ public class TripDetailPresenter implements TripDetailContract.Presenter {
     private TripDetailContract.View tripDetailView;
     private static final String TAG = TripDetailPresenter.class.getSimpleName();
 
-
     public TripDetailPresenter(@NonNull TripDataSource dataSource, @NonNull TripDetailContract.View view) {
         this.tripDataSource = checkNotNull(dataSource);
         this.tripDetailView = checkNotNull(view);
 
         this.tripDetailView.setPresenter(this);
+    }
+
+    @Override
+    public void getTrip(String userId, String tripNodeKey) {
+        DatabaseReference tripReference = tripDataSource.getTrip(userId, tripNodeKey);
+        tripReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                tripDetailView.displayTrip(dataSnapshot.getValue(Trip.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e(TAG, databaseError.getMessage());
+                throw databaseError.toException();
+            }
+        });
     }
 
     @Override

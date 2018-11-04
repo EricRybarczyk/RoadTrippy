@@ -1,6 +1,5 @@
 package me.ericrybarczyk.roadtrippy.tripdetail;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,9 +25,11 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
+import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.dto.TripDay;
 import me.ericrybarczyk.roadtrippy.maps.endpoints.NavigationIntentService;
 import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
+import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
 import me.ericrybarczyk.roadtrippy.tripday.TripDayActivity;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
@@ -46,7 +47,6 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     private String tripId;
     private String tripNodeKey;
-    private String tripDescriptionForDisplay;
     private boolean tripIsArchived = false;
 
     private static final String TAG = TripDetailFragment.class.getSimpleName();
@@ -116,13 +116,6 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
                         intent.putExtra(ArgumentKeys.KEY_TRIP_DAY_NUMBER, tripDayViewModel.getDayNumber());
                         intent.putExtra(ArgumentKeys.KEY_DAY_NODE_KEY, dayNodeKey);
                         startActivityForResult(intent, RequestCodes.TRIP_DAY_REQUEST_CODE);
-
-//                        fragmentNavigationRequestListener.onTripDayEditFragmentRequest(
-//                                FragmentTags.TAG_TRIP_DAY,
-//                                viewModel.getTripId(),
-//                                tripNodeKey,
-//                                viewModel.getDayNumber(),
-//                                dayNodeKey);
                     }
                 });
 
@@ -171,6 +164,8 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
         final View rootView = inflater.inflate(R.layout.fragment_trip_detail, container, false);
         ButterKnife.bind(this, rootView);
 
+        presenter.getTrip(AuthenticationManager.getCurrentUser().getUid(), tripNodeKey);
+
         File mapImage = FileSystemUtil.getPrimaryTripImageFile(getContext(), tripId);
         Picasso.with(getContext())
                 .load(mapImage)
@@ -184,6 +179,15 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
         tripDaysListRecyclerView.setAdapter(firebaseRecyclerAdapter);
 
         return rootView;
+    }
+
+    @Override
+    public void displayTrip(Trip trip) {
+        if (trip == null) {
+            tripDescription.setText(getString(R.string.phrase_for_YourTrip));
+            return;
+        }
+        tripDescription.setText(trip.getDescription());
     }
 
     @Override
@@ -212,4 +216,5 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
     public void setPresenter(TripDetailContract.Presenter presenter) {
         this.presenter = presenter;
     }
+
 }

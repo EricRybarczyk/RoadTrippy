@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +16,20 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.ericrybarczyk.roadtrippy.R;
+import me.ericrybarczyk.roadtrippy.dto.TripDay;
+import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
+import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
+import me.ericrybarczyk.roadtrippy.util.FontManager;
 import me.ericrybarczyk.roadtrippy.util.InputUtils;
+import me.ericrybarczyk.roadtrippy.viewmodels.TripDayViewModel;
 
 public class TripDayFragment extends Fragment implements TripDayContract.View {
 
     private TripDayContract.Presenter presenter;
+    private String userId;
     private String tripId;
     private String tripNodeKey;
     private String dayNodeKey;
@@ -68,8 +77,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View {
             dayNodeKey = getArguments().getString(ArgumentKeys.KEY_DAY_NODE_KEY);
             dayNumber = getArguments().getInt(ArgumentKeys.KEY_TRIP_DAY_NUMBER);
         }
-
-
+        userId = AuthenticationManager.getCurrentUser().getUid();
     }
 
     @Nullable
@@ -79,9 +87,52 @@ public class TripDayFragment extends Fragment implements TripDayContract.View {
         ButterKnife.bind(this, rootView);
         InputUtils.hideKeyboardFrom(getContext(), rootView);
 
-
+        presenter.getTripDay(userId, tripId, dayNodeKey);
 
         return rootView;
+    }
+
+    @Override
+    public void displayTripDay(TripDay tripDay) {
+        TripDayViewModel tripDayViewModel = TripDayViewModel.from(tripDay);
+        setHighlightIndicator(tripDayViewModel.getIsHighlight());
+        if (!tripDayViewModel.getIsDefaultText()) {
+            dayPrimaryDescription.setText(tripDayViewModel.getPrimaryDescription());
+            dayUserNotes.setText(tripDayViewModel.getUserNotes());
+        }
+        if (tripDayViewModel.getDestinations().size() > 0) {
+            dayDestinationRecyclerView.setVisibility(View.VISIBLE);
+            destinationListLabel.setVisibility(View.VISIBLE);
+            TripLocationAdapter adapter = new TripLocationAdapter(
+                    tripDayViewModel.getDestinations(),
+                    userId,
+                    tripId,
+                    dayNodeKey
+            );
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+            dayDestinationRecyclerView.setLayoutManager(layoutManager);
+            dayDestinationRecyclerView.setAdapter(adapter);
+        } else {
+            dayDestinationRecyclerView.setVisibility(View.INVISIBLE);
+            destinationListLabel.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void setHighlightIndicator(boolean isHighlight) {
+        if (isHighlight) {
+            iconHighlight.setTypeface(FontManager.getTypeface(getContext(), FontManager.FONTAWESOME_SOLID));
+            iconHighlight.setTextColor(ContextCompat.getColor(getContext(), R.color.colorControlHighlight));
+        } else {
+            iconHighlight.setTypeface(FontManager.getTypeface(getContext(), FontManager.FONTAWESOME_REGULAR));
+            iconHighlight.setTextColor(ContextCompat.getColor(getContext(), R.color.colorControlHighlightOff));
+        }
+    }
+
+    @OnClick(R.id.icon_highlight)
+    public void onHighlightClick() {
+//        tripDayViewModel.setIsHighlight(!tripDayViewModel.getIsHighlight());
+//        tripRepository.updateTripDayHighlight(userId, tripId, dayNodeKey, tripDayViewModel.getIsHighlight());
+//        setHighlightIndicator(tripDayViewModel.getIsHighlight());
     }
 
     @Override
@@ -97,4 +148,5 @@ public class TripDayFragment extends Fragment implements TripDayContract.View {
     public void setPresenter(TripDayContract.Presenter presenter) {
         this.presenter = presenter;
     }
+
 }
