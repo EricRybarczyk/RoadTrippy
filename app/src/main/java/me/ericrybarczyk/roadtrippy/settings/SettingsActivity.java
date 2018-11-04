@@ -30,7 +30,6 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
 
-    private FirebaseUser firebaseUser;
     private SettingsPresenter settingsPresenter;
 
     private static final String TAG = SettingsActivity.class.getSimpleName();
@@ -47,7 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setupNavigationDrawer();
 
-        verifyFirebaseUser();
+        AuthenticationManager.verifyAuthentication(this);
 
         SettingsFragment settingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
         if (settingsFragment == null) {
@@ -57,14 +56,6 @@ public class SettingsActivity extends AppCompatActivity {
         settingsPresenter = new SettingsPresenter(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()), settingsFragment);
     }
 
-    private void verifyFirebaseUser() {
-        firebaseUser = AuthenticationManager.getCurrentUser();
-        if (firebaseUser == null) {
-            // if no user, go to starting point where login will be required
-            Intent intent = new Intent(SettingsActivity.this, TripListActivity.class);
-            startActivity(intent);
-        }
-    }
     private void setupNavigationDrawer() {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {

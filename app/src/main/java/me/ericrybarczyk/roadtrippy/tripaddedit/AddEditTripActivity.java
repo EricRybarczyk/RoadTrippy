@@ -26,7 +26,6 @@ import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 public class AddEditTripActivity extends AppCompatActivity {
 
     private AddEditTripPresenter addEditTripPresenter;
-    private FirebaseUser firebaseUser;
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.drawer_layout) protected DrawerLayout drawer;
@@ -47,7 +46,7 @@ public class AddEditTripActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setupNavigationDrawer();
 
-        verifyFirebaseUser();
+        AuthenticationManager.verifyAuthentication(this);
 
         AddEditTripFragment addEditTripFragment = (AddEditTripFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
         if (addEditTripFragment == null) {
@@ -58,15 +57,6 @@ public class AddEditTripActivity extends AppCompatActivity {
 
         // TODO: load saved instance state if it exists
 
-    }
-
-    private void verifyFirebaseUser() {
-        firebaseUser = AuthenticationManager.getCurrentUser();
-        if (firebaseUser == null) {
-            // if no user, go to starting point where login will be required
-            Intent intent = new Intent(AddEditTripActivity.this, TripListActivity.class);
-            startActivity(intent);
-        }
     }
 
     private void setupNavigationDrawer() {

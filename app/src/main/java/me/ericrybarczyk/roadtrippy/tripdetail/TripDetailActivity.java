@@ -11,9 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
@@ -32,7 +29,6 @@ public class TripDetailActivity extends AppCompatActivity {
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
 
-    private FirebaseUser firebaseUser;
     private TripDetailPresenter tripDetailPresenter;
     private static final String TAG = TripDetailActivity.class.getSimpleName();
 
@@ -48,7 +44,7 @@ public class TripDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setupNavigationDrawer();
 
-        verifyFirebaseUser();
+        AuthenticationManager.verifyAuthentication(this);
 
         String tripId = getIntent().getStringExtra(ArgumentKeys.KEY_TRIP_ID);
         String tripNodeKey = getIntent().getStringExtra(ArgumentKeys.KEY_TRIP_NODE_KEY);
@@ -59,16 +55,6 @@ public class TripDetailActivity extends AppCompatActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripDetailFragment, R.id.content_container);
         }
         tripDetailPresenter = new TripDetailPresenter(new TripRepository(), tripDetailFragment);
-    }
-
-
-    private void verifyFirebaseUser() {
-        firebaseUser = AuthenticationManager.getCurrentUser();
-        if (firebaseUser == null) {
-            // if no user, go to starting point where login will be required
-            Intent intent = new Intent(TripDetailActivity.this, TripListActivity.class);
-            startActivity(intent);
-        }
     }
 
     private void setupNavigationDrawer() {
