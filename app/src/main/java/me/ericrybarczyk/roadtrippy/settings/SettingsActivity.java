@@ -21,6 +21,7 @@ import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.triplist.TripListActivity;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
+import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -53,11 +54,11 @@ public class SettingsActivity extends AppCompatActivity {
             settingsFragment = SettingsFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), settingsFragment, R.id.content_container);
         }
-        settingsPresenter = new SettingsPresenter(firebaseUser, PreferenceManager.getDefaultSharedPreferences(getApplicationContext()), settingsFragment);
+        settingsPresenter = new SettingsPresenter(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()), settingsFragment);
     }
 
     private void verifyFirebaseUser() {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseUser = AuthenticationManager.getCurrentUser();
         if (firebaseUser == null) {
             // if no user, go to starting point where login will be required
             Intent intent = new Intent(SettingsActivity.this, TripListActivity.class);

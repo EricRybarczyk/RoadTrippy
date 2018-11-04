@@ -21,6 +21,7 @@ import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
 import me.ericrybarczyk.roadtrippy.settings.SettingsActivity;
 import me.ericrybarczyk.roadtrippy.triplist.TripListActivity;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
+import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 
 public class AddEditTripActivity extends AppCompatActivity {
 
@@ -53,14 +54,14 @@ public class AddEditTripActivity extends AppCompatActivity {
             addEditTripFragment = AddEditTripFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), addEditTripFragment, R.id.content_container);
         }
-        addEditTripPresenter = new AddEditTripPresenter(new TripRepository(), firebaseUser, addEditTripFragment);
+        addEditTripPresenter = new AddEditTripPresenter(new TripRepository(), addEditTripFragment);
 
         // TODO: load saved instance state if it exists
 
     }
 
     private void verifyFirebaseUser() {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseUser = AuthenticationManager.getCurrentUser();
         if (firebaseUser == null) {
             // if no user, go to starting point where login will be required
             Intent intent = new Intent(AddEditTripActivity.this, TripListActivity.class);

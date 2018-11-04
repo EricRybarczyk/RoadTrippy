@@ -111,9 +111,7 @@ public class TripListActivity extends AppCompatActivity {
             tripListFragment = TripListFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripListFragment, R.id.content_container);
         }
-
-        tripListPresenter = new TripListPresenter(new TripRepository(), tripListFragment, firebaseUser);
-        tripListFragment.setPresenter(tripListPresenter);
+        tripListPresenter = new TripListPresenter(new TripRepository(), tripListFragment);
     }
 
     private void verifyPermissions() {
@@ -198,7 +196,6 @@ public class TripListActivity extends AppCompatActivity {
             firebaseUser = firebaseAuth.getCurrentUser();
             if (firebaseUser != null) {
                 onSignedInInitialize(firebaseUser);
-                // TODO - EVAL: onFragmentNavigationRequest(FragmentTags.TAG_TRIP_LIST);
             } else {
 
                 onSignedOutCleanup();
@@ -234,7 +231,7 @@ public class TripListActivity extends AppCompatActivity {
 
     private void onSignedInInitialize(FirebaseUser firebaseUser) {
         this.activeUsername = firebaseUser.getDisplayName();
-        String userId = firebaseUser.getUid();
+        userId = firebaseUser.getUid();
 
         View header = navigationView.getHeaderView(0);
         TextView usernameText = header.findViewById(R.id.username_display_text);

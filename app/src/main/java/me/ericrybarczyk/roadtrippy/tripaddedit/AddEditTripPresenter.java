@@ -12,6 +12,7 @@ import me.ericrybarczyk.roadtrippy.dto.TripDay;
 import me.ericrybarczyk.roadtrippy.engine.TripManager;
 import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
 import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
+import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -24,9 +25,9 @@ public class AddEditTripPresenter implements AddEditTripContract.Presenter {
     private int preferenceDrivingHours;
     private static final String TAG = AddEditTripPresenter.class.getSimpleName();
 
-    public AddEditTripPresenter(@NonNull TripDataSource dataSource, @NonNull FirebaseUser firebaseUser, @NonNull AddEditTripContract.View view) {
+    public AddEditTripPresenter(@NonNull TripDataSource dataSource, @NonNull AddEditTripContract.View view) {
         this.tripDataSource = checkNotNull(dataSource);
-        this.firebaseUser = checkNotNull(firebaseUser);
+        this.firebaseUser = AuthenticationManager.getCurrentUser();
         this.addEditTripView = checkNotNull(view);
 
         //TODO: decide how to provide user preference to this class
@@ -54,10 +55,5 @@ public class AddEditTripPresenter implements AddEditTripContract.Presenter {
     @Override
     public void start() {
 
-    }
-
-    @Override
-    public String getUserId() {
-        return firebaseUser.getUid();
     }
 }

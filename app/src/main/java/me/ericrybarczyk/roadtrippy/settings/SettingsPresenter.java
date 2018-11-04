@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
 
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
+import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -16,8 +17,8 @@ public class SettingsPresenter implements SettingsContract.Presenter {
     private SettingsContract.View settingsView;
 
 
-    public SettingsPresenter(FirebaseUser firebaseUser, SharedPreferences sharedPreferences, SettingsContract.View view) {
-        this.firebaseUser = checkNotNull(firebaseUser);
+    public SettingsPresenter(SharedPreferences sharedPreferences, SettingsContract.View view) {
+        this.firebaseUser = AuthenticationManager.getCurrentUser();
         this.sharedPreferences = checkNotNull(sharedPreferences);
         this.settingsView = view;
 
@@ -59,10 +60,5 @@ public class SettingsPresenter implements SettingsContract.Presenter {
     @Override
     public void start() {
 
-    }
-
-    @Override
-    public String getUserId() {
-        return firebaseUser.getUid();
     }
 }

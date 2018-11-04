@@ -22,5 +22,4 @@ package me.ericrybarczyk.roadtrippy;
 
 public interface BasePresenter {
     void start();
-    String getUserId();
 }

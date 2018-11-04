@@ -27,6 +27,7 @@ import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
 import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.tripdetail.TripDetailActivity;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
+import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 import me.ericrybarczyk.roadtrippy.util.FontManager;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
@@ -54,7 +55,7 @@ public class TripListFragment extends Fragment implements TripListContract.View 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DataOptions dataOptions = new DataOptions(presenter.getUserId());
+        DataOptions dataOptions = new DataOptions(AuthenticationManager.getCurrentUser().getUid());
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Trip, TripViewHolder>(dataOptions.getTripListDataOptions()) {
 

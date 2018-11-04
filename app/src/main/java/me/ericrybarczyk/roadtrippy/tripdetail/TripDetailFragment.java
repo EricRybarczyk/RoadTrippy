@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.auth.api.Auth;
 import com.squareup.picasso.Picasso;
 
 import org.threeten.bp.LocalDate;
@@ -29,6 +30,7 @@ import me.ericrybarczyk.roadtrippy.dto.TripDay;
 import me.ericrybarczyk.roadtrippy.maps.endpoints.NavigationIntentService;
 import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
+import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 import me.ericrybarczyk.roadtrippy.util.FileSystemUtil;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripDayViewModel;
 
@@ -79,7 +81,7 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
             }
         }
 
-        DataOptions dataOptions = new DataOptions(presenter.getUserId());
+        DataOptions dataOptions = new DataOptions(AuthenticationManager.getCurrentUser().getUid());
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<TripDay, TripDayViewHolder>(dataOptions.getTripDayDataOptions(tripId)) {
             @NonNull

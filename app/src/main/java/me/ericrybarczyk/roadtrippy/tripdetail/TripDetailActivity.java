@@ -23,6 +23,7 @@ import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.triplist.TripListActivity;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
+import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 
 public class TripDetailActivity extends AppCompatActivity {
 
@@ -57,12 +58,12 @@ public class TripDetailActivity extends AppCompatActivity {
             tripDetailFragment = TripDetailFragment.newInstance(tripId, tripNodeKey);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripDetailFragment, R.id.content_container);
         }
-        tripDetailPresenter = new TripDetailPresenter(new TripRepository(), firebaseUser, tripDetailFragment);
+        tripDetailPresenter = new TripDetailPresenter(new TripRepository(), tripDetailFragment);
     }
 
 
     private void verifyFirebaseUser() {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseUser = AuthenticationManager.getCurrentUser();
         if (firebaseUser == null) {
             // if no user, go to starting point where login will be required
             Intent intent = new Intent(TripDetailActivity.this, TripListActivity.class);

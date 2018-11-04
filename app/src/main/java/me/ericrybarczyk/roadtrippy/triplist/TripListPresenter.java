@@ -9,13 +9,13 @@ public class TripListPresenter implements TripListContract.Presenter {
 
     private TripDataSource tripDataSource;
     private TripListContract.View tripListView;
-    private FirebaseUser firebaseUser;
 
 
-    public TripListPresenter(@NonNull TripDataSource dataSource, @NonNull TripListContract.View tripListView, @NonNull FirebaseUser firebaseUser) {
+    public TripListPresenter(@NonNull TripDataSource dataSource, @NonNull TripListContract.View tripListView) {
         this.tripDataSource = checkNotNull(dataSource);
         this.tripListView = checkNotNull(tripListView);
-        this.firebaseUser = checkNotNull(firebaseUser);
+
+        this.tripListView.setPresenter(this);
     }
 
     @Override
@@ -26,10 +26,5 @@ public class TripListPresenter implements TripListContract.Presenter {
     @Override
     public void start() {
 
-    }
-
-    @Override
-    public String getUserId() {
-        return firebaseUser.getUid();
     }
 }
