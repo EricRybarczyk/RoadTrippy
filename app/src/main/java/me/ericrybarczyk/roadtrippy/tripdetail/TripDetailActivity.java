@@ -1,4 +1,4 @@
-package me.ericrybarczyk.roadtrippy.tripaddedit;
+package me.ericrybarczyk.roadtrippy.tripdetail;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,25 +19,26 @@ import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
 import me.ericrybarczyk.roadtrippy.settings.SettingsActivity;
+import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.triplist.TripListActivity;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
+import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 
-public class AddEditTripActivity extends AppCompatActivity {
-
-    private AddEditTripPresenter addEditTripPresenter;
-    private FirebaseUser firebaseUser;
+public class TripDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.drawer_layout) protected DrawerLayout drawer;
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
 
-    private static final String TAG = AddEditTripActivity.class.getSimpleName();
+    private FirebaseUser firebaseUser;
+    private TripDetailPresenter tripDetailPresenter;
+    private static final String TAG = TripDetailActivity.class.getSimpleName();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_edit_trip);
+        setContentView(R.layout.activity_trip_detail);
         ButterKnife.bind(this);
 
         // configure toolbar and navigation drawer
@@ -48,22 +49,23 @@ public class AddEditTripActivity extends AppCompatActivity {
 
         verifyFirebaseUser();
 
-        AddEditTripFragment addEditTripFragment = (AddEditTripFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
-        if (addEditTripFragment == null) {
-            addEditTripFragment = AddEditTripFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), addEditTripFragment, R.id.content_container);
+        String tripId = getIntent().getStringExtra(ArgumentKeys.KEY_TRIP_ID);
+        String tripNodeKey = getIntent().getStringExtra(ArgumentKeys.KEY_TRIP_NODE_KEY);
+
+        TripDetailFragment tripDetailFragment = (TripDetailFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
+        if (tripDetailFragment == null) {
+            tripDetailFragment = TripDetailFragment.newInstance(tripId, tripNodeKey);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripDetailFragment, R.id.content_container);
         }
-        addEditTripPresenter = new AddEditTripPresenter(new TripRepository(), firebaseUser, addEditTripFragment);
-
-        // TODO: load saved instance state if it exists
-
+        tripDetailPresenter = new TripDetailPresenter(new TripRepository(), firebaseUser, tripDetailFragment);
     }
+
 
     private void verifyFirebaseUser() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
             // if no user, go to starting point where login will be required
-            Intent intent = new Intent(AddEditTripActivity.this, TripListActivity.class);
+            Intent intent = new Intent(TripDetailActivity.this, TripListActivity.class);
             startActivity(intent);
         }
     }
@@ -75,17 +77,18 @@ public class AddEditTripActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.nav_trip_list:
-                                Intent intent = new Intent(AddEditTripActivity.this, TripListActivity.class);
+                                Intent intent = new Intent(TripDetailActivity.this, TripListActivity.class);
                                 startActivity(intent);
                                 break;
                             case R.id.nav_create_trip:
-                                // current screen, no action
+                                Intent intentCreateTrip = new Intent(TripDetailActivity.this, AddEditTripActivity.class);
+                                startActivity(intentCreateTrip);
                                 break;
                             case R.id.nav_trip_history:
                                 // trip history activity
                                 break;
                             case R.id.nav_settings:
-                                Intent intentSettings = new Intent(AddEditTripActivity.this, SettingsActivity.class);
+                                Intent intentSettings = new Intent(TripDetailActivity.this, SettingsActivity.class);
                                 startActivity(intentSettings);
                                 break;
                         }
@@ -101,5 +104,4 @@ public class AddEditTripActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
-
 }

@@ -55,4 +55,9 @@ public class AddEditTripPresenter implements AddEditTripContract.Presenter {
     public void start() {
 
     }
+
+    @Override
+    public String getUserId() {
+        return firebaseUser.getUid();
+    }
 }

@@ -25,6 +25,8 @@ import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.maps.MapSettings;
 import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
 import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
+import me.ericrybarczyk.roadtrippy.tripdetail.TripDetailActivity;
+import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.FontManager;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
@@ -34,7 +36,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class TripListFragment extends Fragment implements TripListContract.View {
 
     private TripListContract.Presenter presenter;
-    FirebaseRecyclerAdapter firebaseRecyclerAdapter;
+    private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
 
     @BindView(R.id.trip_list) protected RecyclerView tripListRecyclerView;
     @BindView(R.id.fab) protected FloatingActionButton fab;
@@ -46,14 +48,13 @@ public class TripListFragment extends Fragment implements TripListContract.View 
     }
 
     public TripListFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DataOptions dataOptions = new DataOptions(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DataOptions dataOptions = new DataOptions(presenter.getUserId());
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Trip, TripViewHolder>(dataOptions.getTripListDataOptions()) {
 
@@ -81,7 +82,7 @@ public class TripListFragment extends Fragment implements TripListContract.View 
                 holder.setTripListClickListener(new TripViewHolder.OnTripListClickListener() {
                     @Override
                     public void onTripListItemClick(String tripId, String tripNodeKey) {
-                        // TODO - EVAL: fragmentNavigationRequestListener.onFragmentNavigationRequest(FragmentTags.TAG_TRIP_DETAIL, tripId, tripNodeKey, isTripListFromArchive);
+                        showTripDetail(tripId, tripNodeKey);
                     }
                 });
 
@@ -120,7 +121,7 @@ public class TripListFragment extends Fragment implements TripListContract.View 
         final View rootView = inflater.inflate(R.layout.fragment_trip_list, container, false);
         ButterKnife.bind(this, rootView);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false); // getContext(), LinearLayoutManager.VERTICAL, false
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         tripListRecyclerView.setLayoutManager(layoutManager);
         tripListRecyclerView.setHasFixedSize(true);
         tripListRecyclerView.setAdapter(firebaseRecyclerAdapter);
@@ -156,12 +157,16 @@ public class TripListFragment extends Fragment implements TripListContract.View 
     }
 
     @Override
+    public void showTripDetail(String tripId, String tripNodeKey) {
+        Intent intent = new Intent(getContext(), TripDetailActivity.class);
+        intent.putExtra(ArgumentKeys.KEY_TRIP_ID, tripId);
+        intent.putExtra(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
+        startActivity(intent);
+    }
+
+    @Override
     public void setPresenter(TripListContract.Presenter presenter) {
         this.presenter = checkNotNull(presenter);
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
 }

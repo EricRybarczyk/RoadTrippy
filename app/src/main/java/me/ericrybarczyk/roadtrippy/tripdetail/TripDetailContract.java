@@ -1,18 +1,15 @@
-package me.ericrybarczyk.roadtrippy.triplist;
-
+package me.ericrybarczyk.roadtrippy.tripdetail;
 
 import me.ericrybarczyk.roadtrippy.BasePresenter;
 import me.ericrybarczyk.roadtrippy.BaseView;
 
-public interface TripListContract {
+public interface TripDetailContract {
 
     interface View extends BaseView<Presenter> {
-        void showCreateTrip();
-        void showTripDetail(String tripId, String tripNodeKey);
+
     }
 
     interface Presenter extends BasePresenter {
-        void createTrip();
+
     }
 }
-

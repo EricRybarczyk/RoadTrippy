@@ -1,26 +1,27 @@
-package me.ericrybarczyk.roadtrippy.triplist;
+package me.ericrybarczyk.roadtrippy.tripdetail;
 
 import android.support.annotation.NonNull;
+
 import com.google.firebase.auth.FirebaseUser;
+
 import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class TripListPresenter implements TripListContract.Presenter {
+public class TripDetailPresenter implements TripDetailContract.Presenter {
 
     private TripDataSource tripDataSource;
-    private TripListContract.View tripListView;
     private FirebaseUser firebaseUser;
+    private TripDetailContract.View tripDetailView;
+    private static final String TAG = TripDetailPresenter.class.getSimpleName();
 
 
-    public TripListPresenter(@NonNull TripDataSource dataSource, @NonNull TripListContract.View tripListView, @NonNull FirebaseUser firebaseUser) {
+    public TripDetailPresenter(@NonNull TripDataSource dataSource, @NonNull FirebaseUser firebaseUser, @NonNull TripDetailContract.View view) {
         this.tripDataSource = checkNotNull(dataSource);
-        this.tripListView = checkNotNull(tripListView);
         this.firebaseUser = checkNotNull(firebaseUser);
-    }
+        this.tripDetailView = checkNotNull(view);
 
-    @Override
-    public void createTrip() {
-        tripListView.showCreateTrip();
+        this.tripDetailView.setPresenter(this);
     }
 
     @Override

@@ -53,4 +53,10 @@ public class FileSystemUtil {
             }
         }
     }
+
+    public static File getPrimaryTripImageFile(Context context, String tripId) {
+        File imageDir = context.getDir(MapSettings.DESTINATION_MAP_IMAGE_DIRECTORY, Context.MODE_PRIVATE);
+        String tripImageFilename = MapSettings.DESTINATION_MAP_MAIN_PREFIX + tripId + MapSettings.DESTINATION_MAP_IMAGE_EXTENSION;
+        return new File(imageDir, tripImageFilename);
+    }
 }

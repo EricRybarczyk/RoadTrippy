@@ -60,4 +60,9 @@ public class SettingsPresenter implements SettingsContract.Presenter {
     public void start() {
 
     }
+
+    @Override
+    public String getUserId() {
+        return firebaseUser.getUid();
+    }
 }
