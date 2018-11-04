@@ -71,16 +71,25 @@ public class AddEditTripFragment extends Fragment
         final View rootView = inflater.inflate(R.layout.fragment_create_trip, container, false);
         ButterKnife.bind(this, rootView);
 
-        if (tripViewModel.isEdited()) {// TODO: isEdited per-value
+        if (tripViewModel.isDescriptionEdited()) {
             tripNameText.setText(tripViewModel.getDescription());
-            departureDateButton.setText(tripViewModel.getDepartureDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
-            returnDateButton.setText(tripViewModel.getReturnDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
-            originButton.setText(tripViewModel.getOriginDescription());
-            destinationButton.setText(tripViewModel.getDestinationDescription());
-            optionReturnDirections.setChecked(tripViewModel.isIncludeReturn());
-        } else {
-            tripNameText.getText().clear();
         }
+        if (tripViewModel.isDepartureDateEdited()) {
+            departureDateButton.setText(tripViewModel.getDepartureDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+        }
+        if (tripViewModel.isReturnDateEdited()) {
+            returnDateButton.setText(tripViewModel.getReturnDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+        }
+        if (tripViewModel.isOriginLatLngEdited()) {
+            originButton.setText(tripViewModel.getOriginDescription());
+        }
+        if (tripViewModel.isDestinationLatLngEdited()) {
+            destinationButton.setText(tripViewModel.getDestinationDescription());
+        }
+        if (tripViewModel.isIncludeReturnEdited()) {
+            optionReturnDirections.setChecked(tripViewModel.isIncludeReturn());
+        }
+//        tripNameText.getText().clear();
 
         departureDateButton.setOnClickListener(v -> {
             saveTripName();
@@ -156,15 +165,10 @@ public class AddEditTripFragment extends Fragment
     public void onTripDateSelected(int year, int month, int dayOfMonth, String tag) {
         if (tag.equals(FragmentTags.TAG_DEPARTURE_DATE_DIALOG)) {
             tripViewModel.setDepartureDate(LocalDate.of(year, month, dayOfMonth));
-            if (tripViewModel.isEdited()) {
-                departureDateButton.setText(tripViewModel.getDepartureDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
-            }
-
+            departureDateButton.setText(tripViewModel.getDepartureDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         } else if (tag.equals(FragmentTags.TAG_RETURN_DATE_DIALOG)) {
             tripViewModel.setReturnDate(LocalDate.of(year, month, dayOfMonth));
-            if (tripViewModel.isEdited()) {
-                returnDateButton.setText(tripViewModel.getReturnDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
-            }
+            returnDateButton.setText(tripViewModel.getReturnDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         }
     }
 

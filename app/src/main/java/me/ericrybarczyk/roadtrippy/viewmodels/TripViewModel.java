@@ -19,15 +19,20 @@ import me.ericrybarczyk.roadtrippy.dto.Trip;
 public class TripViewModel extends ViewModel {
     private String tripId;
     private String description;
+    private boolean isDescriptionEdited;
     private LocalDate departureDate;
+    private boolean isDepartureDateEdited;
     private LocalDate returnDate;
+    private boolean isReturnDateEdited;
     private LatLng originLatLng;
+    private boolean isOriginLatLngEdited;
     private String originDescription;
     private LatLng destinationLatLng;
+    private boolean isDestinationLatLngEdited;
     private String destinationDescription;
     private int durationMinutes;
     private boolean includeReturn;
-    private boolean isEdited; // to help UI know if values are selected by user or just new instance defaults
+    private boolean isIncludeReturnEdited;
 
     public TripViewModel() {
         init();
@@ -42,11 +47,8 @@ public class TripViewModel extends ViewModel {
         returnDate = LocalDate.now().plusDays(1);
         includeReturn = true;
         durationMinutes = 0;
-        if (isEdited) {
-            originLatLng = null;
-            destinationLatLng = null;
-            isEdited = false;
-        }
+        originLatLng = null;
+        destinationLatLng = null;
     }
 
     public static TripViewModel from(Trip trip) {
@@ -157,7 +159,10 @@ public class TripViewModel extends ViewModel {
 
     public void setDescription(String description) {
         this.description = description;
-        isEdited = true;
+        this.isDescriptionEdited = true;
+    }
+    public boolean isDescriptionEdited() {
+        return isDescriptionEdited;
     }
 
     public LocalDate getDepartureDate() {
@@ -166,7 +171,10 @@ public class TripViewModel extends ViewModel {
 
     public void setDepartureDate(LocalDate departureDate) {
         this.departureDate = departureDate;
-        isEdited = true;
+        this.isDepartureDateEdited = true;
+    }
+    public boolean isDepartureDateEdited() {
+        return isDepartureDateEdited;
     }
 
     public LocalDate getReturnDate() {
@@ -175,7 +183,10 @@ public class TripViewModel extends ViewModel {
 
     public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
-        isEdited = true;
+        this.isReturnDateEdited = true;
+    }
+    public boolean isReturnDateEdited() {
+        return isReturnDateEdited;
     }
 
     public LatLng getOriginLatLng() {
@@ -184,7 +195,10 @@ public class TripViewModel extends ViewModel {
 
     public void setOriginLatLng(LatLng originLatLng) {
         this.originLatLng = originLatLng;
-        isEdited = true;
+        this.isOriginLatLngEdited = true;
+    }
+    public boolean isOriginLatLngEdited() {
+        return isOriginLatLngEdited;
     }
 
     public LatLng getDestinationLatLng() {
@@ -193,7 +207,10 @@ public class TripViewModel extends ViewModel {
 
     public void setDestinationLatLng(LatLng destinationLatLng) {
         this.destinationLatLng = destinationLatLng;
-        isEdited = true;
+        this.isDestinationLatLngEdited = true;
+    }
+    public boolean isDestinationLatLngEdited() {
+        return isDestinationLatLngEdited;
     }
 
     public String getOriginDescription() {
@@ -205,7 +222,6 @@ public class TripViewModel extends ViewModel {
 
     public void setOriginDescription(String originDescription) {
         this.originDescription = originDescription;
-        isEdited = true;
     }
 
     public String getDestinationDescription() {
@@ -217,7 +233,6 @@ public class TripViewModel extends ViewModel {
 
     public void setDestinationDescription(String destinationDescription) {
         this.destinationDescription = destinationDescription;
-        isEdited = true;
     }
 
     public int getDurationMinutes() {
@@ -234,11 +249,10 @@ public class TripViewModel extends ViewModel {
 
     public void setIncludeReturn(boolean includeReturn) {
         this.includeReturn = includeReturn;
-        isEdited = true;
+        this.isIncludeReturnEdited = true;
     }
-
-    public boolean isEdited() {
-        return isEdited;
+    public boolean isIncludeReturnEdited() {
+        return isIncludeReturnEdited;
     }
 
     public boolean isValidForSave() {
