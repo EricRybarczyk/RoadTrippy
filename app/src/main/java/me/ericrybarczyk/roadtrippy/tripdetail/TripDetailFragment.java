@@ -103,6 +103,8 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
                 holder.dayUserNotes.setText(tripDayViewModel.getUserNotes());
                 if (isToday(tripDayViewModel.getTripDayDate())) {
                     holder.layoutContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+                } else { // must reset color or else recycled items could retain the highlight color
+                    holder.layoutContainer.setBackgroundColor(getResources().getColor(R.color.colorBackground));
                 }
 
                 // TODO: handle tripIsArchived with different click result?
