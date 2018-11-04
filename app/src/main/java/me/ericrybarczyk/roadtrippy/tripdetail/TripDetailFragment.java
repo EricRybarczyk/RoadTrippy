@@ -1,5 +1,6 @@
 package me.ericrybarczyk.roadtrippy.tripdetail;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,9 +29,11 @@ import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.dto.TripDay;
 import me.ericrybarczyk.roadtrippy.maps.endpoints.NavigationIntentService;
 import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
+import me.ericrybarczyk.roadtrippy.tripday.TripDayActivity;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 import me.ericrybarczyk.roadtrippy.util.FileSystemUtil;
+import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripDayViewModel;
 
 public class TripDetailFragment extends Fragment implements TripDetailContract.View {
@@ -40,7 +43,7 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
     @BindView(R.id.trip_days_list) protected RecyclerView tripDaysListRecyclerView;
 
     private TripDetailContract.Presenter presenter;
-    FirebaseRecyclerAdapter firebaseRecyclerAdapter;
+    private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     private String tripId;
     private String tripNodeKey;
     private String tripDescriptionForDisplay;
@@ -92,21 +95,28 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
 
             @Override
             protected void onBindViewHolder(@NonNull TripDayViewHolder holder, int position, @NonNull TripDay model) {
-                TripDayViewModel viewModel = TripDayViewModel.from(model);
+                TripDayViewModel tripDayViewModel = TripDayViewModel.from(model);
                 String dayNodeKey = this.getRef(position).getKey();
 
-                holder.dayNumber.setText(String.valueOf(viewModel.getDayNumber()));
-                holder.dayPrimaryDescription.setText(viewModel.getPrimaryDescription());
-                holder.dayUserNotes.setText(viewModel.getUserNotes());
-                if (isToday(viewModel.getTripDayDate())) {
+                holder.dayNumber.setText(String.valueOf(tripDayViewModel.getDayNumber()));
+                holder.dayPrimaryDescription.setText(tripDayViewModel.getPrimaryDescription());
+                holder.dayUserNotes.setText(tripDayViewModel.getUserNotes());
+                if (isToday(tripDayViewModel.getTripDayDate())) {
                     holder.layoutContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
                 }
 
                 // TODO: handle tripIsArchived with different click result?
-                holder.setTripDayListClickListener(new TripDayViewHolder.OnTripDayListClickListener() {
+                holder.setTripDayListClickListener(new TripDayViewHolder.TripDayListClickListener() {
                     @Override
                     public void onTripDayListItemClick() {
-                        Toast.makeText(getContext(), "Not Implemented Yet", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getContext(), "Not Implemented Yet", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getContext(), TripDayActivity.class);
+                        intent.putExtra(ArgumentKeys.KEY_TRIP_ID, tripDayViewModel.getTripId());
+                        intent.putExtra(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
+                        intent.putExtra(ArgumentKeys.KEY_TRIP_DAY_NUMBER, tripDayViewModel.getDayNumber());
+                        intent.putExtra(ArgumentKeys.KEY_DAY_NODE_KEY, dayNodeKey);
+                        startActivityForResult(intent, RequestCodes.TRIP_DAY_REQUEST_CODE);
+
 //                        fragmentNavigationRequestListener.onTripDayEditFragmentRequest(
 //                                FragmentTags.TAG_TRIP_DAY,
 //                                viewModel.getTripId(),
@@ -116,19 +126,20 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
                     }
                 });
 
-                if (viewModel.getDestinations().size() == 0) {
+                if (tripDayViewModel.getDestinations().size() == 0) {
                     holder.iconNavigation.setVisibility(View.INVISIBLE);
                 } else {
-                    holder.setNavigationClickListener(new TripDayViewHolder.OnNavigationClickListener() {
+                    holder.iconNavigation.setVisibility(View.VISIBLE);
+                    holder.setNavigationClickListener(new TripDayViewHolder.NavigationClickListener() {
                         @Override
                         public void onNavigationClick() {
-                            switch (viewModel.getDestinations().size()) {
+                            switch (tripDayViewModel.getDestinations().size()) {
                                 case 0:
                                     Log.e(TAG, "onNavigationIconClick with no destinations. Code flow prevents this. git blame!");
                                     return;
                                 case 1:
                                     // navigate directly to the single destination;
-                                    Intent navigationIntent = NavigationIntentService.getNavigationIntent(viewModel.getDestinations().get(0));
+                                    Intent navigationIntent = NavigationIntentService.getNavigationIntent(tripDayViewModel.getDestinations().get(0));
                                     if (navigationIntent.resolveActivity(getContext().getPackageManager()) != null) {
                                         startActivity(navigationIntent);
                                     } else {

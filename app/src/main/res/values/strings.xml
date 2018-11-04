@@ -3,7 +3,8 @@
     <string name="app_name">Road Trippy</string>
     <string name="app_label_create_trip">Road Trippy: Create a Trip</string>
     <string name="app_label_settings">Road Trippy: Settings</string>
-    <string name="app_label_trip_detail">Road Trippy: Your Day</string>
+    <string name="app_label_trip_detail">Road Trippy: Your Trip</string>
+    <string name="app_label_trip_day">Road Trippy: Your Day</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 

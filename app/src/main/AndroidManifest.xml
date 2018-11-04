@@ -29,16 +29,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".tripaddedit.AddEditTripActivity"
             android:label="@string/app_label_create_trip"
             android:parentActivityName=".triplist.TripListActivity"/>
-        <!--android:theme="@style/AppTheme.NoActionBar"-->
-        <activity android:name=".settings.SettingsActivity"
-            android:label="@string/app_label_settings"
-            android:parentActivityName=".triplist.TripListActivity"/>
+
         <activity android:name=".tripdetail.TripDetailActivity"
             android:label="@string/app_label_trip_detail"
             android:parentActivityName=".triplist.TripListActivity" />
+
+        <activity android:name=".tripday.TripDayActivity"
+            android:label="@string/app_label_trip_day"
+            android:parentActivityName=".tripdetail.TripDetailActivity" />
+
+        <activity android:name=".settings.SettingsActivity"
+            android:label="@string/app_label_settings"
+            android:parentActivityName=".triplist.TripListActivity"/>
     </application>
 
 </manifest>
