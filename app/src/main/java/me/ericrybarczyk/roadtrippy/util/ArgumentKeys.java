@@ -20,7 +20,8 @@ public class ArgumentKeys {
     public static final String KEY_TRIP_ID = "trip_id_key";
     public static final String KEY_DAY_NODE_KEY = "trip_day_node_key";
     public static final String KEY_TRIP_DAY_NUMBER = "trip_day_number_key";
-
+    public static final String KEY_TRIP_DESTINATION_LATITUDE  = "trip_destination_latitude_key";
+    public static final String KEY_TRIP_DESTINATION_LONGITUDE  = "trip_destination_longitude_key";
     public static final String KEY_TRIP_NODE_KEY = "trip_node_key";
     public static final String TAG_PICK_NAVIGATION_DIALOG = "pick_navigation_dialog";
 

@@ -1,39 +1,52 @@
 package me.ericrybarczyk.roadtrippy.tripday;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.dto.TripDay;
+import me.ericrybarczyk.roadtrippy.maps.MapSettings;
 import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
+import me.ericrybarczyk.roadtrippy.tripaddedit.TripLocationPickerFragment;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 import me.ericrybarczyk.roadtrippy.util.FontManager;
+import me.ericrybarczyk.roadtrippy.util.FragmentTags;
 import me.ericrybarczyk.roadtrippy.util.InputUtils;
+import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripDayViewModel;
+import me.ericrybarczyk.roadtrippy.viewmodels.TripLocationViewModel;
 
-public class TripDayFragment extends Fragment implements TripDayContract.View {
+public class TripDayFragment extends Fragment implements TripDayContract.View, TripLocationPickerFragment.TripLocationSelectedListener {
 
     private TripDayContract.Presenter presenter;
+    private TripDayViewModel tripDayViewModel;
     private String userId;
     private String tripId;
     private String tripNodeKey;
     private String dayNodeKey;
     private int dayNumber;
+    private LatLng tripDestination;
 
     @BindView(R.id.day_number_header) protected TextView dayNumberHeader;
     @BindView(R.id.icon_highlight) protected TextView iconHighlight;
@@ -46,7 +59,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View {
 
     private static final String TAG = TripDayFragment.class.getSimpleName();
 
-    public static TripDayFragment newInstance(String tripId, String tripNodeKey, int dayNumber, String dayNodeKey ) {
+    public static TripDayFragment newInstance(String tripId, String tripNodeKey, int dayNumber, String dayNodeKey) {
         TripDayFragment tripDayFragment = new TripDayFragment();
         Bundle args = new Bundle();
         args.putString(ArgumentKeys.KEY_TRIP_ID, tripId);
@@ -64,12 +77,19 @@ public class TripDayFragment extends Fragment implements TripDayContract.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        userId = AuthenticationManager.getCurrentUser().getUid();
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(ArgumentKeys.KEY_TRIP_ID)) {
                 tripId = savedInstanceState.getString(ArgumentKeys.KEY_TRIP_ID);
                 tripNodeKey = savedInstanceState.getString(ArgumentKeys.KEY_TRIP_NODE_KEY);
                 dayNodeKey = savedInstanceState.getString(ArgumentKeys.KEY_DAY_NODE_KEY);
                 dayNumber = savedInstanceState.getInt(ArgumentKeys.KEY_TRIP_DAY_NUMBER);
+                if (savedInstanceState.containsKey(ArgumentKeys.KEY_TRIP_DESTINATION_LATITUDE)) {
+                    tripDestination = new LatLng(
+                            savedInstanceState.getDouble(ArgumentKeys.KEY_TRIP_DESTINATION_LATITUDE),
+                            savedInstanceState.getDouble(ArgumentKeys.KEY_TRIP_DESTINATION_LONGITUDE)
+                    );
+                }
             }
         } else if (getArguments() != null) {
             tripId = getArguments().getString(ArgumentKeys.KEY_TRIP_ID);
@@ -77,7 +97,9 @@ public class TripDayFragment extends Fragment implements TripDayContract.View {
             dayNodeKey = getArguments().getString(ArgumentKeys.KEY_DAY_NODE_KEY);
             dayNumber = getArguments().getInt(ArgumentKeys.KEY_TRIP_DAY_NUMBER);
         }
-        userId = AuthenticationManager.getCurrentUser().getUid();
+        if (tripDestination == null) {
+            presenter.getTripDestination(userId, tripNodeKey);
+        }
     }
 
     @Nullable
@@ -94,8 +116,11 @@ public class TripDayFragment extends Fragment implements TripDayContract.View {
 
     @Override
     public void displayTripDay(TripDay tripDay) {
-        TripDayViewModel tripDayViewModel = TripDayViewModel.from(tripDay);
+        tripDayViewModel = TripDayViewModel.from(tripDay);
         setHighlightIndicator(tripDayViewModel.getIsHighlight());
+        dayNumber = tripDayViewModel.getDayNumber();
+        String headerText = getString(R.string.word_for_Day) + " " + String.valueOf(dayNumber);
+        dayNumberHeader.setText(headerText);
         if (!tripDayViewModel.getIsDefaultText()) {
             dayPrimaryDescription.setText(tripDayViewModel.getPrimaryDescription());
             dayUserNotes.setText(tripDayViewModel.getUserNotes());
@@ -118,6 +143,15 @@ public class TripDayFragment extends Fragment implements TripDayContract.View {
         }
     }
 
+    @Override
+    public void setTripDestination(LatLng tripDestination) {
+        if (tripDestination == null) {
+            // should not be possible, can't get to this screen until trip data is created
+            Log.e(TAG, "Trip destination missing for tripId: " + tripId + " , tripNodeKey: " + tripNodeKey);
+        }
+        this.tripDestination = tripDestination;
+    }
+
     private void setHighlightIndicator(boolean isHighlight) {
         if (isHighlight) {
             iconHighlight.setTypeface(FontManager.getTypeface(getContext(), FontManager.FONTAWESOME_SOLID));
@@ -130,9 +164,53 @@ public class TripDayFragment extends Fragment implements TripDayContract.View {
 
     @OnClick(R.id.icon_highlight)
     public void onHighlightClick() {
-//        tripDayViewModel.setIsHighlight(!tripDayViewModel.getIsHighlight());
-//        tripRepository.updateTripDayHighlight(userId, tripId, dayNodeKey, tripDayViewModel.getIsHighlight());
-//        setHighlightIndicator(tripDayViewModel.getIsHighlight());
+        tripDayViewModel.setIsHighlight(!tripDayViewModel.getIsHighlight());
+        presenter.updateTripDayHighlight(userId, tripId, dayNodeKey, tripDayViewModel.getIsHighlight());
+        setHighlightIndicator(tripDayViewModel.getIsHighlight());
+    }
+
+    @OnClick(R.id.search_destination_button)
+    public void onClick(View v) {
+        saveTripDay();
+        TripLocationPickerFragment tripLocationPickerFragment = TripLocationPickerFragment.newInstance(RequestCodes.TRIP_DAY_DESTINATION_REQUEST_CODE);
+        // start this map on the main trip destination
+        Bundle args = new Bundle();
+        args.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)tripDestination.latitude);
+        args.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)tripDestination.longitude);
+        if (tripLocationPickerFragment.getArguments() != null) {
+            tripLocationPickerFragment.getArguments().putAll(args);
+        } else {
+            tripLocationPickerFragment.setArguments(args);
+        }
+        tripLocationPickerFragment.setTargetFragment(TripDayFragment.this, RequestCodes.TRIP_DAY_DESTINATION_REQUEST_CODE);
+        tripLocationPickerFragment.show(getFragmentManager(), FragmentTags.TAG_TRIP_DAY_DESTINATION);
+    }
+
+    @Override
+    public void onTripLocationSelected(LatLng location, String description, int requestCode) {
+        if (requestCode == RequestCodes.TRIP_DAY_DESTINATION_REQUEST_CODE) {
+            TripLocationViewModel tripLocationViewModel = new TripLocationViewModel(location.latitude, location.longitude, description, null);
+            tripDayViewModel.getDestinations().add(tripLocationViewModel);
+            saveTripDay();
+        }
+    }
+
+    @OnClick(R.id.save_trip_day_button)
+    public void onSaveClick() {
+        if (dayPrimaryDescription.getText().toString().isEmpty()) {
+            Toast.makeText(getContext(), R.string.error_save_trip_day_validation, Toast.LENGTH_LONG).show();
+            return;
+        }
+        saveTripDay();
+        showTripDetail();
+    }
+
+    private void saveTripDay() {
+        tripDayViewModel.setPrimaryDescription(dayPrimaryDescription.getText().toString().trim());
+        tripDayViewModel.setUserNotes(dayUserNotes.getText().toString().trim());
+        tripDayViewModel.setIsDefaultText(false);
+        tripDayViewModel.setTripDayNodeKey(dayNodeKey);
+        presenter.updateTripDay(userId, tripId, dayNodeKey, tripDayViewModel);
     }
 
     @Override
@@ -141,12 +219,21 @@ public class TripDayFragment extends Fragment implements TripDayContract.View {
         outState.putString(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
         outState.putString(ArgumentKeys.KEY_DAY_NODE_KEY, dayNodeKey);
         outState.putInt(ArgumentKeys.KEY_TRIP_DAY_NUMBER, dayNumber);
+        if (tripDestination != null) {
+            outState.putDouble(ArgumentKeys.KEY_TRIP_DESTINATION_LATITUDE, tripDestination.latitude);
+            outState.putDouble(ArgumentKeys.KEY_TRIP_DESTINATION_LONGITUDE, tripDestination.longitude);
+        }
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void showTripDetail() {
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 
     @Override
     public void setPresenter(TripDayContract.Presenter presenter) {
         this.presenter = presenter;
     }
-
 }

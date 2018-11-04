@@ -143,8 +143,6 @@ public class AddEditTripFragment extends Fragment
             }
         });
 
-        rootView.clearFocus();
-        InputUtils.hideKeyboardFrom(getContext(), rootView);
         return rootView;
     }
 
