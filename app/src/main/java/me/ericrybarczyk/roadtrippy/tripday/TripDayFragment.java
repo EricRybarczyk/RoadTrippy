@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +25,6 @@ import butterknife.OnClick;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.dto.TripDay;
 import me.ericrybarczyk.roadtrippy.maps.MapSettings;
-import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
 import me.ericrybarczyk.roadtrippy.tripaddedit.TripLocationPickerFragment;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
@@ -41,6 +39,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
 
     private TripDayContract.Presenter presenter;
     private TripDayViewModel tripDayViewModel;
+    TripLocationAdapter tripLocationAdapter;
     private String userId;
     private String tripId;
     private String tripNodeKey;
@@ -121,22 +120,25 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
         dayNumber = tripDayViewModel.getDayNumber();
         String headerText = getString(R.string.word_for_Day) + " " + String.valueOf(dayNumber);
         dayNumberHeader.setText(headerText);
+
         if (!tripDayViewModel.getIsDefaultText()) {
             dayPrimaryDescription.setText(tripDayViewModel.getPrimaryDescription());
             dayUserNotes.setText(tripDayViewModel.getUserNotes());
         }
+
+        tripLocationAdapter = new TripLocationAdapter(
+                tripDayViewModel.getDestinations(),
+                userId,
+                tripId,
+                dayNodeKey
+        );
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        dayDestinationRecyclerView.setLayoutManager(layoutManager);
+        dayDestinationRecyclerView.setAdapter(tripLocationAdapter);
+
         if (tripDayViewModel.getDestinations().size() > 0) {
             dayDestinationRecyclerView.setVisibility(View.VISIBLE);
             destinationListLabel.setVisibility(View.VISIBLE);
-            TripLocationAdapter adapter = new TripLocationAdapter(
-                    tripDayViewModel.getDestinations(),
-                    userId,
-                    tripId,
-                    dayNodeKey
-            );
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-            dayDestinationRecyclerView.setLayoutManager(layoutManager);
-            dayDestinationRecyclerView.setAdapter(adapter);
         } else {
             dayDestinationRecyclerView.setVisibility(View.INVISIBLE);
             destinationListLabel.setVisibility(View.INVISIBLE);
@@ -191,6 +193,10 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
         if (requestCode == RequestCodes.TRIP_DAY_DESTINATION_REQUEST_CODE) {
             TripLocationViewModel tripLocationViewModel = new TripLocationViewModel(location.latitude, location.longitude, description, null);
             tripDayViewModel.getDestinations().add(tripLocationViewModel);
+            int oldCountIsNewPosition = tripLocationAdapter.getItemCount();
+            tripLocationAdapter.notifyItemInserted(oldCountIsNewPosition);
+            dayDestinationRecyclerView.setVisibility(View.VISIBLE);
+            destinationListLabel.setVisibility(View.VISIBLE);
             saveTripDay();
         }
     }
