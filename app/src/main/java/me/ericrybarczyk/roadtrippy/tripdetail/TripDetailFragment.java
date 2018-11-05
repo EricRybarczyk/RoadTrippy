@@ -28,8 +28,6 @@ import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.dto.TripDay;
 import me.ericrybarczyk.roadtrippy.maps.endpoints.NavigationIntentService;
-import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
-import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
 import me.ericrybarczyk.roadtrippy.tripday.TripDayActivity;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
@@ -48,7 +46,6 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
     private String tripId;
     private String tripNodeKey;
     private boolean tripIsArchived = false;
-
     private static final String TAG = TripDetailFragment.class.getSimpleName();
 
     public static TripDetailFragment newInstance(String tripId, String tripNodeKey) {
@@ -62,7 +59,6 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
 
     public TripDetailFragment() {
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,9 +79,7 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
             }
         }
 
-        DataOptions dataOptions = new DataOptions(AuthenticationManager.getCurrentUser().getUid());
-
-        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<TripDay, TripDayViewHolder>(dataOptions.getTripDayDataOptions(tripId)) {
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<TripDay, TripDayViewHolder>(presenter.getTripDayDataOptions(tripId)) {
             @NonNull
             @Override
             public TripDayViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -159,7 +153,6 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
 
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -212,7 +205,6 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
         outState.putString(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
         super.onSaveInstanceState(outState);
     }
-
 
     @Override
     public void setPresenter(TripDetailContract.Presenter presenter) {

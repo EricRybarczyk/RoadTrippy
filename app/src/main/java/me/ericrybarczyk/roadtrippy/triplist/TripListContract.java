@@ -1,8 +1,11 @@
 package me.ericrybarczyk.roadtrippy.triplist;
 
 
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+
 import me.ericrybarczyk.roadtrippy.BasePresenter;
 import me.ericrybarczyk.roadtrippy.BaseView;
+import me.ericrybarczyk.roadtrippy.dto.Trip;
 
 public interface TripListContract {
 
@@ -13,6 +16,7 @@ public interface TripListContract {
 
     interface Presenter extends BasePresenter {
         void createTrip();
+        FirebaseRecyclerOptions<Trip> getTripListDataOptions();
     }
 }
 

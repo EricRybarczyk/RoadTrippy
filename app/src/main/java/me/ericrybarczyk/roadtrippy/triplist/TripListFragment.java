@@ -55,10 +55,7 @@ public class TripListFragment extends Fragment implements TripListContract.View 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DataOptions dataOptions = new DataOptions(AuthenticationManager.getCurrentUser().getUid());
-
-        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Trip, TripViewHolder>(dataOptions.getTripListDataOptions()) {
-
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Trip, TripViewHolder>(presenter.getTripListDataOptions()) {
             @NonNull
             @Override
             public TripViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -114,7 +111,6 @@ public class TripListFragment extends Fragment implements TripListContract.View 
                 holder.iconHighlightTwo.setTypeface(FontManager.getTypeface(getContext(), FontManager.FONTAWESOME_SOLID));
             }
         };
-
     }
 
     @Override

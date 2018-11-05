@@ -16,17 +16,15 @@ public class DataOptions {
 
     public FirebaseRecyclerOptions<Trip> getTripListDataOptions() {
         DatabaseReference reference = repository.getTripList(this.userId);
-        FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
+        return new FirebaseRecyclerOptions.Builder<Trip>()
                 .setQuery(reference, Trip.class)
                 .build();
-        return options;
     }
 
     public FirebaseRecyclerOptions<TripDay> getTripDayDataOptions(String tripId) {
         DatabaseReference reference = repository.getTripDaysList(userId, tripId);
-        FirebaseRecyclerOptions<TripDay> options = new FirebaseRecyclerOptions.Builder<TripDay>()
+        return new FirebaseRecyclerOptions.Builder<TripDay>()
                 .setQuery(reference, TripDay.class)
                 .build();
-        return options;
     }
 }
