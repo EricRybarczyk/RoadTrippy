@@ -4,6 +4,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.dto.TripDay;
+import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 
 public class DataOptions {
     private TripRepository repository;
@@ -14,8 +15,13 @@ public class DataOptions {
         this.userId = userId;
     }
 
-    public FirebaseRecyclerOptions<Trip> getTripListDataOptions() {
-        DatabaseReference reference = repository.getTripList(this.userId);
+    public FirebaseRecyclerOptions<Trip> getTripListDataOptions(String tripListDisplayKey) {
+        DatabaseReference reference;
+        if (tripListDisplayKey.equals(ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR)) {
+            reference = repository.getTripList(this.userId);
+        } else {
+            reference = repository.getArchivedTripList(this.userId);
+        }
         return new FirebaseRecyclerOptions.Builder<Trip>()
                 .setQuery(reference, Trip.class)
                 .build();

@@ -42,6 +42,7 @@ import me.ericrybarczyk.roadtrippy.tasks.UserInfoSave;
 import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
+import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 
 public class TripListActivity extends AppCompatActivity {
@@ -60,7 +61,6 @@ public class TripListActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser firebaseUser;
-    private Location lastKnownLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
@@ -109,7 +109,7 @@ public class TripListActivity extends AppCompatActivity {
     private void initializeDisplay() {
         TripListFragment tripListFragment = (TripListFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
         if (tripListFragment == null) {
-            tripListFragment = TripListFragment.newInstance();
+            tripListFragment = TripListFragment.newInstance(ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripListFragment, R.id.content_container);
         }
         tripListPresenter = new TripListPresenter(new TripRepository(), tripListFragment);
@@ -146,8 +146,8 @@ public class TripListActivity extends AppCompatActivity {
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        lastKnownLocation = location;
-                        Log.i(TAG, "lastKnownLocation updated");
+                        // no need to use the location now, but this helps make sure location is current when user accesses map functionality
+                        Log.i(TAG, "Location updated");
                     }
 
                 })

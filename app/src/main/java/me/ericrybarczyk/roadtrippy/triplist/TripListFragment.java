@@ -8,12 +8,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -23,11 +24,9 @@ import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.maps.MapSettings;
-import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
 import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.tripdetail.TripDetailActivity;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
-import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 import me.ericrybarczyk.roadtrippy.util.FontManager;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
@@ -38,14 +37,19 @@ public class TripListFragment extends Fragment implements TripListContract.View 
 
     private TripListContract.Presenter presenter;
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
+    private String keyTripListDisplayType;
 
     @BindView(R.id.trip_list) protected RecyclerView tripListRecyclerView;
     @BindView(R.id.fab) protected FloatingActionButton fab;
 
     private static final String TAG = TripListFragment.class.getSimpleName();
 
-    public static TripListFragment newInstance() {
-        return new TripListFragment();
+    public static TripListFragment newInstance(String tripListDisplayKey) {
+        TripListFragment tripListFragment = new TripListFragment();
+        Bundle args = new Bundle();
+        args.putString(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE, tripListDisplayKey);
+        tripListFragment.setArguments(args);
+        return tripListFragment;
     }
 
     public TripListFragment() {
@@ -55,7 +59,20 @@ public class TripListFragment extends Fragment implements TripListContract.View 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Trip, TripViewHolder>(presenter.getTripListDataOptions()) {
+        if (savedInstanceState != null) {
+            keyTripListDisplayType = savedInstanceState.getString(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE);
+        } else if (getArguments() != null) {
+            keyTripListDisplayType = getArguments().getString(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE);
+        } else {
+            Log.e(TAG, "Missing expected value for KEY_TRIP_LIST_DISPLAY_TYPE, using default.");
+            keyTripListDisplayType = ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR;
+        }
+
+        firebaseRecyclerAdapter = this.getFirebaseRecyclerAdapter(presenter.getTripListDataOptions(keyTripListDisplayType));
+    }
+
+    private FirebaseRecyclerAdapter<Trip, TripViewHolder> getFirebaseRecyclerAdapter(FirebaseRecyclerOptions<Trip> options) {
+        return new FirebaseRecyclerAdapter<Trip, TripViewHolder>(options) {
             @NonNull
             @Override
             public TripViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -145,6 +162,12 @@ public class TripListFragment extends Fragment implements TripListContract.View 
         if (firebaseRecyclerAdapter != null) {
             firebaseRecyclerAdapter.stopListening();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE, keyTripListDisplayType);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

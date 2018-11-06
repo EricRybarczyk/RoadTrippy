@@ -16,7 +16,7 @@ public interface TripListContract {
 
     interface Presenter extends BasePresenter {
         void createTrip();
-        FirebaseRecyclerOptions<Trip> getTripListDataOptions();
+        FirebaseRecyclerOptions<Trip> getTripListDataOptions(String tripListDisplayKey);
     }
 }
 
