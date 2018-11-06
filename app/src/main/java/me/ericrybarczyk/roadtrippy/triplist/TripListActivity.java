@@ -38,6 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.settings.SettingsActivity;
+import me.ericrybarczyk.roadtrippy.tasks.UserInfoSave;
 import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
@@ -232,17 +233,11 @@ public class TripListActivity extends AppCompatActivity {
     private void onSignedInInitialize(FirebaseUser firebaseUser) {
         this.activeUsername = firebaseUser.getDisplayName();
         userId = firebaseUser.getUid();
-
         View header = navigationView.getHeaderView(0);
         TextView usernameText = header.findViewById(R.id.username_display_text);
         usernameText.setText(activeUsername);
-
         initializeDisplay();
-
-// TODO: finish implementing onSignedInInitialize()
-//        this.saveUserPreference(userId);
-//        new UserInfoSave().execute(firebaseUser);
-//        this.tripArchiveCheck(userId);
+        new UserInfoSave().execute(firebaseUser);
     }
 
     private void onSignedOutCleanup() {
