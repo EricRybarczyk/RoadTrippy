@@ -41,6 +41,7 @@
 
         <activity android:name=".tripday.TripDayActivity"
             android:label="@string/app_label_trip_day"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".tripdetail.TripDetailActivity" />
 
         <activity android:name=".settings.SettingsActivity"

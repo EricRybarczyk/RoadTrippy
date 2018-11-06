@@ -16,6 +16,6 @@ public interface TripDetailContract {
 
     interface Presenter extends BasePresenter {
         void getTrip(String userId, String tripNodeKey);
-        FirebaseRecyclerOptions<TripDay> getTripDayDataOptions(String tripId);
+//        FirebaseRecyclerOptions<TripDay> getTripDayDataOptions(String tripId);
     }
 }

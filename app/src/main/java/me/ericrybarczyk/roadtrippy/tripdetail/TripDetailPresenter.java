@@ -48,11 +48,11 @@ public class TripDetailPresenter implements TripDetailContract.Presenter {
         });
     }
 
-    @Override
-    public FirebaseRecyclerOptions<TripDay> getTripDayDataOptions(String tripId) {
-        DataOptions dataOptions = new DataOptions(AuthenticationManager.getCurrentUser().getUid());
-        return dataOptions.getTripDayDataOptions(tripId);
-    }
+//    @Override
+//    public FirebaseRecyclerOptions<TripDay> getTripDayDataOptions(String tripId) {
+//        DataOptions dataOptions = new DataOptions(AuthenticationManager.getCurrentUser().getUid());
+//        return dataOptions.getTripDayDataOptions(tripId);
+//    }
 
     @Override
     public void start() {

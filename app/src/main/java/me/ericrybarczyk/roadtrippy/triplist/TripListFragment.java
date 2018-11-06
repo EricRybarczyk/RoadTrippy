@@ -24,9 +24,11 @@ import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.maps.MapSettings;
+import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
 import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.tripdetail.TripDetailActivity;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
+import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 import me.ericrybarczyk.roadtrippy.util.FontManager;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
@@ -68,7 +70,9 @@ public class TripListFragment extends Fragment implements TripListContract.View 
             keyTripListDisplayType = ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR;
         }
 
-        firebaseRecyclerAdapter = this.getFirebaseRecyclerAdapter(presenter.getTripListDataOptions(keyTripListDisplayType));
+        DataOptions dataOptions = new DataOptions(AuthenticationManager.getCurrentUser().getUid());
+
+        firebaseRecyclerAdapter = this.getFirebaseRecyclerAdapter(dataOptions.getTripListDataOptions(keyTripListDisplayType));
     }
 
     private FirebaseRecyclerAdapter<Trip, TripViewHolder> getFirebaseRecyclerAdapter(FirebaseRecyclerOptions<Trip> options) {
