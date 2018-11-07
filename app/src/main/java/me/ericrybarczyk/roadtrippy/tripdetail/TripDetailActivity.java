@@ -1,5 +1,6 @@
 package me.ericrybarczyk.roadtrippy.tripdetail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -38,9 +39,18 @@ public class TripDetailActivity extends AppCompatActivity {
 
         AuthenticationManager.verifyAuthentication(this);
 
-        String tripId = getIntent().getStringExtra(ArgumentKeys.KEY_TRIP_ID);
-        String tripNodeKey = getIntent().getStringExtra(ArgumentKeys.KEY_TRIP_NODE_KEY);
-        boolean tripIsArchived = getIntent().getBooleanExtra(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, false);
+        String tripId;
+        String tripNodeKey;
+        boolean tripIsArchived = false;
+        Intent starter = getIntent();
+        if (starter.hasExtra(ArgumentKeys.WIDGET_REQUEST_TRIP_ID)) {
+            tripId = starter.getStringExtra(ArgumentKeys.WIDGET_REQUEST_TRIP_ID);
+            tripNodeKey = starter.getStringExtra(ArgumentKeys.WIDGET_REQUEST_TRIP_NODE_KEY);
+        } else {
+            tripId = starter.getStringExtra(ArgumentKeys.KEY_TRIP_ID);
+            tripNodeKey = starter.getStringExtra(ArgumentKeys.KEY_TRIP_NODE_KEY);
+        }
+        tripIsArchived = starter.getBooleanExtra(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, false);
 
         TripDetailFragment tripDetailFragment = (TripDetailFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
         if (tripDetailFragment == null) {

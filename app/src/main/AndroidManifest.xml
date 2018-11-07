@@ -47,6 +47,21 @@
         <activity android:name=".settings.SettingsActivity"
             android:label="@string/app_label_settings"
             android:parentActivityName=".triplist.TripListActivity"/>
+
+        <activity android:name=".widget.WidgetTripCountdownConfigActivity"
+            android:label="@string/widget_trip_countdown_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".widget.WidgetTripCountdown">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_trip_countdown" />
+        </receiver>
     </application>
 
 </manifest>

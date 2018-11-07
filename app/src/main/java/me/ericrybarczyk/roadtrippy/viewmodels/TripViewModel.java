@@ -33,6 +33,7 @@ public class TripViewModel extends ViewModel {
     private int durationMinutes;
     private boolean includeReturn;
     private boolean isIncludeReturnEdited;
+    private boolean isArchived;
 
     public TripViewModel() {
         init();
@@ -49,6 +50,7 @@ public class TripViewModel extends ViewModel {
         durationMinutes = 0;
         originLatLng = null;
         destinationLatLng = null;
+        isArchived = false;
     }
 
     public static TripViewModel from(Trip trip) {
@@ -64,6 +66,7 @@ public class TripViewModel extends ViewModel {
         viewModel.setDestinationDescription(trip.getDestinationDescription());
         viewModel.setIncludeReturn(trip.getIncludeReturn());
         viewModel.setDurationMinutes(trip.getDurationMinutes());
+        viewModel.setIsArchived(trip.getIsArchived());
 
         return viewModel;
     }
@@ -79,6 +82,7 @@ public class TripViewModel extends ViewModel {
         this.setDestinationDescription(trip.getDestinationDescription());
         this.setIncludeReturn(trip.getIncludeReturn());
         this.setDurationMinutes(trip.getDurationMinutes());
+        this.setIsArchived(trip.getIsArchived());
     }
 
     public void reset() {
@@ -253,6 +257,14 @@ public class TripViewModel extends ViewModel {
     }
     public boolean isIncludeReturnEdited() {
         return isIncludeReturnEdited;
+    }
+
+    public boolean getIsArchived() {
+        return isArchived;
+    }
+
+    public void setIsArchived(boolean archived) {
+        isArchived = archived;
     }
 
     public boolean isValidForSave() {
