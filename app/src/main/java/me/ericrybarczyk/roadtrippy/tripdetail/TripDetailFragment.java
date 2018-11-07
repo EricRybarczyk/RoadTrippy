@@ -109,7 +109,6 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
                 holder.setTripDayListClickListener(new TripDayViewHolder.TripDayListClickListener() {
                     @Override
                     public void onTripDayListItemClick() {
-//                        Toast.makeText(getContext(), "Not Implemented Yet", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getContext(), TripDayActivity.class);
                         intent.putExtra(ArgumentKeys.KEY_TRIP_ID, tripDayViewModel.getTripId());
                         intent.putExtra(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);

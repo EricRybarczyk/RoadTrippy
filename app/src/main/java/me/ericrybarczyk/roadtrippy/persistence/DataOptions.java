@@ -4,6 +4,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.dto.TripDay;
+import me.ericrybarczyk.roadtrippy.dto.TripLocation;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 
 public class DataOptions {
@@ -31,6 +32,13 @@ public class DataOptions {
         DatabaseReference reference = repository.getTripDaysList(userId, tripId);
         return new FirebaseRecyclerOptions.Builder<TripDay>()
                 .setQuery(reference, TripDay.class)
+                .build();
+    }
+
+    public FirebaseRecyclerOptions<TripLocation> getDestinationsForTripDay(String tripId, String dayNodeKey) {
+        DatabaseReference reference = repository.getDestinationsForTripDay(userId, tripId, dayNodeKey);
+        return new FirebaseRecyclerOptions.Builder<TripLocation>()
+                .setQuery(reference, TripLocation.class)
                 .build();
     }
 }
