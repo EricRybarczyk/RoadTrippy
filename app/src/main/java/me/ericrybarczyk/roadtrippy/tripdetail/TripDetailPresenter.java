@@ -32,8 +32,14 @@ public class TripDetailPresenter implements TripDetailContract.Presenter {
     }
 
     @Override
-    public void getTrip(String userId, String tripNodeKey) {
-        DatabaseReference tripReference = tripDataSource.getTrip(userId, tripNodeKey);
+    public void getTrip(String userId, String tripNodeKey, boolean tripIsArchived) {
+        DatabaseReference tripReference;
+        if (tripIsArchived) {
+            tripReference = tripDataSource.getArchivedTrip(userId, tripNodeKey);
+        } else {
+            tripReference = tripDataSource.getTrip(userId, tripNodeKey);
+        }
+
         tripReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -47,12 +53,6 @@ public class TripDetailPresenter implements TripDetailContract.Presenter {
             }
         });
     }
-
-//    @Override
-//    public FirebaseRecyclerOptions<TripDay> getTripDayDataOptions(String tripId) {
-//        DataOptions dataOptions = new DataOptions(AuthenticationManager.getCurrentUser().getUid());
-//        return dataOptions.getTripDayDataOptions(tripId);
-//    }
 
     @Override
     public void start() {

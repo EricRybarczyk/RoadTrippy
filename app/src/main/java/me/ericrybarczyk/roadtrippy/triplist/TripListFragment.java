@@ -185,6 +185,7 @@ public class TripListFragment extends Fragment implements TripListContract.View 
         Intent intent = new Intent(getContext(), TripDetailActivity.class);
         intent.putExtra(ArgumentKeys.KEY_TRIP_ID, tripId);
         intent.putExtra(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
+        intent.putExtra(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, (keyTripListDisplayType.equals(ArgumentKeys.TRIP_LIST_DISPLAY_ARCHIVE_INDICATOR)));
         startActivity(intent);
     }
 

@@ -42,7 +42,8 @@ public class TripDayActivity extends AppCompatActivity {
             String tripNodeKey = getIntent().getStringExtra(ArgumentKeys.KEY_TRIP_NODE_KEY);
             int dayNumber = getIntent().getIntExtra(ArgumentKeys.KEY_TRIP_DAY_NUMBER, -1);
             String dayNodeKey = getIntent().getStringExtra(ArgumentKeys.KEY_DAY_NODE_KEY);
-            tripDayFragment = TripDayFragment.newInstance(tripId, tripNodeKey, dayNumber, dayNodeKey);
+            boolean tripIsArchived = getIntent().getBooleanExtra(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, false);
+            tripDayFragment = TripDayFragment.newInstance(tripId, tripNodeKey, dayNumber, dayNodeKey, tripIsArchived);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripDayFragment, R.id.content_container);
         }
         // Presenter must still be initialized because the Presenter links itself to the View

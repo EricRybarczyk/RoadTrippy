@@ -40,10 +40,11 @@ public class TripDetailActivity extends AppCompatActivity {
 
         String tripId = getIntent().getStringExtra(ArgumentKeys.KEY_TRIP_ID);
         String tripNodeKey = getIntent().getStringExtra(ArgumentKeys.KEY_TRIP_NODE_KEY);
+        boolean tripIsArchived = getIntent().getBooleanExtra(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, false);
 
         TripDetailFragment tripDetailFragment = (TripDetailFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
         if (tripDetailFragment == null) {
-            tripDetailFragment = TripDetailFragment.newInstance(tripId, tripNodeKey);
+            tripDetailFragment = TripDetailFragment.newInstance(tripId, tripNodeKey, tripIsArchived);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripDetailFragment, R.id.content_container);
         }
         // Presenter must still be initialized because the Presenter links itself to the View

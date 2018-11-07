@@ -92,6 +92,11 @@ public class TripRepository implements TripDataSource {
     }
 
     @Override
+    public DatabaseReference getArchivedTrip(String userId, String tripNodeKey) {
+        return firebaseDatabase.getReference().child(DatabasePaths.BASE_PATH_ARCHIVE + userId + "/" + tripNodeKey);
+    }
+
+    @Override
     public DatabaseReference getDestinationsForTripDay(String userId, String tripId, String dayNodeKey) {
         return firebaseDatabase.getReference().child(DatabasePaths.BASE_PATH_TRIPDAYS + userId + "/" + tripId + "/"
                 + dayNodeKey + "/" + DatabasePaths.KEY_TRIPDAY_DESTINATIONS_CHILD);

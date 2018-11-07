@@ -14,6 +14,7 @@ public interface TripDataSource {
     DatabaseReference getTripDaysList(String userId, String tripId);
     DatabaseReference getTripDay(String userId, String tripId, String dayNodeKey);
     DatabaseReference getTrip(String userId, String tripNodeKey);
+    DatabaseReference getArchivedTrip(String userId, String tripNodeKey);
     DatabaseReference getDestinationsForTripDay(String userId, String tripId, String dayNodeKey);
     void saveTrip(Trip trip, List<TripDay> tripDays);
     void updateTripDayHighlight(String userId, String tripId, String dayNodeKey, boolean isHighlight);

@@ -44,6 +44,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
     private String tripId;
     private String tripNodeKey;
     private String dayNodeKey;
+    private boolean tripIsArchived;
     private int dayNumber;
     private LatLng tripDestination;
 
@@ -58,13 +59,14 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
 
     private static final String TAG = TripDayFragment.class.getSimpleName();
 
-    public static TripDayFragment newInstance(String tripId, String tripNodeKey, int dayNumber, String dayNodeKey) {
+    public static TripDayFragment newInstance(String tripId, String tripNodeKey, int dayNumber, String dayNodeKey, boolean tripIsArchived) {
         TripDayFragment tripDayFragment = new TripDayFragment();
         Bundle args = new Bundle();
         args.putString(ArgumentKeys.KEY_TRIP_ID, tripId);
         args.putString(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
         args.putInt(ArgumentKeys.KEY_TRIP_DAY_NUMBER, dayNumber);
         args.putString(ArgumentKeys.KEY_DAY_NODE_KEY, dayNodeKey);
+        args.putBoolean(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, tripIsArchived);
         tripDayFragment.setArguments(args);
         return tripDayFragment;
     }
@@ -83,6 +85,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
                 tripNodeKey = savedInstanceState.getString(ArgumentKeys.KEY_TRIP_NODE_KEY);
                 dayNodeKey = savedInstanceState.getString(ArgumentKeys.KEY_DAY_NODE_KEY);
                 dayNumber = savedInstanceState.getInt(ArgumentKeys.KEY_TRIP_DAY_NUMBER);
+                tripIsArchived = savedInstanceState.getBoolean(ArgumentKeys.TRIP_IS_ARCHIVED_KEY);
                 if (savedInstanceState.containsKey(ArgumentKeys.KEY_TRIP_DESTINATION_LATITUDE)) {
                     tripDestination = new LatLng(
                             savedInstanceState.getDouble(ArgumentKeys.KEY_TRIP_DESTINATION_LATITUDE),
@@ -95,6 +98,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
             tripNodeKey = getArguments().getString(ArgumentKeys.KEY_TRIP_NODE_KEY);
             dayNodeKey = getArguments().getString(ArgumentKeys.KEY_DAY_NODE_KEY);
             dayNumber = getArguments().getInt(ArgumentKeys.KEY_TRIP_DAY_NUMBER);
+            tripIsArchived = getArguments().getBoolean(ArgumentKeys.TRIP_IS_ARCHIVED_KEY);
         }
         if (tripDestination == null) {
             presenter.getTripDestination(userId, tripNodeKey);
@@ -130,7 +134,8 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
                 tripDayViewModel.getDestinations(),
                 userId,
                 tripId,
-                dayNodeKey
+                dayNodeKey,
+                tripIsArchived
         );
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         dayDestinationRecyclerView.setLayoutManager(layoutManager);
@@ -142,6 +147,13 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
         } else {
             dayDestinationRecyclerView.setVisibility(View.INVISIBLE);
             destinationListLabel.setVisibility(View.INVISIBLE);
+        }
+
+        if (tripIsArchived) {
+            dayPrimaryDescription.setEnabled(false);
+            dayUserNotes.setEnabled(false);
+            searchDestinationButton.setVisibility(View.INVISIBLE);
+            saveTripDayButton.setEnabled(false);
         }
     }
 
@@ -155,6 +167,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
     }
 
     private void setHighlightIndicator(boolean isHighlight) {
+        //if (tripIsArchived) return;
         if (isHighlight) {
             iconHighlight.setTypeface(FontManager.getTypeface(getContext(), FontManager.FONTAWESOME_SOLID));
             iconHighlight.setTextColor(ContextCompat.getColor(getContext(), R.color.colorControlHighlight));
@@ -166,6 +179,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
 
     @OnClick(R.id.icon_highlight)
     public void onHighlightClick() {
+        if (tripIsArchived) return;
         tripDayViewModel.setIsHighlight(!tripDayViewModel.getIsHighlight());
         presenter.updateTripDayHighlight(userId, tripId, dayNodeKey, tripDayViewModel.getIsHighlight());
         setHighlightIndicator(tripDayViewModel.getIsHighlight());
@@ -225,6 +239,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
         outState.putString(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
         outState.putString(ArgumentKeys.KEY_DAY_NODE_KEY, dayNodeKey);
         outState.putInt(ArgumentKeys.KEY_TRIP_DAY_NUMBER, dayNumber);
+        outState.putBoolean(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, tripIsArchived);
         if (tripDestination != null) {
             outState.putDouble(ArgumentKeys.KEY_TRIP_DESTINATION_LATITUDE, tripDestination.latitude);
             outState.putDouble(ArgumentKeys.KEY_TRIP_DESTINATION_LONGITUDE, tripDestination.longitude);

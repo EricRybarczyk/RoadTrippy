@@ -24,12 +24,14 @@ public class TripLocationAdapter extends RecyclerView.Adapter<TripLocationAdapte
     private String userId;
     private String tripId;
     private String dayNodeKey;
+    private boolean tripIsArchived = false;
 
-    public TripLocationAdapter(List<TripLocationViewModel> tripLocationViewModelList, String userId, String tripId, String dayNodeKey) {
+    public TripLocationAdapter(List<TripLocationViewModel> tripLocationViewModelList, String userId, String tripId, String dayNodeKey, boolean tripIsArchived) {
         this.destinations = tripLocationViewModelList;
         this.userId = userId;
         this.tripId = tripId;
         this.dayNodeKey = dayNodeKey;
+        this.tripIsArchived = tripIsArchived;
     }
 
 
@@ -46,14 +48,20 @@ public class TripLocationAdapter extends RecyclerView.Adapter<TripLocationAdapte
         TripLocationViewModel viewModel = destinations.get(position);
 
         holder.destinationDescription.setText(viewModel.getDescription());
+        holder.setTripIsArchived(tripIsArchived);
 
-        holder.iconKeep.setTypeface(FontManager.getTypeface(holder.iconKeep.getContext(), FontManager.FONTAWESOME_REGULAR));
-        holder.iconKeep.setTextColor(ContextCompat.getColor(holder.iconKeep.getContext(), R.color.colorControlHighlightSafe));
-        holder.iconKeep.setVisibility(View.INVISIBLE);
+        if (tripIsArchived) {
+            holder.iconKeep.setVisibility(View.INVISIBLE);
+            holder.iconTrash.setVisibility(View.INVISIBLE);
+        } else {
+            holder.iconKeep.setTypeface(FontManager.getTypeface(holder.iconKeep.getContext(), FontManager.FONTAWESOME_REGULAR));
+            holder.iconKeep.setTextColor(ContextCompat.getColor(holder.iconKeep.getContext(), R.color.colorControlHighlightSafe));
+            holder.iconKeep.setVisibility(View.INVISIBLE);
 
-        holder.iconTrash.setTypeface(FontManager.getTypeface(holder.iconTrash.getContext(), FontManager.FONTAWESOME_REGULAR));
-        holder.iconTrash.setTextColor(ContextCompat.getColor(holder.iconTrash.getContext(), R.color.colorControlHighlightOff));
-        holder.iconTrash.setVisibility(View.VISIBLE);
+            holder.iconTrash.setTypeface(FontManager.getTypeface(holder.iconTrash.getContext(), FontManager.FONTAWESOME_REGULAR));
+            holder.iconTrash.setTextColor(ContextCompat.getColor(holder.iconTrash.getContext(), R.color.colorControlHighlightOff));
+            holder.iconTrash.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -72,14 +80,20 @@ public class TripLocationAdapter extends RecyclerView.Adapter<TripLocationAdapte
         @BindView(R.id.icon_trash) protected TextView iconTrash;
 
         private boolean trashIconActivated;
+        private boolean tripIsArchived;
 
-        public TripLocationHolder(View itemView) {
+        public void setTripIsArchived(boolean tripIsArchived) {
+            this.tripIsArchived = tripIsArchived;
+        }
+
+        TripLocationHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
         @OnClick(R.id.icon_trash)
         public void onClickTrash() {
+            if (tripIsArchived) return;
             trashIconActivated = !trashIconActivated; // flip the toggle
             if (trashIconActivated) {
                 iconTrash.setTextColor(ContextCompat.getColor(iconTrash.getContext(), R.color.colorControlHighlightWarning));
@@ -99,6 +113,7 @@ public class TripLocationAdapter extends RecyclerView.Adapter<TripLocationAdapte
 
         @OnClick(R.id.icon_keep)
         public void onClickKeep() {
+            if (tripIsArchived) return;
             iconKeep.setVisibility(View.INVISIBLE);
             trashIconActivated = false;
             iconTrash.setTextColor(ContextCompat.getColor(iconTrash.getContext(), R.color.colorControlHighlightOff));

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,11 +50,12 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
     private boolean tripIsArchived = false;
     private static final String TAG = TripDetailFragment.class.getSimpleName();
 
-    public static TripDetailFragment newInstance(String tripId, String tripNodeKey) {
+    public static TripDetailFragment newInstance(String tripId, String tripNodeKey, boolean tripIsArchived) {
         TripDetailFragment tripDetailFragment = new TripDetailFragment();
         Bundle args = new Bundle();
         args.putString(ArgumentKeys.KEY_TRIP_ID, tripId);
         args.putString(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
+        args.putBoolean(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, tripIsArchived);
         tripDetailFragment.setArguments(args);
         return tripDetailFragment;
     }
@@ -69,13 +71,12 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
             if (savedInstanceState.containsKey(ArgumentKeys.KEY_TRIP_ID)) {
                 tripId = savedInstanceState.getString(ArgumentKeys.KEY_TRIP_ID);
                 tripNodeKey = savedInstanceState.getString(ArgumentKeys.KEY_TRIP_NODE_KEY);
+                tripIsArchived = savedInstanceState.getBoolean(ArgumentKeys.TRIP_IS_ARCHIVED_KEY);
             }
         } else if (getArguments() != null) {
             if (getArguments().containsKey(ArgumentKeys.KEY_TRIP_ID)) {
                 tripId = getArguments().getString(ArgumentKeys.KEY_TRIP_ID);
                 tripNodeKey = getArguments().getString(ArgumentKeys.KEY_TRIP_NODE_KEY);
-            }
-            if (getArguments().containsKey(ArgumentKeys.TRIP_IS_ARCHIVED_KEY)) {
                 tripIsArchived = getArguments().getBoolean(ArgumentKeys.TRIP_IS_ARCHIVED_KEY);
             }
         }
@@ -114,6 +115,7 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
                         intent.putExtra(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
                         intent.putExtra(ArgumentKeys.KEY_TRIP_DAY_NUMBER, tripDayViewModel.getDayNumber());
                         intent.putExtra(ArgumentKeys.KEY_DAY_NODE_KEY, dayNodeKey);
+                        intent.putExtra(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, tripIsArchived);
                         startActivityForResult(intent, RequestCodes.TRIP_DAY_REQUEST_CODE);
                     }
                 });
@@ -162,7 +164,12 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
         final View rootView = inflater.inflate(R.layout.fragment_trip_detail, container, false);
         ButterKnife.bind(this, rootView);
 
-        presenter.getTrip(AuthenticationManager.getCurrentUser().getUid(), tripNodeKey);
+        try {
+            presenter.getTrip(AuthenticationManager.getCurrentUser().getUid(), tripNodeKey, tripIsArchived);
+        } catch (Exception e) {
+            Snackbar.make(tripDaysListRecyclerView, R.string.error_message_data_lookup_exception, Snackbar.LENGTH_SHORT).show();
+            return rootView;
+        }
 
         File mapImage = FileSystemUtil.getPrimaryTripImageFile(getContext(), tripId);
         Picasso.with(getContext())
@@ -206,6 +213,7 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(ArgumentKeys.KEY_TRIP_ID, tripId);
         outState.putString(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
+        outState.putBoolean(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, tripIsArchived);
         super.onSaveInstanceState(outState);
     }
 

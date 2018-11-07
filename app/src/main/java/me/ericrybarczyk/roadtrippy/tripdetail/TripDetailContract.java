@@ -15,7 +15,7 @@ public interface TripDetailContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getTrip(String userId, String tripNodeKey);
+        void getTrip(String userId, String tripNodeKey, boolean tripIsArchived);
 //        FirebaseRecyclerOptions<TripDay> getTripDayDataOptions(String tripId);
     }
 }
