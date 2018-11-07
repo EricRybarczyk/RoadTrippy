@@ -31,12 +31,6 @@ public class TripListPresenter implements TripListContract.Presenter {
         tripListView.showCreateTrip();
     }
 
-//    @Override
-//    public FirebaseRecyclerOptions<Trip> getTripListDataOptions(String tripListDisplayKey) {
-//        DataOptions dataOptions = new DataOptions(AuthenticationManager.getCurrentUser().getUid());
-//        return dataOptions.getTripListDataOptions(tripListDisplayKey);
-//    }
-
     @Override
     public void start() {
 

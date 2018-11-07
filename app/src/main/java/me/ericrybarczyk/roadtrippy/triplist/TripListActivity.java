@@ -52,7 +52,6 @@ public class TripListActivity extends AppCompatActivity {
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
 
-    private TripListPresenter tripListPresenter;
     private static final String TAG = TripListActivity.class.getSimpleName();
 
     public static final String ANONYMOUS = "anonymous";
@@ -62,6 +61,8 @@ public class TripListActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser firebaseUser;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private String keyTripListDisplayType;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +81,13 @@ public class TripListActivity extends AppCompatActivity {
 
         setupNavigationDrawer();
 
-        // TODO: load saved instance state if it exists
+        if (savedInstanceState != null) {
+            keyTripListDisplayType = savedInstanceState.getString(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE);
+        } else if (getIntent().hasExtra(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE)) {
+            keyTripListDisplayType = getIntent().getStringExtra(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE);
+        } else {
+            keyTripListDisplayType = ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR;
+        }
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         verifyPermissions();
@@ -109,10 +116,11 @@ public class TripListActivity extends AppCompatActivity {
     private void initializeDisplay() {
         TripListFragment tripListFragment = (TripListFragment) getSupportFragmentManager().findFragmentById(R.id.content_container);
         if (tripListFragment == null) {
-            tripListFragment = TripListFragment.newInstance(ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR);
+            tripListFragment = TripListFragment.newInstance(keyTripListDisplayType);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripListFragment, R.id.content_container);
         }
-        tripListPresenter = new TripListPresenter(new TripRepository(), tripListFragment);
+        // Presenter must still be initialized because the Presenter links itself to the View
+        TripListPresenter tripListPresenter = new TripListPresenter(new TripRepository(), tripListFragment);
     }
 
     private void verifyPermissions() {
@@ -164,9 +172,12 @@ public class TripListActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        TripListContract.View tripListView;
                         switch (item.getItemId()) {
                             case R.id.nav_trip_list:
                                 // current screen, no action
+                                tripListView = (TripListContract.View) getSupportFragmentManager().findFragmentById(R.id.content_container);
+                                tripListView.showDefaultTripList();
                                 break;
                             case R.id.nav_create_trip:
                                 Intent intentCreateTrip = new Intent(TripListActivity.this, AddEditTripActivity.class);
@@ -174,6 +185,8 @@ public class TripListActivity extends AppCompatActivity {
                                 break;
                             case R.id.nav_trip_history:
                                 // trip history activity
+                                tripListView = (TripListContract.View) getSupportFragmentManager().findFragmentById(R.id.content_container);
+                                tripListView.showArchivedTripList();
                                 break;
                             case R.id.nav_settings:
                                 Intent intentSettings = new Intent(TripListActivity.this, SettingsActivity.class);
@@ -254,5 +267,11 @@ public class TripListActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         firebaseAuth.removeAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE, keyTripListDisplayType);
+        super.onSaveInstanceState(outState);
     }
 }

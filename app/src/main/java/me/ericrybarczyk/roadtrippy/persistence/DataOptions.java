@@ -17,10 +17,10 @@ public class DataOptions {
 
     public FirebaseRecyclerOptions<Trip> getTripListDataOptions(String tripListDisplayKey) {
         DatabaseReference reference;
-        if (tripListDisplayKey.equals(ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR)) {
-            reference = repository.getTripList(this.userId);
-        } else {
+        if (tripListDisplayKey.equals(ArgumentKeys.TRIP_LIST_DISPLAY_ARCHIVE_INDICATOR)) {
             reference = repository.getArchivedTripList(this.userId);
+        } else {
+            reference = repository.getTripList(this.userId);
         }
         return new FirebaseRecyclerOptions.Builder<Trip>()
                 .setQuery(reference, Trip.class)

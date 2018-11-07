@@ -189,6 +189,30 @@ public class TripListFragment extends Fragment implements TripListContract.View 
     }
 
     @Override
+    public void showArchivedTripList() {
+        if (!this.keyTripListDisplayType.equals(ArgumentKeys.TRIP_LIST_DISPLAY_ARCHIVE_INDICATOR)) {
+            changeRecyclerAdapter(ArgumentKeys.TRIP_LIST_DISPLAY_ARCHIVE_INDICATOR);
+        }
+    }
+
+    @Override
+    public void showDefaultTripList() {
+        if (!this.keyTripListDisplayType.equals(ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR)) {
+            changeRecyclerAdapter(ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR);
+        }
+    }
+
+    private void changeRecyclerAdapter(String tripListDisplayType) {
+        firebaseRecyclerAdapter.stopListening();
+        tripListRecyclerView.setAdapter(null);
+        DataOptions dataOptions = new DataOptions(AuthenticationManager.getCurrentUser().getUid());
+        firebaseRecyclerAdapter = getFirebaseRecyclerAdapter(dataOptions.getTripListDataOptions(tripListDisplayType));
+        tripListRecyclerView.setAdapter(firebaseRecyclerAdapter);
+        firebaseRecyclerAdapter.startListening();
+        this.keyTripListDisplayType = tripListDisplayType;
+    }
+
+    @Override
     public void setPresenter(TripListContract.Presenter presenter) {
         this.presenter = checkNotNull(presenter);
     }
