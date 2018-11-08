@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO: consider renaming this since it is also used by dialog_settings_home_location (change _tlp id prefix too?) -->
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -77,14 +76,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_button_tlp"
         app:layout_constraintBottom_toTopOf="@id/set_location_button_tlp">
-
-        <!-- fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/map_tlp"
-            class="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            map:uiZoomControls="true"
-            map:uiZoomGestures="true" / -->
 
     </FrameLayout>
 

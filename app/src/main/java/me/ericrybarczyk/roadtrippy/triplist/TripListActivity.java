@@ -56,7 +56,6 @@ public class TripListActivity extends AppCompatActivity {
 
     public static final String ANONYMOUS = "anonymous";
     private String activeUsername = ANONYMOUS;
-    private String userId;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private FirebaseUser firebaseUser;
@@ -221,7 +220,7 @@ public class TripListActivity extends AppCompatActivity {
                 startActivityForResult(
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
-                                .setIsSmartLockEnabled(false) // TODO: Udacity tutorial set this to false (default is true: system will basically keep user automatically logged in)
+                                .setIsSmartLockEnabled(true)
                                 .setAvailableProviders(providers)
                                 .build(),
                         RequestCodes.SIGN_IN_REQUEST_CODE);
@@ -244,7 +243,6 @@ public class TripListActivity extends AppCompatActivity {
 
     private void onSignedInInitialize(FirebaseUser firebaseUser) {
         this.activeUsername = firebaseUser.getDisplayName();
-        userId = firebaseUser.getUid();
         View header = navigationView.getHeaderView(0);
         TextView usernameText = header.findViewById(R.id.username_display_text);
         usernameText.setText(activeUsername);

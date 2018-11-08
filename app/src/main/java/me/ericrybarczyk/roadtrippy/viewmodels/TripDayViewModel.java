@@ -3,7 +3,6 @@ package me.ericrybarczyk.roadtrippy.viewmodels;
 import android.arch.lifecycle.ViewModel;
 
 import org.threeten.bp.LocalDate;
-import org.threeten.bp.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 

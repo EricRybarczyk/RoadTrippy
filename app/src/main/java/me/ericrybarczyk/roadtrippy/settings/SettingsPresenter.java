@@ -26,8 +26,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
     }
 
     @Override
-    public int getCurrentDrivingDurationPreference() {
-        int defaultHours = 12;
+    public int getCurrentDrivingDurationPreference(int defaultHours) {
         return sharedPreferences.getInt(ArgumentKeys.KEY_DRIVING_DURATION_PREFERENCE, defaultHours);
     }
 

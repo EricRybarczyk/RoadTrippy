@@ -17,6 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/TripListItemContent"
-        tools:text="October 17 to 21" />
+        tools:text="October 20 to 24" />
 
 </LinearLayout>

@@ -14,6 +14,6 @@ public interface AddEditTripContract {
     }
 
     interface Presenter extends BasePresenter {
-        void saveTrip(Context context, TripViewModel tripViewModel);
+        void saveTrip(Context context, TripViewModel tripViewModel, int drivingHoursPreference);
     }
 }

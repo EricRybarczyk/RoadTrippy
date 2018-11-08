@@ -19,25 +19,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AddEditTripPresenter implements AddEditTripContract.Presenter {
 
-    private TripDataSource tripDataSource;
     private FirebaseUser firebaseUser;
     private AddEditTripContract.View addEditTripView;
-    private int preferenceDrivingHours;
     private static final String TAG = AddEditTripPresenter.class.getSimpleName();
 
     public AddEditTripPresenter(@NonNull TripDataSource dataSource, @NonNull AddEditTripContract.View view) {
-        this.tripDataSource = checkNotNull(dataSource);
+        TripDataSource tripDataSource = checkNotNull(dataSource);
         this.firebaseUser = AuthenticationManager.getCurrentUser();
         this.addEditTripView = checkNotNull(view);
-
-        //TODO: decide how to provide user preference to this class
-        preferenceDrivingHours = 12;
 
         this.addEditTripView.setPresenter(this);
     }
 
     @Override
-    public void saveTrip(Context context, TripViewModel tripViewModel) {
+    public void saveTrip(Context context, TripViewModel tripViewModel, int preferenceDrivingHours) {
         TripManager tripManager = new TripManager();
         Trip trip = tripManager.buildTrip(tripViewModel, firebaseUser.getUid());
         List<TripDay> tripDays = tripManager.buildInitialTripDays(context, tripViewModel, preferenceDrivingHours);

@@ -1,9 +1,11 @@
 package me.ericrybarczyk.roadtrippy.settings;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,18 +68,14 @@ public class SettingsFragment extends Fragment implements SettingsContract.View,
         drivingHoursPreference.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DrivingDurationSettingFragment settingFragment = DrivingDurationSettingFragment.newInstance(presenter.getCurrentDrivingDurationPreference());
+                int defaultHours = Integer.parseInt(getResources().getString(R.string.pref_daily_driving_hours_default));
+                DrivingDurationSettingFragment settingFragment = DrivingDurationSettingFragment.newInstance(presenter.getCurrentDrivingDurationPreference(defaultHours));
                 settingFragment.setTargetFragment(SettingsFragment.this, RequestCodes.PREFERENCE_DRIVING_HOURS_REQUEST_CODE);
                 settingFragment.show(getFragmentManager(), FragmentTags.TAG_SETTING_DRIVING_DURATION);
             }
         });
 
         return rootView;
-    }
-
-    @Override
-    public void doSomething() {
-        
     }
 
     @Override

@@ -105,7 +105,6 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
                     holder.layoutContainer.setBackgroundColor(getResources().getColor(R.color.colorBackground));
                 }
 
-                // TODO: handle tripIsArchived with different click result?
                 holder.setTripDayListClickListener(new TripDayViewHolder.TripDayListClickListener() {
                     @Override
                     public void onTripDayListItemClick() {
@@ -141,7 +140,7 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
                                     return;
                                 default:
                                     // show the picker
-                                    NavigationPickerFragment pickerFragment = NavigationPickerFragment.newInstance(tripId, dayNodeKey, TripDetailFragment.this.presenter);
+                                    NavigationPickerFragment pickerFragment = NavigationPickerFragment.newInstance(tripId, dayNodeKey);
                                     pickerFragment.show(getChildFragmentManager(), ArgumentKeys.TAG_PICK_NAVIGATION_DIALOG);
                             }
                         }

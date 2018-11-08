@@ -8,12 +8,11 @@ import me.ericrybarczyk.roadtrippy.BaseView;
 public interface SettingsContract {
 
     interface View extends BaseView<Presenter> {
-        void doSomething();
     }
 
 
     interface Presenter extends BasePresenter {
-        int getCurrentDrivingDurationPreference();
+        int getCurrentDrivingDurationPreference(int defaultDuration);
         void saveDrivingDurationPreference(int drivingDuration);
         void saveHomeLocationPreference(LatLng homeLocation);
         LatLng getHomeLocationPreference();

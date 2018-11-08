@@ -261,7 +261,7 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
     }
 
     public interface HomeLocationPreferenceSaveListener {
-        public void onHomeLocationPreferenceSave(LatLng homeLocation);
+        void onHomeLocationPreferenceSave(LatLng homeLocation);
     }
 }
 

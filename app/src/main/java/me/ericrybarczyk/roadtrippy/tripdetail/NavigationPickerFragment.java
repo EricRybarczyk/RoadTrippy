@@ -32,7 +32,6 @@ public class NavigationPickerFragment extends DialogFragment {
 
     private String dayNodeKey;
     private String tripId;
-    private TripDetailContract.Presenter presenter;
     FirebaseRecyclerAdapter firebaseRecyclerAdapter;
 
     @BindView(R.id.navigation_destination_list) protected RecyclerView navigationDestinationsRecyclerView;
@@ -40,9 +39,8 @@ public class NavigationPickerFragment extends DialogFragment {
     public NavigationPickerFragment() {
     }
 
-    public static NavigationPickerFragment newInstance(String tripId, String dayNodeKey, TripDetailContract.Presenter presenter) {
+    public static NavigationPickerFragment newInstance(String tripId, String dayNodeKey) {
         NavigationPickerFragment navFragment = new NavigationPickerFragment();
-        navFragment.presenter = presenter;
         Bundle args = new Bundle();
         args.putString(ArgumentKeys.KEY_TRIP_ID, tripId);
         args.putString(ArgumentKeys.KEY_DAY_NODE_KEY, dayNodeKey);

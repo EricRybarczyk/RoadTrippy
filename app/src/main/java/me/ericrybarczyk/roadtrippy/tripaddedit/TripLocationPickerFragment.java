@@ -59,7 +59,6 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
     private String googleMapsApiKey;
     private GoogleMap googleMap;
     private LatLng mapLocation;
-    private CameraPosition cameraPosition;
     private boolean displayForUserCurrentLocation;
     private float lastMapZoomLevel;
     private int requestCode; // passed in from caller to be returned with map location
@@ -91,7 +90,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
 
         if (savedInstanceState != null) {
             requestCode = savedInstanceState.getInt(ArgumentKeys.KEY_REQUEST_CODE);
-            if (savedInstanceState.containsKey(ArgumentKeys.KEY_START_LAT)) {
+            if (savedInstanceState.containsKey(ArgumentKeys.KEY_LAST_MAP_ZOOM_LEVEL)) {
                 lastMapZoomLevel = savedInstanceState.getFloat(ArgumentKeys.KEY_LAST_MAP_ZOOM_LEVEL);
             } else if (savedInstanceState.containsKey(MapSettings.KEY_MAP_DISPLAY_LATITUDE)) {
                 displayForUserCurrentLocation = false; // flag request to show a requested location instead of user current location
@@ -226,7 +225,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
     private void updateMapView(float zoomLevel) {
         googleMap.clear();
         googleMap.addMarker(new MarkerOptions().position(mapLocation));
-        cameraPosition = new CameraPosition.Builder().target(mapLocation)
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(mapLocation)
                 .zoom(zoomLevel)
                 .bearing(MapSettings.MAP_DEFAULT_BEARING)
                 .tilt(MapSettings.MAP_DEFAULT_TILT)

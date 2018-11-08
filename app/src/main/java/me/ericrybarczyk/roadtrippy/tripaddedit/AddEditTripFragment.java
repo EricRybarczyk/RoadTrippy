@@ -235,7 +235,10 @@ public class AddEditTripFragment extends Fragment
 
     @Override
     public void onTripConfirmation() {
-        presenter.saveTrip(getContext(), tripViewModel);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        int defaultHours = Integer.parseInt(getResources().getString(R.string.pref_daily_driving_hours_default));
+        int drivingHoursPreference = preferences.getInt(ArgumentKeys.KEY_DRIVING_DURATION_PREFERENCE, defaultHours);
+        presenter.saveTrip(getContext(), tripViewModel, drivingHoursPreference);
     }
 
     @Override
