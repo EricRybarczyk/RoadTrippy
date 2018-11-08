@@ -19,7 +19,6 @@ public interface TripDataSource {
     void saveTrip(Trip trip, List<TripDay> tripDays);
     void updateTripDayHighlight(String userId, String tripId, String dayNodeKey, boolean isHighlight);
     void updateTripDay(String userId, String tripId, String dayNodeKey, TripDay tripDay);
-    void archiveFinishedTrips(String userId);
     void archiveTrip(String userId, String tripNodeKey);
     void removeTripDayDestination(String userId, String tripId, String dayNodeKey, int destinationIndex);
     void saveUserInfo(FirebaseUser firebaseUser);

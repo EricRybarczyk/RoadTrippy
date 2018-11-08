@@ -1,6 +1,5 @@
 package me.ericrybarczyk.roadtrippy.persistence;
 
-
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -115,40 +114,6 @@ public class TripRepository implements TripDataSource {
     }
 
     @Override
-    public void archiveFinishedTrips(String userId) {
-        DatabaseReference tripListReference = getTripList(userId);
-        tripListReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot item : dataSnapshot.getChildren()) {
-                        Trip trip = item.getValue(Trip.class);
-                        String tripNodeKey = item.getKey();
-                        if (trip != null) {
-                            // if trip ended yesterday or older, then archive it
-                            if ((LocalDate.parse(trip.getReturnDate())).compareTo(LocalDate.now()) < 0) {
-                                archiveTrip(userId, tripNodeKey, trip);
-                                deleteActiveTrip(userId, tripNodeKey);
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, databaseError.getMessage());
-            }
-        });
-    }
-
-    private void archiveTrip(String userId, String tripNodeKey, Trip trip) {
-        DatabaseReference reference = firebaseDatabase.getReference().child(DatabasePaths.BASE_PATH_ARCHIVE + userId);
-        trip.setIsArchived(true);
-        reference.child(tripNodeKey).setValue(trip);
-    }
-
-    @Override
     public void archiveTrip(String userId, String tripNodeKey) {
         DatabaseReference reference = getTrip(userId, tripNodeKey);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -166,6 +131,12 @@ public class TripRepository implements TripDataSource {
                 Log.e(TAG, databaseError.getMessage());
             }
         });
+    }
+
+    private void archiveTrip(String userId, String tripNodeKey, Trip trip) {
+        DatabaseReference reference = firebaseDatabase.getReference().child(DatabasePaths.BASE_PATH_ARCHIVE + userId);
+        trip.setIsArchived(true);
+        reference.child(tripNodeKey).setValue(trip);
     }
 
     private void deleteActiveTrip(String userId, String tripNodeKey) {

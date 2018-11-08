@@ -55,6 +55,11 @@ public class TripDetailPresenter implements TripDetailContract.Presenter {
     }
 
     @Override
+    public void archiveTrip(String userId, String tripNodeKey) {
+        tripDataSource.archiveTrip(userId, tripNodeKey);
+    }
+
+    @Override
     public void start() {
 
     }

@@ -7,6 +7,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import butterknife.BindView;
@@ -24,6 +26,9 @@ public class TripDetailActivity extends AppCompatActivity {
     @BindView(R.id.nav_view) protected NavigationView navigationView;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
 
+    private TripDetailPresenter tripDetailPresenter;
+    private String tripNodeKey;
+    private boolean tripIsArchived;
     private static final String TAG = TripDetailActivity.class.getSimpleName();
 
     @Override
@@ -39,10 +44,8 @@ public class TripDetailActivity extends AppCompatActivity {
 
         AuthenticationManager.verifyAuthentication(this);
 
-        String tripId;
-        String tripNodeKey;
-        boolean tripIsArchived = false;
         Intent starter = getIntent();
+        String tripId;
         if (starter.hasExtra(ArgumentKeys.WIDGET_REQUEST_TRIP_ID)) {
             tripId = starter.getStringExtra(ArgumentKeys.WIDGET_REQUEST_TRIP_ID);
             tripNodeKey = starter.getStringExtra(ArgumentKeys.WIDGET_REQUEST_TRIP_NODE_KEY);
@@ -57,8 +60,29 @@ public class TripDetailActivity extends AppCompatActivity {
             tripDetailFragment = TripDetailFragment.newInstance(tripId, tripNodeKey, tripIsArchived);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripDetailFragment, R.id.content_container);
         }
-        // Presenter must still be initialized because the Presenter links itself to the View
-        TripDetailPresenter tripDetailPresenter = new TripDetailPresenter(new TripRepository(), tripDetailFragment);
+
+        tripDetailPresenter = new TripDetailPresenter(new TripRepository(), tripDetailFragment);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (tripIsArchived) {
+            return true; // no menu to archive if already archived
+        }
+        getMenuInflater().inflate(R.menu.menu_trip_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_archive_trip:
+                tripDetailPresenter.archiveTrip(AuthenticationManager.getCurrentUser().getUid(), tripNodeKey);
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
