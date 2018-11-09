@@ -1,6 +1,7 @@
 package me.ericrybarczyk.roadtrippy.tripday;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -79,6 +80,8 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tripDayViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(TripDayViewModel.class);
 
         userId = AuthenticationManager.getCurrentUser().getUid();
         if (savedInstanceState != null) {
@@ -247,6 +250,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
             outState.putDouble(ArgumentKeys.KEY_TRIP_DESTINATION_LATITUDE, tripDestination.latitude);
             outState.putDouble(ArgumentKeys.KEY_TRIP_DESTINATION_LONGITUDE, tripDestination.longitude);
         }
+        saveTripDay();
         super.onSaveInstanceState(outState);
     }
 
