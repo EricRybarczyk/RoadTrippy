@@ -2,8 +2,6 @@ package me.ericrybarczyk.roadtrippy.settings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
@@ -20,8 +18,6 @@ import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 public class SettingsActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
-    @BindView(R.id.drawer_layout) protected DrawerLayout drawer;
-    @BindView(R.id.nav_view) protected NavigationView navigationView;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
 
     private static final String TAG = SettingsActivity.class.getSimpleName();

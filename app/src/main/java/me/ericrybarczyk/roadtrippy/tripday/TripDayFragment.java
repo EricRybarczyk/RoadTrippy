@@ -232,9 +232,14 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
     }
 
     private void saveTripDay() {
-        tripDayViewModel.setPrimaryDescription(dayPrimaryDescription.getText().toString().trim());
-        tripDayViewModel.setUserNotes(dayUserNotes.getText().toString().trim());
-        tripDayViewModel.setIsDefaultText(false);
+        if (!dayPrimaryDescription.getText().toString().isEmpty()) {
+            tripDayViewModel.setPrimaryDescription(dayPrimaryDescription.getText().toString().trim());
+            tripDayViewModel.setIsDefaultText(false);
+        }
+        if (!dayUserNotes.getText().toString().isEmpty()) {
+            tripDayViewModel.setUserNotes(dayUserNotes.getText().toString().trim());
+            tripDayViewModel.setIsDefaultText(false);
+        }
         tripDayViewModel.setTripDayNodeKey(dayNodeKey);
         presenter.updateTripDay(userId, tripId, dayNodeKey, tripDayViewModel);
     }
