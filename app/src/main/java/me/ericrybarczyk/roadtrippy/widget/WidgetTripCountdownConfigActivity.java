@@ -72,13 +72,10 @@ public class WidgetTripCountdownConfigActivity extends AppCompatActivity {
             // send them to the app if no userId
             if (userId == null) {
                 launchAppButton.setVisibility(View.VISIBLE);
-                launchAppButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Class destination = TripListActivity.class;
-                        Intent intent = new Intent(getApplicationContext(), destination);
-                        startActivity(intent);
-                    }
+                launchAppButton.setOnClickListener(v -> {
+                    Class destination = TripListActivity.class;
+                    Intent intent = new Intent(getApplicationContext(), destination);
+                    startActivity(intent);
                 });
                 Snackbar.make(tripList, R.string.widget_config_require_login_message, Snackbar.LENGTH_INDEFINITE).show();
                 return;
@@ -119,23 +116,20 @@ public class WidgetTripCountdownConfigActivity extends AppCompatActivity {
                 String tripId = viewModel.getTripId();
                 String tripNodeKey = this.getRef(position).getKey();
 
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final Context context = WidgetTripCountdownConfigActivity.this;
-                        // set the widget data from the selected item
-                        savePrefs(context, appWidgetId, userId, tripId, tripNodeKey);
+                v.setOnClickListener(v1 -> {
+                    final Context context = WidgetTripCountdownConfigActivity.this;
+                    // set the widget data from the selected item
+                    savePrefs(context, appWidgetId, userId, tripId, tripNodeKey);
 
-                        // initial update of the widget being created
-                        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                        WidgetTripCountdown.updateAppWidget(context, appWidgetManager, appWidgetId);
+                    // initial update of the widget being created
+                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                    WidgetTripCountdown.updateAppWidget(context, appWidgetManager, appWidgetId);
 
-                        // create the Intent and finish the Activity
-                        Intent widgetIntent = new Intent();
-                        widgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-                        setResult(RESULT_OK, widgetIntent);
-                        finish();
-                    }
+                    // create the Intent and finish the Activity
+                    Intent widgetIntent = new Intent();
+                    widgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                    setResult(RESULT_OK, widgetIntent);
+                    finish();
                 });
             }
 

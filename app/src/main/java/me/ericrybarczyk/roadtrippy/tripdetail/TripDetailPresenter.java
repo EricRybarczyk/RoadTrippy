@@ -3,18 +3,13 @@ package me.ericrybarczyk.roadtrippy.tripdetail;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import me.ericrybarczyk.roadtrippy.dto.Trip;
-import me.ericrybarczyk.roadtrippy.dto.TripDay;
-import me.ericrybarczyk.roadtrippy.persistence.DataOptions;
 import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
-import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

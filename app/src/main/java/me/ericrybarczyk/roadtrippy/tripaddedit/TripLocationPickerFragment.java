@@ -29,6 +29,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.FullScreenDialogFragment;
@@ -111,7 +113,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
             }
         }
 
-        tripViewModel = ViewModelProviders.of(getActivity()).get(TripViewModel.class);
+        tripViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(TripViewModel.class);
     }
 
     @Nullable
@@ -147,12 +149,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
                     updateMapView(MapSettings.MAP_SEARCH_RESULT_ZOOM); // make sure the map is displayed in a way that works well for the snapshot
                     // save a bitmap of the Google Map
                     // code based on https://stackoverflow.com/a/26946907/798642 and https://stackoverflow.com/a/17674787/798642
-                    googleMap.snapshot(new GoogleMap.SnapshotReadyCallback() {
-                        @Override
-                        public void onSnapshotReady(Bitmap bitmap) {
-                            FileSystemUtil.saveMapSnapshotImage(getTargetFragment().getContext(), bitmap, tripViewModel.getTripId());
-                        }
-                    });
+                    googleMap.snapshot(bitmap -> FileSystemUtil.saveMapSnapshotImage(getTargetFragment().getContext(), bitmap, tripViewModel.getTripId()));
                 }
                 InputUtils.hideKeyboardFrom(getContext(), searchText);
 
@@ -165,7 +162,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
             }
         });
 
-        int permission = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION);
+        int permission = ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PERMISSION_GRANTED) {
             updateLocation();
         } else {
@@ -179,16 +176,13 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
 
     @SuppressLint("MissingPermission")
     private void updateLocation() {
-        LocationServices.getFusedLocationProviderClient(getContext())
+        LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()))
                 .getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (displayForUserCurrentLocation) {
-                            mapLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        }
-                        mapFragment.getMapAsync(TripLocationPickerFragment.this);
+                .addOnSuccessListener(location -> {
+                    if (displayForUserCurrentLocation) {
+                        mapLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     }
+                    mapFragment.getMapAsync(TripLocationPickerFragment.this);
                 });
     }
 
@@ -248,7 +242,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
 
             findPlacesCall.enqueue(new Callback<PlacesResponse>() {
                 @Override
-                public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
+                public void onResponse(@NonNull Call<PlacesResponse> call, @NonNull Response<PlacesResponse> response) {
                     PlacesResponse placesResponse = response.body();
                     if ((placesResponse != null && placesResponse.getCandidates() != null ? placesResponse.getCandidates().size() : 0) > 0) {
 
@@ -271,7 +265,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
                 }
 
                 @Override
-                public void onFailure(Call<PlacesResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<PlacesResponse> call, @NonNull Throwable t) {
                     Log.e(TAG, "Failed to call Places API. Error: " + t.getMessage());
                     Toast.makeText(getContext(), R.string.map_search_call_error_message, Toast.LENGTH_LONG).show();
                 }

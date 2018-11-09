@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 import org.threeten.bp.LocalDate;
 
 import java.io.File;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -105,44 +106,38 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
                     holder.layoutContainer.setBackgroundColor(getResources().getColor(R.color.colorBackground));
                 }
 
-                holder.setTripDayListClickListener(new TripDayViewHolder.TripDayListClickListener() {
-                    @Override
-                    public void onTripDayListItemClick() {
-                        Intent intent = new Intent(getContext(), TripDayActivity.class);
-                        intent.putExtra(ArgumentKeys.KEY_TRIP_ID, tripDayViewModel.getTripId());
-                        intent.putExtra(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
-                        intent.putExtra(ArgumentKeys.KEY_TRIP_DAY_NUMBER, tripDayViewModel.getDayNumber());
-                        intent.putExtra(ArgumentKeys.KEY_DAY_NODE_KEY, dayNodeKey);
-                        intent.putExtra(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, tripIsArchived);
-                        startActivityForResult(intent, RequestCodes.TRIP_DAY_REQUEST_CODE);
-                    }
+                holder.setTripDayListClickListener(() -> {
+                    Intent intent = new Intent(getContext(), TripDayActivity.class);
+                    intent.putExtra(ArgumentKeys.KEY_TRIP_ID, tripDayViewModel.getTripId());
+                    intent.putExtra(ArgumentKeys.KEY_TRIP_NODE_KEY, tripNodeKey);
+                    intent.putExtra(ArgumentKeys.KEY_TRIP_DAY_NUMBER, tripDayViewModel.getDayNumber());
+                    intent.putExtra(ArgumentKeys.KEY_DAY_NODE_KEY, dayNodeKey);
+                    intent.putExtra(ArgumentKeys.TRIP_IS_ARCHIVED_KEY, tripIsArchived);
+                    startActivityForResult(intent, RequestCodes.TRIP_DAY_REQUEST_CODE);
                 });
 
                 if (tripDayViewModel.getDestinations().size() == 0) {
                     holder.iconNavigation.setVisibility(View.INVISIBLE);
                 } else {
                     holder.iconNavigation.setVisibility(View.VISIBLE);
-                    holder.setNavigationClickListener(new TripDayViewHolder.NavigationClickListener() {
-                        @Override
-                        public void onNavigationClick() {
-                            switch (tripDayViewModel.getDestinations().size()) {
-                                case 0:
-                                    Log.e(TAG, "onNavigationIconClick with no destinations. Code flow prevents this. git blame!");
-                                    return;
-                                case 1:
-                                    // navigate directly to the single destination;
-                                    Intent navigationIntent = NavigationIntentService.getNavigationIntent(tripDayViewModel.getDestinations().get(0));
-                                    if (navigationIntent.resolveActivity(getContext().getPackageManager()) != null) {
-                                        startActivity(navigationIntent);
-                                    } else {
-                                        Toast.makeText(getContext(), R.string.error_message_system_missing_google_maps, Toast.LENGTH_LONG).show();
-                                    }
-                                    return;
-                                default:
-                                    // show the picker
-                                    NavigationPickerFragment pickerFragment = NavigationPickerFragment.newInstance(tripId, dayNodeKey);
-                                    pickerFragment.show(getChildFragmentManager(), ArgumentKeys.TAG_PICK_NAVIGATION_DIALOG);
-                            }
+                    holder.setNavigationClickListener(() -> {
+                        switch (tripDayViewModel.getDestinations().size()) {
+                            case 0:
+                                Log.e(TAG, "onNavigationIconClick with no destinations. Code flow prevents this. git blame!");
+                                return;
+                            case 1:
+                                // navigate directly to the single destination;
+                                Intent navigationIntent = NavigationIntentService.getNavigationIntent(tripDayViewModel.getDestinations().get(0));
+                                if (navigationIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                                    startActivity(navigationIntent);
+                                } else {
+                                    Toast.makeText(getContext(), R.string.error_message_system_missing_google_maps, Toast.LENGTH_LONG).show();
+                                }
+                                return;
+                            default:
+                                // show the picker
+                                NavigationPickerFragment pickerFragment = NavigationPickerFragment.newInstance(tripId, dayNodeKey);
+                                pickerFragment.show(getChildFragmentManager(), ArgumentKeys.TAG_PICK_NAVIGATION_DIALOG);
                         }
                     });
                 }
@@ -169,7 +164,7 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
             return rootView;
         }
 
-        File mapImage = FileSystemUtil.getPrimaryTripImageFile(getContext(), tripId);
+        File mapImage = FileSystemUtil.getPrimaryTripImageFile(Objects.requireNonNull(getContext()), tripId);
         Picasso.with(getContext())
                 .load(mapImage)
                 .placeholder(R.drawable.map_placeholder)

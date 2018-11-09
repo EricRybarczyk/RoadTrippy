@@ -13,10 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,17 +71,14 @@ public class NavigationPickerFragment extends DialogFragment {
             protected void onBindViewHolder(@NonNull NavigationDestinationHolder holder, int position, @NonNull TripLocation model) {
                 TripLocationViewModel viewModel = TripLocationViewModel.from(model);
                 holder.navigateButton.setText(viewModel.getDescription());
-                holder.navigateButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent navigationIntent = NavigationIntentService.getNavigationIntent(viewModel);
-                        if (navigationIntent.resolveActivity(getContext().getPackageManager()) != null) {
-                            startActivity(navigationIntent);
-                        } else {
-                            Toast.makeText(getContext(), R.string.error_message_system_missing_google_maps, Toast.LENGTH_LONG).show();
-                        }
-                        dismiss();
+                holder.navigateButton.setOnClickListener(v -> {
+                    Intent navigationIntent = NavigationIntentService.getNavigationIntent(viewModel);
+                    if (navigationIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                        startActivity(navigationIntent);
+                    } else {
+                        Toast.makeText(getContext(), R.string.error_message_system_missing_google_maps, Toast.LENGTH_LONG).show();
                     }
+                    dismiss();
                 });
             }
         };

@@ -24,7 +24,7 @@ public class TripLocationAdapter extends RecyclerView.Adapter<TripLocationAdapte
     private String userId;
     private String tripId;
     private String dayNodeKey;
-    private boolean tripIsArchived = false;
+    private boolean tripIsArchived;
 
     public TripLocationAdapter(List<TripLocationViewModel> tripLocationViewModelList, String userId, String tripId, String dayNodeKey, boolean tripIsArchived) {
         this.destinations = tripLocationViewModelList;

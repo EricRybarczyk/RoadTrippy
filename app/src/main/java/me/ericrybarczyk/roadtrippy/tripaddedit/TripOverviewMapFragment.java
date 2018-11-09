@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,7 +66,7 @@ public class TripOverviewMapFragment extends DialogFragment implements OnMapRead
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         googleMapsApiKey = getString(R.string.google_maps_key);
-        tripViewModel = ViewModelProviders.of(getActivity()).get(TripViewModel.class);
+        tripViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(TripViewModel.class);
     }
 
     @Nullable
@@ -114,7 +115,7 @@ public class TripOverviewMapFragment extends DialogFragment implements OnMapRead
         Call<DirectionsResponse> directionsCall = endpoint.getDirections(googleMapsApiKey, origin, destination, alternatives);
         directionsCall.enqueue(new Callback<DirectionsResponse>() {
             @Override
-            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+            public void onResponse(@NonNull Call<DirectionsResponse> call, @NonNull Response<DirectionsResponse> response) {
                 DirectionsResponse directionsResponse = response.body();
 
                 // Convert overview_polyline into list of LatLng and add as Polyline
@@ -204,7 +205,7 @@ public class TripOverviewMapFragment extends DialogFragment implements OnMapRead
             }
 
             @Override
-            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<DirectionsResponse> call, @NonNull Throwable t) {
                 Log.e(TAG, "Retrofit Callback onFailure: " + t.getMessage());
                 Toast.makeText(getActivity(), R.string.map_directions_call_error_message, Toast.LENGTH_SHORT).show();
             }
@@ -216,7 +217,7 @@ public class TripOverviewMapFragment extends DialogFragment implements OnMapRead
     public void onResume() {
         // Technique for full-size dialog display is from https://guides.codepath.com/android/Using-DialogFragment#sizing-dialogs
         // Get existing layout params for the window
-        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+        ViewGroup.LayoutParams params = Objects.requireNonNull(getDialog().getWindow()).getAttributes();
         // Assign window properties to fill the parent
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.height = WindowManager.LayoutParams.MATCH_PARENT;

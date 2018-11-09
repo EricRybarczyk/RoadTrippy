@@ -12,17 +12,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SettingsPresenter implements SettingsContract.Presenter {
 
-    private FirebaseUser firebaseUser;
     private SharedPreferences sharedPreferences;
-    private SettingsContract.View settingsView;
 
 
-    public SettingsPresenter(SharedPreferences sharedPreferences, SettingsContract.View view) {
-        this.firebaseUser = AuthenticationManager.getCurrentUser();
+    SettingsPresenter(SharedPreferences sharedPreferences, SettingsContract.View view) {
         this.sharedPreferences = checkNotNull(sharedPreferences);
-        this.settingsView = view;
-
-        this.settingsView.setPresenter(this);
+        view.setPresenter(this);
     }
 
     @Override

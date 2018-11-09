@@ -21,6 +21,8 @@ import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
@@ -63,7 +65,7 @@ public class AddEditTripFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tripViewModel = ViewModelProviders.of(getActivity()).get(TripViewModel.class);
+        tripViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(TripViewModel.class);
     }
 
     @Override
@@ -119,7 +121,7 @@ public class AddEditTripFragment extends Fragment
             saveTripName();
             TripOriginPickerFragment pickerFragment = TripOriginPickerFragment.newInstance();
             pickerFragment.setTargetFragment(AddEditTripFragment.this, RequestCodes.TRIP_ORIGIN_REQUEST_CODE);
-            pickerFragment.show(getFragmentManager(), ArgumentKeys.TAG_PICK_ORIGIN_DIALOG);
+            pickerFragment.show(Objects.requireNonNull(getFragmentManager()), ArgumentKeys.TAG_PICK_ORIGIN_DIALOG);
         });
 
         destinationButton.setOnClickListener(v -> {
@@ -138,7 +140,7 @@ public class AddEditTripFragment extends Fragment
                 }
             }
             tripLocationPickerFragment.setTargetFragment(AddEditTripFragment.this, RequestCodes.TRIP_DESTINATION_REQUEST_CODE);
-            tripLocationPickerFragment.show(getFragmentManager(), FragmentTags.TAG_CREATE_TRIP);
+            tripLocationPickerFragment.show(Objects.requireNonNull(getFragmentManager()), FragmentTags.TAG_CREATE_TRIP);
         });
 
         nextStepButton.setOnClickListener(v -> {
@@ -146,7 +148,7 @@ public class AddEditTripFragment extends Fragment
             if (tripViewModel.isValidForSave()) {
                 TripOverviewMapFragment tripOverviewMapFragment = TripOverviewMapFragment.newInstance();
                 tripOverviewMapFragment.setTargetFragment(AddEditTripFragment.this, RequestCodes.TRIP_OVERVIEW_MAP_REQUEST_CODE);
-                tripOverviewMapFragment.show(getFragmentManager(), FragmentTags.TAG_TRIP_OVERVIEW_MAP);
+                tripOverviewMapFragment.show(Objects.requireNonNull(getFragmentManager()), FragmentTags.TAG_TRIP_OVERVIEW_MAP);
             } else {
                 Toast.makeText(getContext(), R.string.error_create_trip_data_validation, Toast.LENGTH_LONG).show();
             }
@@ -175,7 +177,7 @@ public class AddEditTripFragment extends Fragment
     @Override
     public void onTripOriginSelected(String key) {
         if (key.equals(ArgumentKeys.KEY_HOME_ORIGIN)) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getActivity()).getApplicationContext());
             if (preferences.contains(ArgumentKeys.KEY_HOME_LOCATION_LATITUDE_PREFERENCE) && preferences.contains(ArgumentKeys.KEY_HOME_LOCATION_LONGITUDE_PREFERENCE)) {
                 tripViewModel.setOriginLatLng(
                         new LatLng(
@@ -208,7 +210,7 @@ public class AddEditTripFragment extends Fragment
                     tripLocationPickerFragment.setArguments(args);
                 }
             }
-            tripLocationPickerFragment.show(getFragmentManager(), FragmentTags.TAG_CREATE_TRIP);
+            tripLocationPickerFragment.show(Objects.requireNonNull(getFragmentManager()), FragmentTags.TAG_CREATE_TRIP);
         }
     }
 
@@ -235,7 +237,7 @@ public class AddEditTripFragment extends Fragment
 
     @Override
     public void onTripConfirmation() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(getContext()));
         int defaultHours = Integer.parseInt(getResources().getString(R.string.pref_daily_driving_hours_default));
         int drivingHoursPreference = preferences.getInt(ArgumentKeys.KEY_DRIVING_DURATION_PREFERENCE, defaultHours);
         presenter.saveTrip(getContext(), tripViewModel, drivingHoursPreference);
@@ -243,7 +245,7 @@ public class AddEditTripFragment extends Fragment
 
     @Override
     public void showTripList() {
-        getActivity().setResult(Activity.RESULT_OK);
+        Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK);
         getActivity().finish();
     }
 }

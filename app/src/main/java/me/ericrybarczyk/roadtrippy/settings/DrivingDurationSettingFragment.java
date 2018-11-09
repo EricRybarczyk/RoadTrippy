@@ -54,19 +54,16 @@ public class DrivingDurationSettingFragment extends DialogFragment {
         }
 
         drivingHours.setText(String.valueOf(currentDrivingHoursPreference));
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String value = drivingHours.getText().toString().trim();
-                if (!value.isEmpty()) {
-                    int hours = Integer.parseInt(value);
-                    if (hours > 48 || hours < 1) {
-                        Toast.makeText(getContext(), getString(R.string.error_driving_duration_value_invalid), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    listener.onDrivingDurationPreferenceSave(hours);
-                    dismiss();
+        saveButton.setOnClickListener(v -> {
+            String value = drivingHours.getText().toString().trim();
+            if (!value.isEmpty()) {
+                int hours = Integer.parseInt(value);
+                if (hours > 48 || hours < 1) {
+                    Toast.makeText(getContext(), getString(R.string.error_driving_duration_value_invalid), Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                listener.onDrivingDurationPreferenceSave(hours);
+                dismiss();
             }
         });
 

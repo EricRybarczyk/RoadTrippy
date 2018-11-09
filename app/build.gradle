@@ -32,7 +32,7 @@ ext {
     googlePlayVersion = "16.0.0" // 15.0.1
     mapUtilsVersion = "0.5"
     preferencesVersion = "27.1.1"
-    firebaseCoreVersion = "16.0.4"
+    firebaseCoreVersion = "16.0.5"
     firebaseDatabaseVersion = "16.0.4"
     firebaseAuthVersion = "16.0.5"
     firebaseUiVersion = "4.2.0"

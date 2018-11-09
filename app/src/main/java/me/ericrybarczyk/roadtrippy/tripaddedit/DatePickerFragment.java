@@ -16,6 +16,8 @@ import android.widget.DatePicker;
 
 import org.threeten.bp.LocalDate;
 
+import java.util.Objects;
+
 import me.ericrybarczyk.roadtrippy.util.FragmentTags;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
 
@@ -31,7 +33,7 @@ public class DatePickerFragment extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        TripViewModel tripViewModel = ViewModelProviders.of(getActivity()).get(TripViewModel.class);
+        TripViewModel tripViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(TripViewModel.class);
 
         assert getTag() != null;
         switch (getTag()) {

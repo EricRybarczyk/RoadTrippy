@@ -18,6 +18,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,14 +99,9 @@ public class TripListFragment extends Fragment implements TripListContract.View 
 
                 holder.setTripId(viewModel.getTripId());
                 holder.setTripNodeKey(tripNodeKey);
-                holder.setTripListClickListener(new TripViewHolder.OnTripListClickListener() {
-                    @Override
-                    public void onTripListItemClick(String tripId, String tripNodeKey) {
-                        showTripDetail(tripId, tripNodeKey);
-                    }
-                });
+                holder.setTripListClickListener((tripId, tripNodeKey1) -> showTripDetail(tripId, tripNodeKey1));
 
-                File imageDir = getContext().getDir(MapSettings.DESTINATION_MAP_IMAGE_DIRECTORY, Context.MODE_PRIVATE);
+                File imageDir = Objects.requireNonNull(getContext()).getDir(MapSettings.DESTINATION_MAP_IMAGE_DIRECTORY, Context.MODE_PRIVATE);
                 String tripImageFilename = MapSettings.DESTINATION_MAP_SLICED_PREFIX + viewModel.getTripId() + MapSettings.DESTINATION_MAP_IMAGE_EXTENSION;
                 File mapImage = new File(imageDir, tripImageFilename);
                 Picasso.with(getContext())
@@ -144,12 +140,7 @@ public class TripListFragment extends Fragment implements TripListContract.View 
         tripListRecyclerView.setHasFixedSize(true);
         tripListRecyclerView.setAdapter(firebaseRecyclerAdapter);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.createTrip();
-            }
-        });
+        fab.setOnClickListener(v -> presenter.createTrip());
 
         return rootView;
     }

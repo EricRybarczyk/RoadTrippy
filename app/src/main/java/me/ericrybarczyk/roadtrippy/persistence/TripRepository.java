@@ -15,6 +15,7 @@ import org.threeten.bp.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.dto.TripDay;
@@ -41,7 +42,7 @@ public class TripRepository implements TripDataSource {
             String tripPushId = tripsDatabaseReference.push().getKey();
 
             // save the Trip object under the pushId
-            tripsDatabaseReference.child(tripPushId).setValue(trip);
+            tripsDatabaseReference.child(Objects.requireNonNull(tripPushId)).setValue(trip);
 
             // build a path for the TripDay child objects so they can be associated with the saved Trip object
             DatabaseReference daysDatabaseReference = firebaseDatabase.getReference()

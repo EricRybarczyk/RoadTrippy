@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -170,10 +172,10 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
     private void setHighlightIndicator(boolean isHighlight) {
         //if (tripIsArchived) return;
         if (isHighlight) {
-            iconHighlight.setTypeface(FontManager.getTypeface(getContext(), FontManager.FONTAWESOME_SOLID));
+            iconHighlight.setTypeface(FontManager.getTypeface(Objects.requireNonNull(getContext()), FontManager.FONTAWESOME_SOLID));
             iconHighlight.setTextColor(ContextCompat.getColor(getContext(), R.color.colorControlHighlight));
         } else {
-            iconHighlight.setTypeface(FontManager.getTypeface(getContext(), FontManager.FONTAWESOME_REGULAR));
+            iconHighlight.setTypeface(FontManager.getTypeface(Objects.requireNonNull(getContext()), FontManager.FONTAWESOME_REGULAR));
             iconHighlight.setTextColor(ContextCompat.getColor(getContext(), R.color.colorControlHighlightOff));
         }
     }
@@ -200,7 +202,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
             tripLocationPickerFragment.setArguments(args);
         }
         tripLocationPickerFragment.setTargetFragment(TripDayFragment.this, RequestCodes.TRIP_DAY_DESTINATION_REQUEST_CODE);
-        tripLocationPickerFragment.show(getFragmentManager(), FragmentTags.TAG_TRIP_DAY_DESTINATION);
+        tripLocationPickerFragment.show(Objects.requireNonNull(getFragmentManager()), FragmentTags.TAG_TRIP_DAY_DESTINATION);
     }
 
     @Override
@@ -250,7 +252,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
 
     @Override
     public void showTripDetail() {
-        getActivity().setResult(Activity.RESULT_OK);
+        Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK);
         getActivity().finish();
     }
 

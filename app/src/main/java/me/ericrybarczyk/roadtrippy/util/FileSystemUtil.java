@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 import me.ericrybarczyk.roadtrippy.maps.MapSettings;
 
@@ -47,7 +48,7 @@ public class FileSystemUtil {
             Log.e(TAG, e.getMessage());
         } finally {
             try {
-                fos.close();
+                Objects.requireNonNull(fos).close();
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
             }

@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,7 +72,7 @@ public class TripListActivity extends AppCompatActivity {
 
         // configure toolbar
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -118,7 +119,7 @@ public class TripListActivity extends AppCompatActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), tripListFragment, R.id.content_container);
         }
         // Presenter must still be initialized because the Presenter links itself to the View
-        TripListPresenter tripListPresenter = new TripListPresenter(new TripRepository(), tripListFragment);
+        TripListPresenter tripListPresenter = new TripListPresenter(tripListFragment);
     }
 
     private void verifyPermissions() {
@@ -149,53 +150,41 @@ public class TripListActivity extends AppCompatActivity {
     @SuppressLint("MissingPermission")
     private void updateLastKnownLocation() {
         fusedLocationProviderClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // no need to use the location now, but this helps make sure location is current when user accesses map functionality
-                        Log.i(TAG, "Location updated");
-                    }
-
+                .addOnSuccessListener(this, location -> {
+                    // no need to use the location now, but this helps make sure location is current when user accesses map functionality
+                    Log.i(TAG, "Location updated");
                 })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "fusedLocationProviderClient onFailure: " + e.getMessage());
-                    }
-                });
+                .addOnFailureListener(this, e -> Log.e(TAG, "fusedLocationProviderClient onFailure: " + e.getMessage()));
     }
 
     private void setupNavigationDrawer() {
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        TripListContract.View tripListView;
-                        switch (item.getItemId()) {
-                            case R.id.nav_trip_list:
-                                // current screen, no action
-                                tripListView = (TripListContract.View) getSupportFragmentManager().findFragmentById(R.id.content_container);
-                                tripListView.showDefaultTripList();
-                                break;
-                            case R.id.nav_create_trip:
-                                Intent intentCreateTrip = new Intent(TripListActivity.this, AddEditTripActivity.class);
-                                startActivity(intentCreateTrip);
-                                break;
-                            case R.id.nav_trip_history:
-                                // trip history activity
-                                tripListView = (TripListContract.View) getSupportFragmentManager().findFragmentById(R.id.content_container);
-                                tripListView.showArchivedTripList();
-                                break;
-                            case R.id.nav_settings:
-                                Intent intentSettings = new Intent(TripListActivity.this, SettingsActivity.class);
-                                startActivity(intentSettings);
-                                break;
-                        }
-
-                        drawer.closeDrawers();
-                        return true;
+                item -> {
+                    TripListContract.View tripListView;
+                    switch (item.getItemId()) {
+                        case R.id.nav_trip_list:
+                            // current screen, no action
+                            tripListView = (TripListContract.View) getSupportFragmentManager().findFragmentById(R.id.content_container);
+                            tripListView.showDefaultTripList();
+                            break;
+                        case R.id.nav_create_trip:
+                            Intent intentCreateTrip = new Intent(TripListActivity.this, AddEditTripActivity.class);
+                            startActivity(intentCreateTrip);
+                            break;
+                        case R.id.nav_trip_history:
+                            // trip history activity
+                            tripListView = (TripListContract.View) getSupportFragmentManager().findFragmentById(R.id.content_container);
+                            tripListView.showArchivedTripList();
+                            break;
+                        case R.id.nav_settings:
+                            Intent intentSettings = new Intent(TripListActivity.this, SettingsActivity.class);
+                            startActivity(intentSettings);
+                            break;
                     }
-        });
+
+                    drawer.closeDrawers();
+                    return true;
+                });
     }
 
     private void setupFirebaseAuth() {

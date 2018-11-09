@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.FullScreenDialogFragment;
@@ -55,7 +57,6 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
     private GoogleMap googleMap;
     private float lastMapZoomLevel;
     private LatLng homeLocation;
-    private CameraPosition cameraPosition;
 
     @BindView(R.id.search_button_tlp) protected Button searchButton;
     @BindView(R.id.set_location_button_tlp) protected Button setLocationButton;
@@ -132,7 +133,7 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
         locationDescription.setText(getString(R.string.word_for_HOME));
         locationDescription.setEnabled(false);
 
-        int permission = ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION);
+        int permission = ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PERMISSION_GRANTED) {
             updateLocation();
         } else {
@@ -146,17 +147,14 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
 
     @SuppressLint("MissingPermission")
     private void updateLocation() {
-        LocationServices.getFusedLocationProviderClient(getContext())
+        LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()))
                 .getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (homeLocation == null) {
-                            // if homeLocation already set, start the map with that saved home location
-                            homeLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                        }
-                        mapFragment.getMapAsync(HomeLocationSettingFragment.this);
+                .addOnSuccessListener(location -> {
+                    if (homeLocation == null) {
+                        // if homeLocation already set, start the map with that saved home location
+                        homeLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     }
+                    mapFragment.getMapAsync(HomeLocationSettingFragment.this);
                 });
     }
 
@@ -177,7 +175,7 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
     private void updateMapView(float zoomLevel) {
         googleMap.clear();
         googleMap.addMarker(new MarkerOptions().position(homeLocation));
-        cameraPosition = new CameraPosition.Builder().target(homeLocation)
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(homeLocation)
                 .zoom(zoomLevel)
                 .bearing(MapSettings.MAP_DEFAULT_BEARING)
                 .tilt(MapSettings.MAP_DEFAULT_TILT)
@@ -211,7 +209,7 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
 
             findPlacesCall.enqueue(new Callback<PlacesResponse>() {
                 @Override
-                public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
+                public void onResponse(@NonNull Call<PlacesResponse> call, @NonNull Response<PlacesResponse> response) {
                     PlacesResponse placesResponse = response.body();
                     if ((placesResponse != null && placesResponse.getCandidates() != null ? placesResponse.getCandidates().size() : 0) > 0) {
 
@@ -234,7 +232,7 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
                 }
 
                 @Override
-                public void onFailure(Call<PlacesResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<PlacesResponse> call, @NonNull Throwable t) {
                     Log.e(TAG, "Failed to call Places API. Error: " + t.getMessage());
                     Toast.makeText(getContext(), R.string.map_search_call_error_message, Toast.LENGTH_LONG).show();
                 }
