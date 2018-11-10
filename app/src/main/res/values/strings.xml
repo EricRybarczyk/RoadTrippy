@@ -27,6 +27,9 @@
     <string name="pref_driving_hours_info">Drives over this limit will be split to separate days</string>
     <string name="pref_button_save_label">SAVE</string>
 
+    <string name="message_no_default_trip_list_data">You have no trips to display</string>
+    <string name="message_no_archived_trip_list_data">You have no archived trips to display</string>
+
     <string name="screen_heading_create_trip">Start planning your trip</string>
     <string name="screen_heading_default_trip_name">Trip Route Overview</string>
 
