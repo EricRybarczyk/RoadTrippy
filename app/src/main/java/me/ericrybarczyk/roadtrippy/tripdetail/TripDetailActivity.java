@@ -1,10 +1,12 @@
 package me.ericrybarczyk.roadtrippy.tripdetail;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -13,13 +15,14 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.ericrybarczyk.roadtrippy.BaseActivity;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 
-public class TripDetailActivity extends AppCompatActivity {
+public class TripDetailActivity extends BaseActivity {
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
@@ -60,6 +63,8 @@ public class TripDetailActivity extends AppCompatActivity {
         }
 
         tripDetailPresenter = new TripDetailPresenter(new TripRepository(), tripDetailFragment);
+
+        logScreenInfo(TAG);
     }
 
     @Override

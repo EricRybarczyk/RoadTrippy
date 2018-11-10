@@ -37,6 +37,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.ericrybarczyk.roadtrippy.BaseActivity;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.settings.SettingsActivity;
 import me.ericrybarczyk.roadtrippy.tasks.UserInfoSave;
@@ -46,7 +47,7 @@ import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 
-public class TripListActivity extends AppCompatActivity {
+public class TripListActivity extends BaseActivity {
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.drawer_layout) protected DrawerLayout drawer;
@@ -93,6 +94,8 @@ public class TripListActivity extends AppCompatActivity {
         verifyPermissions();
         updateLastKnownLocation();
         setupFirebaseAuth();
+
+        logScreenInfo(TAG);
     }
 
     @Override

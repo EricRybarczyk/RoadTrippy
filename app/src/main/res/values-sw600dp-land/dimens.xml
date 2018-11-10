@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- any device in Landscape layout with larger screen gets the original-design height -->
+    <dimen name="trip_detail_tip_image_height">200dp</dimen>
+</resources>

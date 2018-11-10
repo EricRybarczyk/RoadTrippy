@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -41,6 +42,8 @@ public class TripListFragment extends Fragment implements TripListContract.View 
     private TripListContract.Presenter presenter;
     private FirebaseRecyclerAdapter firebaseRecyclerAdapter;
     private String keyTripListDisplayType;
+    private static final int GRID_LAYOUT_SCREEN_WIDTH_MIN = 720;
+    private static final int GRID_LAYOUT_SPAN_COUNT = 2;
 
     @BindView(R.id.trip_list) protected RecyclerView tripListRecyclerView;
     @BindView(R.id.fab) protected FloatingActionButton fab;
@@ -135,7 +138,12 @@ public class TripListFragment extends Fragment implements TripListContract.View 
         final View rootView = inflater.inflate(R.layout.fragment_trip_list, container, false);
         ButterKnife.bind(this, rootView);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager;
+        if (getResources().getConfiguration().screenWidthDp >= GRID_LAYOUT_SCREEN_WIDTH_MIN) {
+            layoutManager = new GridLayoutManager(getActivity(), GRID_LAYOUT_SPAN_COUNT, LinearLayoutManager.VERTICAL, false);
+        } else {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
         tripListRecyclerView.setLayoutManager(layoutManager);
         tripListRecyclerView.setHasFixedSize(true);
         tripListRecyclerView.setAdapter(firebaseRecyclerAdapter);
