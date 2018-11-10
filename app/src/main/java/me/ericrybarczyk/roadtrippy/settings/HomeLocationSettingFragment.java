@@ -150,7 +150,7 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
         LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()))
                 .getLastLocation()
                 .addOnSuccessListener(location -> {
-                    if (homeLocation == null) {
+                    if (location != null &&     homeLocation == null) {
                         // if homeLocation already set, start the map with that saved home location
                         homeLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     }
@@ -173,6 +173,7 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
     }
 
     private void updateMapView(float zoomLevel) {
+        if (homeLocation == null) return;
         googleMap.clear();
         googleMap.addMarker(new MarkerOptions().position(homeLocation));
         CameraPosition cameraPosition = new CameraPosition.Builder().target(homeLocation)
@@ -239,6 +240,11 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
             });
         }
         if (v.getId() == setLocationButton.getId()) {
+            if (homeLocation == null) {
+                Log.e(TAG, getString(R.string.error_no_location_specified));
+                Toast.makeText(getContext(), R.string.error_no_location_specified, Toast.LENGTH_LONG).show();
+                return;
+            }
             HomeLocationPreferenceSaveListener listener = (HomeLocationPreferenceSaveListener) getTargetFragment();
             if (listener == null) {
                 throw new RuntimeException(TAG + ": TargetFragment of this dialog must implement HomeLocationPreferenceSaveListener");
@@ -253,8 +259,10 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
         if (googleMap != null) {
             savedInstanceState.putFloat(ArgumentKeys.KEY_LAST_MAP_ZOOM_LEVEL, googleMap.getCameraPosition().zoom);
         }
-        savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)homeLocation.latitude);
-        savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)homeLocation.longitude);
+        if (homeLocation != null) {
+            savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LATITUDE, (float)homeLocation.latitude);
+            savedInstanceState.putFloat(MapSettings.KEY_MAP_DISPLAY_LONGITUDE, (float)homeLocation.longitude);
+        }
         super.onSaveInstanceState(savedInstanceState);
     }
 

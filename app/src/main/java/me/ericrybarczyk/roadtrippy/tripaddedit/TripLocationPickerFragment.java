@@ -179,7 +179,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
         LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()))
                 .getLastLocation()
                 .addOnSuccessListener(location -> {
-                    if (displayForUserCurrentLocation) {
+                    if (location != null && displayForUserCurrentLocation) {
                         mapLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     }
                     mapFragment.getMapAsync(TripLocationPickerFragment.this);
@@ -217,6 +217,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
     }
 
     private void updateMapView(float zoomLevel) {
+        if (mapLocation == null) return;
         googleMap.clear();
         googleMap.addMarker(new MarkerOptions().position(mapLocation));
         CameraPosition cameraPosition = new CameraPosition.Builder().target(mapLocation)

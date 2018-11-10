@@ -96,6 +96,7 @@
     <string name="error_device_location_null">Device location not found, please check your Location Settings.</string>
     <string name="error_create_trip_data_validation">Please provide all trip information</string>
     <string name="error_save_trip_day_validation">You must enter the Primary activity or event description</string>
+    <string name="error_no_location_specified">Please search or tap the map to specify a location</string>
     <string name="error_home_location_preference_not_found">Please use the Settings menu to set your Home location</string>
     <string name="error_message_system_missing_google_maps">Unable to locate Google Maps on your device. Google Maps is required for Navigation features.</string>
     <string name="error_message_archived_trip_no_edit">Sorry, we do not allow editing of archived trips</string>
