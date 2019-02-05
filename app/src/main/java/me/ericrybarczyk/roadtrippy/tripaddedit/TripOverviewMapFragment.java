@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +42,7 @@ import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class TripOverviewMapFragment extends DialogFragment implements OnMapReadyCallback {
 
@@ -198,7 +198,7 @@ public class TripOverviewMapFragment extends DialogFragment implements OnMapRead
                     //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(overviewBounds.getCenter(), 5));
 
                 } else {
-                    Log.d(TAG, "Retrofit onResponse: No Directions search result.");
+                    Timber.d(TAG, "Retrofit onResponse: No Directions search result.");
                     Toast.makeText(getContext(), R.string.map_directions_failure, Toast.LENGTH_LONG).show();
                 }
 
@@ -206,7 +206,7 @@ public class TripOverviewMapFragment extends DialogFragment implements OnMapRead
 
             @Override
             public void onFailure(@NonNull Call<DirectionsResponse> call, @NonNull Throwable t) {
-                Log.e(TAG, "Retrofit Callback onFailure: " + t.getMessage());
+                Timber.e(TAG, "Retrofit Callback onFailure: " + t.getMessage());
                 Toast.makeText(getActivity(), R.string.map_directions_call_error_message, Toast.LENGTH_SHORT).show();
             }
         });

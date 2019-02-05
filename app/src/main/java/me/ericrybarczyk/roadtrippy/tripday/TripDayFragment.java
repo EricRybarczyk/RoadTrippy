@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,7 @@ import me.ericrybarczyk.roadtrippy.util.InputUtils;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripDayViewModel;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripLocationViewModel;
+import timber.log.Timber;
 
 public class TripDayFragment extends Fragment implements TripDayContract.View, TripLocationPickerFragment.TripLocationSelectedListener {
 
@@ -167,7 +167,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
     public void setTripDestination(LatLng tripDestination) {
         if (tripDestination == null) {
             // should not be possible, can't get to this screen until trip data is created
-            Log.e(TAG, "Trip destination missing for tripId: " + tripId + " , tripNodeKey: " + tripNodeKey);
+            Timber.e(TAG, "Trip destination missing for tripId: " + tripId + " , tripNodeKey: " + tripNodeKey);
         }
         this.tripDestination = tripDestination;
     }

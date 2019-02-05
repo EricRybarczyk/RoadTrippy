@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,7 @@ import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 import me.ericrybarczyk.roadtrippy.util.FileSystemUtil;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripDayViewModel;
+import timber.log.Timber;
 
 public class TripDetailFragment extends Fragment implements TripDetailContract.View {
 
@@ -123,7 +123,7 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
                     holder.setNavigationClickListener(() -> {
                         switch (tripDayViewModel.getDestinations().size()) {
                             case 0:
-                                Log.e(TAG, "onNavigationIconClick with no destinations. Code flow prevents this. git blame!");
+                                Timber.e(TAG, "onNavigationIconClick with no destinations. Code flow prevents this. git blame!");
                                 return;
                             case 1:
                                 // navigate directly to the single destination;

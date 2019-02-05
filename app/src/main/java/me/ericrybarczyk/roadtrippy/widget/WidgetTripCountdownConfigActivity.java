@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -30,6 +29,7 @@ import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
 import me.ericrybarczyk.roadtrippy.triplist.TripListActivity;
 import me.ericrybarczyk.roadtrippy.util.NetworkChecker;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
+import timber.log.Timber;
 
 public class WidgetTripCountdownConfigActivity extends AppCompatActivity {
 
@@ -88,7 +88,7 @@ public class WidgetTripCountdownConfigActivity extends AppCompatActivity {
             appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            Log.e(TAG, "Intent Extras is missing required AppWidgetManager.EXTRA_APPWIDGET_ID");
+            Timber.e(TAG, "Intent Extras is missing required AppWidgetManager.EXTRA_APPWIDGET_ID");
             finish();
             return;
         }
@@ -135,7 +135,7 @@ public class WidgetTripCountdownConfigActivity extends AppCompatActivity {
 
             @Override
             public void onError(@NonNull DatabaseError error) {
-                Log.e(TAG, error.getMessage());
+                Timber.e(TAG, error.getMessage());
                 super.onError(error);
                 finish();
             }

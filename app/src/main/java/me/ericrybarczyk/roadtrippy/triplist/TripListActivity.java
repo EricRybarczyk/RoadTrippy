@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,9 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,8 +23,6 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -42,10 +37,10 @@ import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.settings.SettingsActivity;
 import me.ericrybarczyk.roadtrippy.tasks.UserInfoSave;
 import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
-import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
+import timber.log.Timber;
 
 public class TripListActivity extends BaseActivity {
 
@@ -155,9 +150,9 @@ public class TripListActivity extends BaseActivity {
         fusedLocationProviderClient.getLastLocation()
                 .addOnSuccessListener(this, location -> {
                     // no need to use the location now, but this helps make sure location is current when user accesses map functionality
-                    Log.i(TAG, "Location updated");
+                    Timber.i(TAG, "Location updated");
                 })
-                .addOnFailureListener(this, e -> Log.e(TAG, "fusedLocationProviderClient onFailure: " + e.getMessage()));
+                .addOnFailureListener(this, e -> Timber.e(TAG, "fusedLocationProviderClient onFailure: " + e.getMessage()));
     }
 
     private void setupNavigationDrawer() {

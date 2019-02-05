@@ -2,7 +2,6 @@ package me.ericrybarczyk.roadtrippy.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,6 +10,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import me.ericrybarczyk.roadtrippy.maps.MapSettings;
+import timber.log.Timber;
 
 public class FileSystemUtil {
 
@@ -45,12 +45,12 @@ public class FileSystemUtil {
 
         } catch (FileNotFoundException e) {
             // in case of file errors, placeholder images will be acceptable
-            Log.e(TAG, e.getMessage());
+            Timber.e(TAG, e.getMessage());
         } finally {
             try {
                 Objects.requireNonNull(fos).close();
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
+                Timber.e(TAG, e.getMessage());
             }
         }
     }

@@ -43,6 +43,7 @@ ext {
     picassoVersion = "2.5.2"
     retrofitVersion = "2.4.0"
     threetenVersion = "1.1.1"
+    timberVersion = "4.7.1"
     junitVersion = "4.12"
     supportTestVersion = "1.0.2"
     espressoVersion = "3.0.2"
@@ -82,6 +83,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.jakewharton.threetenabp:threetenabp:$threetenVersion"
     implementation "com.squareup.picasso:picasso:$picassoVersion"
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "com.android.support.test:runner:$supportTestVersion"

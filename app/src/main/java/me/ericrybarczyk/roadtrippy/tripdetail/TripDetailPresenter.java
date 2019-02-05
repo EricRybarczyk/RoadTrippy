@@ -1,7 +1,6 @@
 package me.ericrybarczyk.roadtrippy.tripdetail;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -10,6 +9,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
+import timber.log.Timber;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,7 +43,7 @@ public class TripDetailPresenter implements TripDetailContract.Presenter {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, databaseError.getMessage());
+                Timber.e(TAG, databaseError.getMessage());
                 throw databaseError.toException();
             }
         });

@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +21,7 @@ import me.ericrybarczyk.roadtrippy.persistence.TripRepository;
 import me.ericrybarczyk.roadtrippy.tripdetail.TripDetailActivity;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
+import timber.log.Timber;
 
 public class WidgetTripCountdown extends AppWidgetProvider {
 
@@ -41,7 +41,7 @@ public class WidgetTripCountdown extends AppWidgetProvider {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Trip trip = dataSnapshot.getValue(Trip.class);
                 if (trip == null) {
-                    Log.e(WidgetTripCountdown.class.getSimpleName(), "updateAppWidget - onDataChange: Trip object is null from Firebase");
+                    Timber.e(WidgetTripCountdown.class.getSimpleName(), "updateAppWidget - onDataChange: Trip object is null from Firebase");
                     return;
                 }
                 TripViewModel viewModel = TripViewModel.from(trip);
@@ -66,7 +66,7 @@ public class WidgetTripCountdown extends AppWidgetProvider {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(WidgetTripCountdown.class.getSimpleName(), databaseError.getMessage());
+                Timber.e(WidgetTripCountdown.class.getSimpleName(), databaseError.getMessage());
             }
         });
 

@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +34,7 @@ import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 import me.ericrybarczyk.roadtrippy.util.FontManager;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
+import timber.log.Timber;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -72,7 +71,7 @@ public class TripListFragment extends Fragment implements TripListContract.View 
         } else if (getArguments() != null) {
             keyTripListDisplayType = getArguments().getString(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE);
         } else {
-            Log.e(TAG, "Missing expected value for KEY_TRIP_LIST_DISPLAY_TYPE, using default.");
+            Timber.e(TAG, "Missing expected value for KEY_TRIP_LIST_DISPLAY_TYPE, using default.");
             keyTripListDisplayType = ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR;
         }
 

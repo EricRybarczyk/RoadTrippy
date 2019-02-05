@@ -2,7 +2,6 @@ package me.ericrybarczyk.roadtrippy.tripdetail;
 
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.ericrybarczyk.roadtrippy.R;
+import timber.log.Timber;
 
 public class TripDayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -40,7 +40,7 @@ public class TripDayViewHolder extends RecyclerView.ViewHolder implements View.O
     @OnClick
     public void onClick(View v) {
         if (tripDayListClickListener == null) {
-            Log.e(TAG, "onTripDayListClickListener is null");
+            Timber.e(TAG, "onTripDayListClickListener is null");
             return;
         }
         tripDayListClickListener.onTripDayListItemClick();

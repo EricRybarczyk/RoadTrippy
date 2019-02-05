@@ -2,12 +2,10 @@ package me.ericrybarczyk.roadtrippy.settings;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,6 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.Objects;
 
@@ -45,6 +42,7 @@ import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
@@ -221,12 +219,12 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
                             locationDescription.setText(place.getName());
                             updateMapView(MapSettings.MAP_SEARCH_RESULT_ZOOM);
                         } else {
-                            Log.d(TAG, "Too many Places Search results. Result count = " + String.valueOf(placesResponse.getCandidates().size()));
+                            Timber.d(TAG, "Too many Places Search results. Result count = " + String.valueOf(placesResponse.getCandidates().size()));
                             Toast.makeText(getContext(), R.string.map_search_too_many_results_message, Toast.LENGTH_LONG).show();
                         }
 
                     } else {
-                        Log.d(TAG, "Retrofit onResponse: No Places Search results.");
+                        Timber.d(TAG, "Retrofit onResponse: No Places Search results.");
                         Toast.makeText(getContext(), R.string.map_search_no_results_message, Toast.LENGTH_LONG).show();
                     }
 
@@ -234,14 +232,14 @@ public class HomeLocationSettingFragment extends FullScreenDialogFragment
 
                 @Override
                 public void onFailure(@NonNull Call<PlacesResponse> call, @NonNull Throwable t) {
-                    Log.e(TAG, "Failed to call Places API. Error: " + t.getMessage());
+                    Timber.e(TAG, "Failed to call Places API. Error: " + t.getMessage());
                     Toast.makeText(getContext(), R.string.map_search_call_error_message, Toast.LENGTH_LONG).show();
                 }
             });
         }
         if (v.getId() == setLocationButton.getId()) {
             if (homeLocation == null) {
-                Log.e(TAG, getString(R.string.error_no_location_specified));
+                Timber.e(TAG, getString(R.string.error_no_location_specified));
                 Toast.makeText(getContext(), R.string.error_no_location_specified, Toast.LENGTH_LONG).show();
                 return;
             }

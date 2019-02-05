@@ -1,7 +1,6 @@
 package me.ericrybarczyk.roadtrippy.persistence;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +20,7 @@ import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.dto.TripDay;
 import me.ericrybarczyk.roadtrippy.dto.TripLocation;
 import me.ericrybarczyk.roadtrippy.dto.User;
+import timber.log.Timber;
 
 public class TripRepository implements TripDataSource {
 
@@ -55,7 +55,7 @@ public class TripRepository implements TripDataSource {
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "Firebase Exception: " + e.getMessage());
+            Timber.e(TAG, "Firebase Exception: " + e.getMessage());
             throw e;
         }
     }
@@ -127,7 +127,7 @@ public class TripRepository implements TripDataSource {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, databaseError.getMessage());
+                Timber.e(TAG, databaseError.getMessage());
             }
         });
     }
@@ -162,7 +162,7 @@ public class TripRepository implements TripDataSource {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "Firebase DatabaseError: " + databaseError.getMessage());
+                Timber.e(TAG, "Firebase DatabaseError: " + databaseError.getMessage());
             }
         });
     }
@@ -186,12 +186,12 @@ public class TripRepository implements TripDataSource {
                     user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), now, now);
                 }
                 Task<Void> result = reference.setValue(user);
-                Log.i(TAG, "save user operation success = " + String.valueOf(result.isSuccessful()));
+                Timber.i(TAG, "save user operation success = " + String.valueOf(result.isSuccessful()));
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, databaseError.getMessage());
+                Timber.e(TAG, databaseError.getMessage());
             }
         });
     }

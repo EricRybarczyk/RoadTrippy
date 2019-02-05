@@ -11,7 +11,6 @@ import android.support.v4.app.DialogFragment;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.widget.DatePicker;
 
 import org.threeten.bp.LocalDate;
@@ -20,6 +19,7 @@ import java.util.Objects;
 
 import me.ericrybarczyk.roadtrippy.util.FragmentTags;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripViewModel;
+import timber.log.Timber;
 
 public class DatePickerFragment extends DialogFragment
         implements  DatePickerDialog.OnDateSetListener {
@@ -83,12 +83,12 @@ public class DatePickerFragment extends DialogFragment
         date = LocalDate.of(year, localDateMonth, dayOfMonth);
         try {
             if (tripDateSelectedListener == null) {
-                Log.e(TAG, "TripDateSelectedListener is null");
+                Timber.e(TAG, "TripDateSelectedListener is null");
                 return;
             }
             tripDateSelectedListener.onTripDateSelected(year, localDateMonth, dayOfMonth, this.getTag());
         } catch (ClassCastException e) {
-            Log.e(TAG, "Containing fragment must implement DatePickerFragment.TripDateSelectedListener");
+            Timber.e(TAG, "Containing fragment must implement DatePickerFragment.TripDateSelectedListener");
             throw e;
         }
     }

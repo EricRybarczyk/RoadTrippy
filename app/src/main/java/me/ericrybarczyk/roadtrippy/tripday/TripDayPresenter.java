@@ -1,7 +1,6 @@
 package me.ericrybarczyk.roadtrippy.tripday;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
@@ -13,6 +12,7 @@ import me.ericrybarczyk.roadtrippy.dto.Trip;
 import me.ericrybarczyk.roadtrippy.dto.TripDay;
 import me.ericrybarczyk.roadtrippy.persistence.TripDataSource;
 import me.ericrybarczyk.roadtrippy.viewmodels.TripDayViewModel;
+import timber.log.Timber;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -40,7 +40,7 @@ public class TripDayPresenter implements TripDayContract.Presenter {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, databaseError.getMessage());
+                Timber.e(TAG, databaseError.getMessage());
                 throw databaseError.toException();
             }
         });
@@ -61,7 +61,7 @@ public class TripDayPresenter implements TripDayContract.Presenter {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, databaseError.getMessage());
+                Timber.e(TAG, databaseError.getMessage());
                 throw databaseError.toException();
             }
         });

@@ -1,7 +1,6 @@
 package me.ericrybarczyk.roadtrippy.triplist;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,6 +9,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.ericrybarczyk.roadtrippy.R;
+import timber.log.Timber;
 
 public class TripViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -51,11 +51,11 @@ public class TripViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     @OnClick
     public void onClick(View v) {
         if (onTripListClickListener == null) {
-            Log.e(TAG, "onTripListClickListener is null");
+            Timber.e(TAG, "onTripListClickListener is null");
             return;
         }
         if (tripId == null) {
-            Log.e(TAG, "String tripId is null");
+            Timber.e(TAG, "String tripId is null");
             return;
         }
         onTripListClickListener.onTripListItemClick(tripId, tripNodeKey);
