@@ -14,9 +14,6 @@ import timber.log.Timber;
 
 public class FileSystemUtil {
 
-    private static final String TAG = FileSystemUtil.class.getSimpleName();
-
-
     public static void saveMapSnapshotImage(Context context, Bitmap bitmap, String tripId) {
 
         // calculations to slice a part of the image for use in trip list view
@@ -45,12 +42,12 @@ public class FileSystemUtil {
 
         } catch (FileNotFoundException e) {
             // in case of file errors, placeholder images will be acceptable
-            Timber.e(TAG, e.getMessage());
+            Timber.e(e.getMessage());
         } finally {
             try {
                 Objects.requireNonNull(fos).close();
             } catch (IOException e) {
-                Timber.e(TAG, e.getMessage());
+                Timber.e(e.getMessage());
             }
         }
     }

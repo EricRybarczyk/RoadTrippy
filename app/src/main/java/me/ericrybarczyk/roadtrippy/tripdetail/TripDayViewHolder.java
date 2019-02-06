@@ -22,7 +22,6 @@ public class TripDayViewHolder extends RecyclerView.ViewHolder implements View.O
     @BindView(R.id.day_primary_description) protected TextView dayPrimaryDescription;
     @BindView(R.id.day_user_notes) protected TextView dayUserNotes;
     @BindView(R.id.icon_navigate_trip_day) protected ImageView iconNavigation;
-    private static final String TAG = TripDayViewHolder.class.getSimpleName();
 
     public TripDayViewHolder(View itemView) {
         super(itemView);
@@ -40,7 +39,7 @@ public class TripDayViewHolder extends RecyclerView.ViewHolder implements View.O
     @OnClick
     public void onClick(View v) {
         if (tripDayListClickListener == null) {
-            Timber.e(TAG, "onTripDayListClickListener is null");
+            Timber.e("onTripDayListClickListener is null");
             return;
         }
         tripDayListClickListener.onTripDayListItemClick();

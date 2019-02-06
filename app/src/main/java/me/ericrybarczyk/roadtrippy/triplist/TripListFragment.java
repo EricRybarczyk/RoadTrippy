@@ -49,8 +49,6 @@ public class TripListFragment extends Fragment implements TripListContract.View 
     @BindView(R.id.trip_list) protected RecyclerView tripListRecyclerView;
     @BindView(R.id.fab) protected FloatingActionButton fab;
 
-    private static final String TAG = TripListFragment.class.getSimpleName();
-
     public static TripListFragment newInstance(String tripListDisplayKey) {
         TripListFragment tripListFragment = new TripListFragment();
         Bundle args = new Bundle();
@@ -71,7 +69,7 @@ public class TripListFragment extends Fragment implements TripListContract.View 
         } else if (getArguments() != null) {
             keyTripListDisplayType = getArguments().getString(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE);
         } else {
-            Timber.e(TAG, "Missing expected value for KEY_TRIP_LIST_DISPLAY_TYPE, using default.");
+            Timber.e("Missing expected value for KEY_TRIP_LIST_DISPLAY_TYPE, using default.");
             keyTripListDisplayType = ArgumentKeys.TRIP_LIST_DISPLAY_DEFAULT_INDICATOR;
         }
 

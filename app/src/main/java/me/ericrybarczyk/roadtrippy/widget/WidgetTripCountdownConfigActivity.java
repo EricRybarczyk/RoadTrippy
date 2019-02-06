@@ -40,7 +40,6 @@ public class WidgetTripCountdownConfigActivity extends AppCompatActivity {
     private static final String PREF_KEY_TRIP_ID = "appwidget_trip_id_";
     private static final String PREF_KEY_TRIP_NODE_KEY = "appwidget_trip_node_key_";
     private static final String PREF_KEY_USER_ID = "appwidget_user_id_";
-    private static final String TAG = WidgetTripCountdownConfigActivity.class.getSimpleName();
 
     TripRepository tripRepository;
     FirebaseListAdapter<Trip> adapter;
@@ -88,7 +87,7 @@ public class WidgetTripCountdownConfigActivity extends AppCompatActivity {
             appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            Timber.e(TAG, "Intent Extras is missing required AppWidgetManager.EXTRA_APPWIDGET_ID");
+            Timber.e("Intent Extras is missing required AppWidgetManager.EXTRA_APPWIDGET_ID");
             finish();
             return;
         }
@@ -135,7 +134,7 @@ public class WidgetTripCountdownConfigActivity extends AppCompatActivity {
 
             @Override
             public void onError(@NonNull DatabaseError error) {
-                Timber.e(TAG, error.getMessage());
+                Timber.e(error.getMessage());
                 super.onError(error);
                 finish();
             }

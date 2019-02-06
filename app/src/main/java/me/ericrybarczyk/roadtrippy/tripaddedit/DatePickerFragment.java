@@ -25,7 +25,6 @@ public class DatePickerFragment extends DialogFragment
         implements  DatePickerDialog.OnDateSetListener {
 
     private TripDateSelectedListener tripDateSelectedListener;
-    private static final String TAG = DatePickerFragment.class.getSimpleName();
     private LocalDate date;
 
 
@@ -83,12 +82,12 @@ public class DatePickerFragment extends DialogFragment
         date = LocalDate.of(year, localDateMonth, dayOfMonth);
         try {
             if (tripDateSelectedListener == null) {
-                Timber.e(TAG, "TripDateSelectedListener is null");
+                Timber.e("TripDateSelectedListener is null");
                 return;
             }
             tripDateSelectedListener.onTripDateSelected(year, localDateMonth, dayOfMonth, this.getTag());
         } catch (ClassCastException e) {
-            Timber.e(TAG, "Containing fragment must implement DatePickerFragment.TripDateSelectedListener");
+            Timber.e("Containing fragment must implement DatePickerFragment.TripDateSelectedListener");
             throw e;
         }
     }

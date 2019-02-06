@@ -49,7 +49,6 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
     private String tripId;
     private String tripNodeKey;
     private boolean tripIsArchived = false;
-    private static final String TAG = TripDetailFragment.class.getSimpleName();
 
     public static TripDetailFragment newInstance(String tripId, String tripNodeKey, boolean tripIsArchived) {
         TripDetailFragment tripDetailFragment = new TripDetailFragment();
@@ -123,7 +122,7 @@ public class TripDetailFragment extends Fragment implements TripDetailContract.V
                     holder.setNavigationClickListener(() -> {
                         switch (tripDayViewModel.getDestinations().size()) {
                             case 0:
-                                Timber.e(TAG, "onNavigationIconClick with no destinations. Code flow prevents this. git blame!");
+                                Timber.e("onNavigationIconClick with no destinations. Code flow prevents this. git blame!");
                                 return;
                             case 1:
                                 // navigate directly to the single destination;

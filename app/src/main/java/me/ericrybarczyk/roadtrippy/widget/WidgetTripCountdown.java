@@ -41,7 +41,7 @@ public class WidgetTripCountdown extends AppWidgetProvider {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Trip trip = dataSnapshot.getValue(Trip.class);
                 if (trip == null) {
-                    Timber.e(WidgetTripCountdown.class.getSimpleName(), "updateAppWidget - onDataChange: Trip object is null from Firebase");
+                    Timber.e("updateAppWidget - onDataChange: Trip object is null from Firebase");
                     return;
                 }
                 TripViewModel viewModel = TripViewModel.from(trip);
@@ -66,7 +66,7 @@ public class WidgetTripCountdown extends AppWidgetProvider {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Timber.e(WidgetTripCountdown.class.getSimpleName(), databaseError.getMessage());
+                Timber.e(databaseError.getMessage());
             }
         });
 

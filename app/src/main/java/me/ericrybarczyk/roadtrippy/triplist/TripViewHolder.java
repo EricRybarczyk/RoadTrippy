@@ -27,8 +27,6 @@ public class TripViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     @BindView(R.id.icon_highlight_one) protected TextView iconHighlightOne;
     @BindView(R.id.icon_highlight_two) protected TextView iconHighlightTwo;
 
-    private static final String TAG = TripViewHolder.class.getSimpleName();
-
 
     public TripViewHolder(View itemView) {
         super(itemView);
@@ -51,11 +49,11 @@ public class TripViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     @OnClick
     public void onClick(View v) {
         if (onTripListClickListener == null) {
-            Timber.e(TAG, "onTripListClickListener is null");
+            Timber.e("onTripListClickListener is null");
             return;
         }
         if (tripId == null) {
-            Timber.e(TAG, "String tripId is null");
+            Timber.e("String tripId is null");
             return;
         }
         onTripListClickListener.onTripListItemClick(tripId, tripNodeKey);

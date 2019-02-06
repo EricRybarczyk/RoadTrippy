@@ -20,7 +20,6 @@ public class TripDayPresenter implements TripDayContract.Presenter {
 
     private TripDataSource tripDataSource;
     private TripDayContract.View tripDayView;
-    public static final String TAG = TripDayPresenter.class.getSimpleName();
 
     public TripDayPresenter(@NonNull TripDataSource dataSource, @NonNull TripDayContract.View view) {
         tripDataSource = checkNotNull(dataSource);
@@ -40,7 +39,7 @@ public class TripDayPresenter implements TripDayContract.Presenter {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Timber.e(TAG, databaseError.getMessage());
+                Timber.e(databaseError.getMessage());
                 throw databaseError.toException();
             }
         });
@@ -61,7 +60,7 @@ public class TripDayPresenter implements TripDayContract.Presenter {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Timber.e(TAG, databaseError.getMessage());
+                Timber.e(databaseError.getMessage());
                 throw databaseError.toException();
             }
         });

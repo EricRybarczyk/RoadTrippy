@@ -167,7 +167,7 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
     public void setTripDestination(LatLng tripDestination) {
         if (tripDestination == null) {
             // should not be possible, can't get to this screen until trip data is created
-            Timber.e(TAG, "Trip destination missing for tripId: " + tripId + " , tripNodeKey: " + tripNodeKey);
+            Timber.e("Trip destination missing for tripId: %s, tripNodeKey: %s", tripId, tripNodeKey);
         }
         this.tripDestination = tripDestination;
     }

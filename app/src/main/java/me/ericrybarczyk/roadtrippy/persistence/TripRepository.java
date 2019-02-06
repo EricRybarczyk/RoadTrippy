@@ -25,7 +25,6 @@ import timber.log.Timber;
 public class TripRepository implements TripDataSource {
 
     private FirebaseDatabase firebaseDatabase;
-    private static final String TAG = TripRepository.class.getSimpleName();
 
     public TripRepository() {
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -55,7 +54,7 @@ public class TripRepository implements TripDataSource {
             }
 
         } catch (Exception e) {
-            Timber.e(TAG, "Firebase Exception: " + e.getMessage());
+            Timber.e("Firebase Exception: %s", e.getMessage());
             throw e;
         }
     }
@@ -127,7 +126,7 @@ public class TripRepository implements TripDataSource {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Timber.e(TAG, databaseError.getMessage());
+                Timber.e(databaseError.getMessage());
             }
         });
     }
@@ -162,7 +161,7 @@ public class TripRepository implements TripDataSource {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Timber.e(TAG, "Firebase DatabaseError: " + databaseError.getMessage());
+                Timber.e("Firebase DatabaseError: %s", databaseError.getMessage());
             }
         });
     }
@@ -186,12 +185,12 @@ public class TripRepository implements TripDataSource {
                     user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), now, now);
                 }
                 Task<Void> result = reference.setValue(user);
-                Timber.i(TAG, "save user operation success = " + String.valueOf(result.isSuccessful()));
+                Timber.i("save user operation success = %s", String.valueOf(result.isSuccessful()));
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Timber.e(TAG, databaseError.getMessage());
+                Timber.e(databaseError.getMessage());
             }
         });
     }

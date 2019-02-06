@@ -150,9 +150,9 @@ public class TripListActivity extends BaseActivity {
         fusedLocationProviderClient.getLastLocation()
                 .addOnSuccessListener(this, location -> {
                     // no need to use the location now, but this helps make sure location is current when user accesses map functionality
-                    Timber.i(TAG, "Location updated");
+                    Timber.i("Location updated");
                 })
-                .addOnFailureListener(this, e -> Timber.e(TAG, "fusedLocationProviderClient onFailure: " + e.getMessage()));
+                .addOnFailureListener(this, e -> Timber.e("fusedLocationProviderClient onFailure: %s", e.getMessage()));
     }
 
     private void setupNavigationDrawer() {

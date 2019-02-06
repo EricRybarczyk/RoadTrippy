@@ -251,12 +251,12 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
                             locationDescription.setText(place.getName());
                             updateMapView(MapSettings.MAP_SEARCH_RESULT_ZOOM);
                         } else {
-                            Timber.d(TAG, "Too many Places Search results. Result count = " + String.valueOf(placesResponse.getCandidates().size()));
+                            Timber.d("Too many Places Search results. Result count = %s", String.valueOf(placesResponse.getCandidates().size()));
                             Toast.makeText(getContext(), R.string.map_search_too_many_results_message, Toast.LENGTH_LONG).show();
                         }
 
                     } else {
-                        Timber.d(TAG, "Retrofit onResponse: No Places Search results.");
+                        Timber.d("Retrofit onResponse: No Places Search results.");
                         Toast.makeText(getContext(), R.string.map_search_no_results_message, Toast.LENGTH_LONG).show();
                     }
 
@@ -264,7 +264,7 @@ public class TripLocationPickerFragment extends FullScreenDialogFragment
 
                 @Override
                 public void onFailure(@NonNull Call<PlacesResponse> call, @NonNull Throwable t) {
-                    Timber.e(TAG, "Failed to call Places API. Error: " + t.getMessage());
+                    Timber.e("Failed to call Places API. Error: %s", t.getMessage());
                     Toast.makeText(getContext(), R.string.map_search_call_error_message, Toast.LENGTH_LONG).show();
                 }
             });

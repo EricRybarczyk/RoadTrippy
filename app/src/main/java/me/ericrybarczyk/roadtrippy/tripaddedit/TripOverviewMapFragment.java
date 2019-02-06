@@ -198,7 +198,7 @@ public class TripOverviewMapFragment extends DialogFragment implements OnMapRead
                     //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(overviewBounds.getCenter(), 5));
 
                 } else {
-                    Timber.d(TAG, "Retrofit onResponse: No Directions search result.");
+                    Timber.d("Retrofit onResponse: No Directions search result.");
                     Toast.makeText(getContext(), R.string.map_directions_failure, Toast.LENGTH_LONG).show();
                 }
 
@@ -206,7 +206,7 @@ public class TripOverviewMapFragment extends DialogFragment implements OnMapRead
 
             @Override
             public void onFailure(@NonNull Call<DirectionsResponse> call, @NonNull Throwable t) {
-                Timber.e(TAG, "Retrofit Callback onFailure: " + t.getMessage());
+                Timber.e("Retrofit Callback onFailure: %s", t.getMessage());
                 Toast.makeText(getActivity(), R.string.map_directions_call_error_message, Toast.LENGTH_SHORT).show();
             }
         });
