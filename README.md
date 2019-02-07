@@ -2,7 +2,7 @@
 
 **This app was my final project towards my [Udacity Android Developer Nanodegree](https://graduation.udacity.com/confirm/4EVRWQDC).**
 
-The app is &copy; 2018 Eric Rybarczyk
+Copyright &copy; 2018 Eric Rybarczyk
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
