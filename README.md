@@ -1,6 +1,6 @@
 # Road Trippy #
 
-**This app was my final project towards my [Udacity Android Developer Nanodegree](https://graduation.udacity.com/confirm/4EVRWQDC).**
+**This app was my final project towards my [Android Developer Nanodegree](https://graduation.udacity.com/confirm/4EVRWQDC) from Udacity.**
 
 Copyright &copy; 2018 Eric Rybarczyk
 
