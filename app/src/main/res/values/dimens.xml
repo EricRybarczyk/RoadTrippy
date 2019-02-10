@@ -51,6 +51,9 @@
 
     <dimen name="pref_layout_item_height">80dp</dimen>
 
+    <dimen name="terms_vertical_margin">24dp</dimen>
+    <dimen name="terms_horizontal_margin">18dp</dimen>
+
     <dimen name="widget_trip_countdown_margin">8dp</dimen>
     <dimen name="widget_trip_countdown_text_margin_start">6dp</dimen>
     <dimen name="widget_trip_countdown_text_margin_top">4dp</dimen>

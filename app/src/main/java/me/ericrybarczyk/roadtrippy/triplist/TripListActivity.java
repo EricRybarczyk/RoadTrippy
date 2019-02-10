@@ -20,6 +20,7 @@ package me.ericrybarczyk.roadtrippy.triplist;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,6 +30,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,6 +55,7 @@ import me.ericrybarczyk.roadtrippy.BaseActivity;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.settings.SettingsActivity;
 import me.ericrybarczyk.roadtrippy.tasks.UserInfoSave;
+import me.ericrybarczyk.roadtrippy.terms.TermsOfUseActivity;
 import me.ericrybarczyk.roadtrippy.tripaddedit.AddEditTripActivity;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
@@ -93,6 +96,8 @@ public class TripListActivity extends BaseActivity {
         toggle.syncState();
 
         setupNavigationDrawer();
+
+        verifyTermsOfUse();
 
         if (savedInstanceState != null) {
             keyTripListDisplayType = savedInstanceState.getString(ArgumentKeys.KEY_TRIP_LIST_DISPLAY_TYPE);
@@ -135,6 +140,17 @@ public class TripListActivity extends BaseActivity {
         }
         // Presenter must still be initialized because the Presenter links itself to the View
         TripListPresenter tripListPresenter = new TripListPresenter(tripListFragment);
+    }
+
+    private void verifyTermsOfUse() {
+
+        if (getUserHasAcceptedTermsConditions()) { return; }
+
+        // if no affirmative preference value is saved, must go to the Terms & Conditions screen before app can be used
+        Intent intent = new Intent(this, TermsOfUseActivity.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        finish();
     }
 
     private void verifyPermissions() {
@@ -261,6 +277,7 @@ public class TripListActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        verifyTermsOfUse();
         firebaseAuth.addAuthStateListener(authStateListener);
     }
 

@@ -17,6 +17,8 @@
 
 package me.ericrybarczyk.roadtrippy.settings;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -28,11 +30,15 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.ericrybarczyk.roadtrippy.BaseActivity;
 import me.ericrybarczyk.roadtrippy.R;
+import me.ericrybarczyk.roadtrippy.terms.TermsOfUseActivity;
+import me.ericrybarczyk.roadtrippy.triplist.TripListActivity;
 import me.ericrybarczyk.roadtrippy.util.ActivityUtils;
+import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
     @BindView(R.id.toolbar) protected Toolbar toolbar;
     @BindView(R.id.content_container) protected FrameLayout contentFrameLayout;
@@ -44,6 +50,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
+
+        // user may have revoked acceptance of terms - route to app launch in this case
+        verifyTermsOfUse();
 
         // configure toolbar and navigation drawer
         setSupportActionBar(toolbar);
@@ -59,6 +68,22 @@ public class SettingsActivity extends AppCompatActivity {
         }
         // Presenter must still be initialized because the Presenter links itself to the View
         SettingsPresenter settingsPresenter = new SettingsPresenter(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()), settingsFragment);
+    }
+
+    private void verifyTermsOfUse() {
+        if (getUserHasAcceptedTermsConditions()) { return; }
+
+        // if no affirmative preference value is saved, must go to the Terms & Conditions screen before app can be used
+        Intent intent = new Intent(this, TripListActivity.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        verifyTermsOfUse();
     }
 
     @Override

@@ -42,7 +42,6 @@
         <activity
             android:name=".triplist.TripListActivity"
             android:label="@string/app_name">
-            <!--android:theme="@style/AppTheme.NoActionBar"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -73,6 +72,10 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".terms.TermsOfUseActivity"
+            android:label="@string/app_label_terms_of_use"
+            android:parentActivityName=".triplist.TripListActivity" />
 
         <receiver android:name=".widget.WidgetTripCountdown">
             <intent-filter>

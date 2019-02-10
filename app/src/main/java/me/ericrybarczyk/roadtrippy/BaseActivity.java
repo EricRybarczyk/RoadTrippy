@@ -17,9 +17,12 @@
 
 package me.ericrybarczyk.roadtrippy;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 
+import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
 import timber.log.Timber;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -31,5 +34,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         Timber.tag(tag).d("Screen Height: %d", configuration.screenHeightDp);
         Timber.tag(tag).d("Screen Width: %d", configuration.screenWidthDp);
         Timber.tag(tag).d("Screen Smallest Width: %d", configuration.smallestScreenWidthDp);
+    }
+
+    // check saved preference for indicator the user has accepted terms and conditions
+    protected boolean getUserHasAcceptedTermsConditions() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getBoolean(ArgumentKeys.KEY_USER_ACCEPTED_TERMS_CONDITIONS, false);
     }
 }

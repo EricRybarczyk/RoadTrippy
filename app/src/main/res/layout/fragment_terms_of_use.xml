@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2018 Eric Rybarczyk
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_start_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/guideline_default_vertical_inset" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_end_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/guideline_default_vertical_inset" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_top_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/guideline_default_horizontal_inset" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_bottom_terms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/guideline_default_horizontal_inset" />
+
+    <TextView
+        android:id="@+id/terms_open_statement_text"
+        style="@style/TermsOfUseText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/terms_intro_text"
+        app:layout_constraintTop_toTopOf="@id/guideline_top_terms"
+        app:layout_constraintStart_toStartOf="@id/guideline_start_terms"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end_terms" />
+
+    <Button
+        android:id="@+id/accept_terms_button"
+        style="@style/TermsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/terms_open_statement_text"
+        app:layout_constraintStart_toStartOf="@id/guideline_start_terms"
+        app:layout_constraintEnd_toStartOf="@id/cancel_terms_button"
+        android:text="@string/terms_accept_button_label"/>
+
+    <Button
+        android:id="@+id/cancel_terms_button"
+        style="@style/TermsButtonSubdued"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/terms_open_statement_text"
+        app:layout_constraintStart_toEndOf="@id/accept_terms_button"
+        app:layout_constraintEnd_toStartOf="@id/guideline_end_terms"
+        android:text="@string/terms_cancel_button_label"/>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/accept_terms_button"
+        app:layout_constraintStart_toStartOf="@id/guideline_start_terms"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end_terms"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_bottom_terms"
+        android:layout_marginTop="@dimen/terms_vertical_margin"
+        android:scrollbars="vertical">
+
+        <WebView
+            android:id="@+id/terms_full_content_webview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

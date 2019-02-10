@@ -49,6 +49,8 @@ captures/
 google-services.json
 # Google Maps api key
 app/src/main/res/values/google_maps_api.xml
+# Privacy Policy
+app/src/main/res/raw/legal_language.html
 
 # Freeline
 freeline.py

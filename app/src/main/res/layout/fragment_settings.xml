@@ -64,7 +64,7 @@
             android:id="@+id/title_home_preference"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Home Location"
+            tools:text="@string/pref_home_location_title"
             android:text="@string/pref_home_location_title"
             style="@style/TextInputLabel"/>
 
@@ -101,7 +101,7 @@
             android:id="@+id/title_driving_hours_preference"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Driving Hours"
+            tools:text="@string/pref_driving_hours_title"
             android:text="@string/pref_driving_hours_title"
             style="@style/TextInputLabel"/>
 
@@ -122,6 +122,43 @@
         android:background="@color/colorDividerLineMedium"
         android:contentDescription="@string/aria_divider_line"
         app:layout_constraintTop_toBottomOf="@id/driving_hours_preference"
+        app:layout_constraintStart_toStartOf="@id/guideline_start_settings"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end_settings" />
+
+    <LinearLayout
+        android:id="@+id/terms_of_use_preference"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/pref_layout_item_height"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/divider_line_driving_preference"
+        app:layout_constraintStart_toStartOf="@id/guideline_start_settings"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end_settings">
+
+        <TextView
+            android:id="@+id/title_terms_of_use_preference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="@string/pref_terms_of_use_title"
+            android:text="@string/pref_terms_of_use_title"
+            style="@style/TextInputLabel"/>
+
+        <TextView
+            android:id="@+id/info_terms_of_use_preference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="explanation text goes here"
+            android:text="@string/pref_terms_of_use_info"
+            style="@style/TextSubHint" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/divider_line_terms_of_use_preference"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorDividerLineMedium"
+        android:contentDescription="@string/aria_divider_line"
+        app:layout_constraintTop_toBottomOf="@id/terms_of_use_preference"
         app:layout_constraintStart_toStartOf="@id/guideline_start_settings"
         app:layout_constraintEnd_toEndOf="@id/guideline_end_settings" />
 

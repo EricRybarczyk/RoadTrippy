@@ -17,6 +17,7 @@
 
 package me.ericrybarczyk.roadtrippy.settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.model.LatLng;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.ericrybarczyk.roadtrippy.R;
+import me.ericrybarczyk.roadtrippy.terms.TermsOfUseActivity;
 import me.ericrybarczyk.roadtrippy.util.FragmentTags;
 import me.ericrybarczyk.roadtrippy.util.RequestCodes;
 
@@ -42,6 +44,7 @@ public class SettingsFragment extends Fragment implements SettingsContract.View,
 
     @BindView(R.id.home_location_preference) protected LinearLayout homeLocationPreference;
     @BindView(R.id.driving_hours_preference) protected LinearLayout drivingHoursPreference;
+    @BindView(R.id.terms_of_use_preference) protected LinearLayout termsOfUsePreference;
 
     private SettingsContract.Presenter presenter;
 
@@ -76,6 +79,12 @@ public class SettingsFragment extends Fragment implements SettingsContract.View,
             DrivingDurationSettingFragment settingFragment = DrivingDurationSettingFragment.newInstance(presenter.getCurrentDrivingDurationPreference(defaultHours));
             settingFragment.setTargetFragment(SettingsFragment.this, RequestCodes.PREFERENCE_DRIVING_HOURS_REQUEST_CODE);
             settingFragment.show(getFragmentManager(), FragmentTags.TAG_SETTING_DRIVING_DURATION);
+        });
+
+        termsOfUsePreference.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), TermsOfUseActivity.class);
+            startActivity(intent);
+            // TODO: is this needed?  getActivity().finish();
         });
 
         return rootView;

@@ -18,13 +18,8 @@
 package me.ericrybarczyk.roadtrippy.settings;
 
 import android.content.SharedPreferences;
-
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.auth.FirebaseUser;
-
 import me.ericrybarczyk.roadtrippy.util.ArgumentKeys;
-import me.ericrybarczyk.roadtrippy.util.AuthenticationManager;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SettingsPresenter implements SettingsContract.Presenter {

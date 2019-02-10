@@ -78,6 +78,26 @@
         <item name="android:layout_marginBottom">4dp</item>
     </style>
 
+    <style name="TermsButton" parent="AppButton">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:width">165sp</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorTextOverAccent</item>
+        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TermsButtonSubdued" parent="AppButton">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:width">165sp</item>
+        <item name="android:background">@color/colorBackground</item>
+        <item name="android:textColor">@color/colorTextInputLabel</item>
+        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="NavigationDestinationButton" parent="@android:style/Widget.Button">
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
@@ -230,6 +250,16 @@
         <item name="android:textColor">@color/colorTextSecondary</item>
         <item name="android:layout_marginStart">@dimen/widget_trip_countdown_text_margin_start</item>
         <item name="android:layout_marginTop">@dimen/widget_trip_countdown_text_margin_top</item>
+    </style>
+
+    <style name="TermsOfUseText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:layout_marginTop">@dimen/terms_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/terms_vertical_margin</item>
+        <item name="android:layout_marginStart">@dimen/terms_horizontal_margin</item>
+        <item name="android:layout_marginEnd">@dimen/terms_horizontal_margin</item>
     </style>
 
 </resources>
