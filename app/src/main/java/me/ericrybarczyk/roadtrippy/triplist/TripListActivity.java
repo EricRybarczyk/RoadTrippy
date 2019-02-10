@@ -39,6 +39,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -51,6 +52,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 import me.ericrybarczyk.roadtrippy.BaseActivity;
 import me.ericrybarczyk.roadtrippy.R;
 import me.ericrybarczyk.roadtrippy.settings.SettingsActivity;
@@ -144,7 +146,11 @@ public class TripListActivity extends BaseActivity {
 
     private void verifyTermsOfUse() {
 
-        if (getUserHasAcceptedTermsConditions()) { return; }
+        if (getUserHasAcceptedTermsConditions()) {
+            // configure Crashlytics if user has agreed to terms
+            Fabric.with(this, new Crashlytics());
+            return;
+        }
 
         // if no affirmative preference value is saved, must go to the Terms & Conditions screen before app can be used
         Intent intent = new Intent(this, TermsOfUseActivity.class);

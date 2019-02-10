@@ -149,7 +149,6 @@ public class TripDayFragment extends Fragment implements TripDayContract.View, T
 
         if (!tripDayViewModel.getIsDefaultText()) {
             dayPrimaryDescription.setText(tripDayViewModel.getPrimaryDescription());
-            // TODO: bug with onSaveInstanceState with this field
             dayUserNotes.setText(tripDayViewModel.getUserNotes());
         }
 

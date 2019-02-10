@@ -84,7 +84,6 @@ public class SettingsFragment extends Fragment implements SettingsContract.View,
         termsOfUsePreference.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), TermsOfUseActivity.class);
             startActivity(intent);
-            // TODO: is this needed?  getActivity().finish();
         });
 
         return rootView;
