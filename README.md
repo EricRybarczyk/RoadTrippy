@@ -6,6 +6,8 @@
 
 Refer to the *API Setup for Road Trippy Demo App.pdf* document in this repository. This document provides details for a developer to configure the necessary Firebase and Google Maps APIs needed for the app to function. Be aware that **YOU must provide** several required files to bring this app to a functional state, as explained in the document.
 
+The original project proposal document is also included, as *Final Project Proposal - Android Developer Nanodegree.pdf*. The document itself is based on the required proposal content as defined by [Udacity](https://www.udacity.com/). Screen mockups were created with [Pencil](https://pencil.evolus.vn/), and open-source GUI prototyping tool.
+
    ***
    
 Copyright &copy; 2018 Eric Rybarczyk
